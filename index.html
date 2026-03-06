@@ -3,176 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI EMPIRE | 7 PILLARS SECURE NODE</title>
-    
-    <script>
-        (function() {
-            var pass = prompt("7 PILLARS SECURITY: ENTER SOVEREIGN ACCESS PASSWORD");
-            if (pass !== "7-PILLARS-2026") {
-                document.write("<body style='background:black;color:red;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;'><h1>ACCESS DENIED. UNAUTHORIZED IP TRACED.</h1></body>");
-                window.stop();
-            }
-        })();
-    </script>
-
+    <title>7 PILLARS | SECURE NODE ACTIVE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
-    
     <style>
-        body { background-color: #010101; color: #e4e4e7; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-user-select: none; user-select: none; }
-        .diamond-font { font-family: 'Orbitron', sans-serif; letter-spacing: 3px; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
-        .gold-glow { box-shadow: 0 0 40px rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3) !important; }
-        .hidden { display: none !important; }
-        @keyframes pulse-gold { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.01); } }
-        .animate-gold { animation: pulse-gold 4s infinite; }
+        body { background: #000; color: white; font-family: sans-serif; }
+        .gold { color: #f59e0b; }
+        .panel { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; }
+        .gift-btn { background: linear-gradient(90deg, #f59e0b, #92400e); color: black; font-weight: 900; }
+        .live-window { width: 100%; height: 200px; background: #050505; border-radius: 15px; border: 1px solid #222; position: relative; overflow: hidden; }
     </style>
 </head>
-<body id="main-app" class="p-4 pb-32">
+<body class="pb-32">
 
-    <div id="gate-node" class="fixed inset-0 bg-black z-[5000] flex flex-col items-center justify-center p-8 text-center">
-        <div class="mb-10 animate-gold">
-            <h1 class="diamond-font text-amber-500 text-3xl mb-1">NAWI EMPIRE</h1>
-            <p class="text-[7px] text-zinc-600 uppercase tracking-[8px]">Sovereign Node v2.9</p>
+    <div class="p-6 flex justify-between items-center border-b border-white/5">
+        <h1 class="text-xs font-black tracking-[5px] gold uppercase">7 Pillars Node</h1>
+        <div class="flex items-center gap-1">
+            <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+            <span class="text-[8px] text-emerald-500 font-bold">SECURE</span>
         </div>
-        <div class="glass p-8 w-full max-w-sm mb-10 gold-glow">
-            <h2 id="daily-greet" class="text-xs font-black text-white mb-2 uppercase italic tracking-widest">Verifying Authority...</h2>
-            <p class="text-[8px] text-zinc-500 italic leading-relaxed">"By my order and my authority, I protect you and this platform."</p>
-        </div>
-        <button onclick="enterEmpire()" class="bg-amber-600 text-black text-[10px] font-black px-12 py-5 rounded-full uppercase tracking-[3px] active:scale-95 transition-all">Unlock 7 Pillars</button>
     </div>
 
-    <div id="main-ui" class="hidden">
-        
-        <div class="flex justify-between items-start mb-8">
-            <div>
-                <h4 class="text-[9px] font-black uppercase text-white tracking-widest">7 PILLARS PROTOCOL</h4>
-                <div class="flex items-center gap-1.5 mt-1">
-                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <p class="text-[6px] text-emerald-500 font-bold uppercase tracking-widest">Network Secure</p>
-                </div>
-            </div>
-            <div class="text-right">
-                <p class="text-[6px] text-zinc-600 uppercase">Sovereign Reserve</p>
-                <h2 class="text-lg font-black italic text-amber-500">35,000,000 💠</h2>
+    <div class="p-4">
+        <div class="live-window flex items-center justify-center">
+            <div class="text-center">
+                <i data-lucide="activity" class="text-zinc-700 w-12 h-12 mb-2 animate-pulse mx-auto"></i>
+                <p class="text-[9px] text-zinc-500 tracking-widest uppercase italic">Imperial Stream Active</p>
             </div>
         </div>
-
-        <div class="glass p-6 mb-8 border border-amber-500/20 bg-amber-500/5">
-            <button onclick="toggleManifesto()" class="w-full flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="scroll-text" class="w-4 h-4 text-amber-500"></i>
-                    <h3 class="text-[9px] font-black uppercase text-amber-500 tracking-[2px]">The Empire Manifesto</h3>
-                </div>
-                <i data-lucide="chevron-down" id="manifesto-icon" class="w-4 h-4 text-zinc-600 transition-transform"></i>
-            </button>
-            <div id="manifesto-content" class="hidden mt-6 space-y-5 border-t border-white/5 pt-5">
-                <div>
-                    <h4 class="text-[8px] font-black text-white uppercase mb-1.5">What is NAWI EMPIRE?</h4>
-                    <p class="text-[9px] text-zinc-400 leading-relaxed italic">"A Network of Autonomous Wealth and Integrity. A private digital jurisdiction for the 100 Founders."</p>
-                </div>
-                <div>
-                    <h4 class="text-[8px] font-black text-white uppercase mb-1.5">The Meaning of the 7 Pillars?</h4>
-                    <p class="text-[9px] text-zinc-400 leading-relaxed italic">"Music, Gaming, Commerce, Education, Technology, Security, and Unity. Our foundation of strength."</p>
-                </div>
-                <div>
-                    <h4 class="text-[8px] font-black text-white uppercase mb-1.5">Is this a Ponzi Scheme?</h4>
-                    <p class="text-[9px] text-zinc-400 leading-relaxed italic">"No. We generate value through industry pillars. Founders earn from global revenue, not just recruitment."</p>
-                </div>
-            </div>
-        </div>
-
-        <h3 class="text-[8px] text-zinc-600 uppercase tracking-widest mb-4 ml-1">Active Sovereignty Nodes</h3>
-        <div class="grid grid-cols-1 gap-4 mb-8">
-            <div class="glass p-5 flex justify-between items-center border-l-2 border-purple-500/50">
-                <div class="flex items-center gap-4">
-                    <i data-lucide="music" class="w-5 h-5 text-purple-500"></i>
-                    <span class="text-[10px] font-black uppercase tracking-widest">Music Pillar</span>
-                </div>
-                <span class="text-[7px] text-purple-400 font-bold bg-purple-500/10 px-2 py-1 rounded italic">1% DIV ACTIVE</span>
-            </div>
-            <div class="glass p-5 flex justify-between items-center border-l-2 border-blue-500/50">
-                <div class="flex items-center gap-4">
-                    <i data-lucide="gamepad-2" class="w-5 h-5 text-blue-500"></i>
-                    <span class="text-[10px] font-black uppercase tracking-widest">Gaming Pillar</span>
-                </div>
-                <span class="text-[7px] text-blue-400 font-bold bg-blue-500/10 px-2 py-1 rounded italic">STAKING LIVE</span>
-            </div>
-        </div>
-
-        <div class="glass p-6 mb-8 gold-glow">
-            <h3 class="text-[9px] font-black uppercase text-zinc-400 tracking-widest mb-4">P2P Sovereign Treasury</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="alert('Contact 7 PILLARS Admin for secure P2P Deposit instructions.')" class="py-4 bg-emerald-600/10 border border-emerald-500/30 text-emerald-500 text-[8px] font-black uppercase rounded-2xl tracking-widest active:bg-emerald-600/20">Deposit</button>
-                <button onclick="alert('Withdrawal Request Queued for Verification.')" class="py-4 bg-white/5 border border-white/10 text-white text-[8px] font-black uppercase rounded-2xl tracking-widest">Withdraw</button>
-            </div>
-            <p class="text-[6px] text-center text-zinc-600 mt-4 italic">"Wealth is private. Privacy is Power."</p>
-        </div>
-
-        <div id="deep-vault" class="hidden glass p-8 mb-10 text-center border-2 border-amber-600/50 bg-amber-600/5">
-            <div class="flex justify-center mb-4"><i data-lucide="crown" class="w-8 h-8 text-amber-500"></i></div>
-            <h1 class="text-xl font-black italic text-white mb-1 uppercase">7 PILLARS ADMIN</h1>
-            <p class="text-[7px] text-zinc-500 uppercase tracking-[5px] mb-8 italic">Excellency Level Access</p>
-            
-            <div class="space-y-3 text-left mb-8">
-                <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-[8px] text-amber-500 font-black">NW-F001 Ledger</span>
-                    <span class="text-[8px] text-emerald-500 font-black">+12,500💠</span>
-                </div>
-            </div>
-
-            <button onclick="activatePanic()" class="w-full py-4 bg-red-950/40 border border-red-500/50 text-red-500 text-[8px] font-black uppercase rounded-2xl tracking-widest">Execute Pillar Collapse</button>
-        </div>
-
     </div>
 
-    <div class="fixed bottom-0 left-0 w-full bg-black/90 backdrop-blur-3xl p-6 border-t border-white/5 flex justify-around items-center">
-        <button onclick="directorAccess()" class="text-[8px] text-zinc-700 font-black uppercase tracking-[3px] italic hover:text-amber-500 transition-colors">Admin Login</button>
-        <p class="text-[7px] text-zinc-500 font-black uppercase tracking-widest">Unity is Strength</p>
+    <div class="px-4 grid grid-cols-3 gap-2 mb-6">
+        <button onclick="gift(500)" class="gift-btn py-4 rounded-xl text-[8px]">₦500</button>
+        <button onclick="gift(5000)" class="gift-btn py-4 rounded-xl text-[8px]">₦5K</button>
+        <button onclick="gift(50000)" class="gift-btn py-4 rounded-xl text-[8px]">₦50K</button>
+    </div>
+
+    <div class="px-4 grid grid-cols-2 gap-3">
+        <div onclick="alert('Reserve: 3.0M USD\nStatus: Verified')" class="panel p-5 flex flex-col items-center">
+            <i data-lucide="shield-check" class="text-emerald-500 mb-1"></i>
+            <span class="text-[8px] font-bold">RESERVE</span>
+        </div>
+        <div onclick="window.location.href='https://www.google.com/logos/2010/pacman10-i.html'" class="panel p-5 flex flex-col items-center">
+            <i data-lucide="gamepad-2" class="text-purple-500 mb-1"></i>
+            <span class="text-[8px] font-bold">GAMING</span>
+        </div>
+        <div onclick="alert('Menu: Active for Founders')" class="panel p-5 flex flex-col items-center">
+            <i data-lucide="utensils" class="text-orange-500 mb-1"></i>
+            <span class="text-[8px] font-bold">KITCHEN</span>
+        </div>
+        <div onclick="alert('Shop: Merch Store Open')" class="panel p-5 flex flex-col items-center">
+            <i data-lucide="shopping-cart" class="text-blue-500 mb-1"></i>
+            <span class="text-[8px] font-bold">SHOP</span>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full p-6 bg-black border-t border-white/10 flex justify-between items-center">
+        <p class="text-[10px] font-black italic gold tracking-widest uppercase">7 PILLARS AUTHORITY</p>
+        <button onclick="vault()" class="bg-zinc-800 text-[8px] px-5 py-2 rounded-full font-bold">VAULT</button>
     </div>
 
     <script>
         lucide.createIcons();
-        
-        function enterEmpire() {
-            document.getElementById('gate-node').classList.add('hidden');
-            document.getElementById('main-ui').classList.remove('hidden');
-            window.scrollTo(0,0);
+        function gift(n) {
+            alert("7 PILLARS AUTHORITY:\nExchange initiated for ₦" + n + ".\n\nFunds will be moved from Public Node to Sovereign Vault.");
         }
-
-        function toggleManifesto() {
-            const content = document.getElementById('manifesto-content');
-            const icon = document.getElementById('manifesto-icon');
-            content.classList.toggle('hidden');
-            icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
-        }
-
-        function directorAccess() {
-            let k1 = prompt("ENTER 7 PILLARS AUTHORITY KEY:");
-            if(k1 === "NAWI-ALPHA-01") {
-                document.getElementById('deep-vault').classList.remove('hidden');
-                document.getElementById('deep-vault').scrollIntoView({behavior:'smooth'});
-                alert("7 Pillars Verified. Welcome, Excellency.");
-            } else {
-                alert("ACCESS DENIED.");
+        function vault() {
+            let p = prompt("AUTHORITY KEY:");
+            if(p === "NAWI-ALPHA-01") {
+                alert("PRIVATE LEDGER: 35,000,000.00 USD\n\nDIRECTOR: IDENTITY ENCRYPTED\nSTATUS: TOTAL CONTROL");
             }
         }
-
-        function activatePanic() {
-            if(confirm("COLLAPSE PILLARS? This will destroy all access permanently.")) {
-                localStorage.setItem('NAWI_KILL_SWITCH', 'true');
-                location.reload();
-            }
-        }
-
-        // Kill Switch State
-        if(localStorage.getItem('NAWI_KILL_SWITCH') === 'true') {
-            document.body.innerHTML = "<div style='background:black;height:100vh;display:flex;flex-direction:column;align-items:center;justify-center;color:white;font-family:Orbitron;text-align:center;'><h1 style='font-size:3rem;color:red;'>PILLAR COLLAPSE</h1><p style='letter-spacing:5px;font-size:10px;'>NODE VOIDED BY AUTHORITY</p></div>";
-        }
-
-        // Security: Prevent right click
-        document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
 </html>
