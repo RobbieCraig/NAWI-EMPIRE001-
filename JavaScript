@@ -1,47 +1,26 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors'); // Allows your app to talk to the server
-const app = express();
 
-app.use(express.json());
-app.use(cors());
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://NAWI-EMPIRE:<db_password>@nawi-empire01.xhjz2iu.mongodb.net/?appName=NAWI-EMPIRE01";
 
-// AUTHORITY CONNECTION TO DATABASE
-// Replace 'YOUR_MONGODB_URI_HERE' with your real connection string from MongoDB Atlas
-mongoose.connect('YOUR_MONGODB_URI_HERE')
-    .then(() => console.log('7 PILLARS: Database Socket Connected'))
-    .catch(err => console.error('Database Connection Failed', err));
-
-// THE WALLET SCHEMA
-const UserSchema = new mongoose.Schema({
-    username: String,
-    nairaBalance: { type: Number, default: 3000000 },
-    authorityKey: String
-});
-const User = mongoose.model('User', UserSchema);
-
-// API: FETCH LIVE BALANCE
-app.get('/api/wallet/balance/:userId', async (req, res) => {
-    try {
-        const user = await User.findById(req.params.userId);
-        res.json({ balance: user ? user.nairaBalance : 0 });
-    } catch (err) { res.status(500).send(err); }
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 });
 
-// API: PROCESS GIFT
-app.post('/api/gift/send', async (req, res) => {
-    const { userId, amount } = req.body;
-    try {
-        const user = await User.findById(userId);
-        if (user && user.nairaBalance >= amount) {
-            user.nairaBalance -= amount;
-            await user.save();
-            res.json({ success: true, message: "Gift Processed to Reserve" });
-        } else {
-            res.status(400).json({ error: "Insufficient Funds" });
-        }
-    } catch (err) { res.status(500).send(err); }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`NAWI EMPIRE Engine Live on Port ${PORT}`));
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
