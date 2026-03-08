@@ -1,31 +1,43 @@
 body {
-    background-color: #050505; /* Pure Black */
-    color: white;
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background-color: #0a0a0a;
+    color: #ffffff;
+    font-family: 'Segoe UI', sans-serif;
     margin: 0;
+    text-align: center;
 }
 
-.hero {
-    text-align: center;
-    border: 2px solid #D4AF37; /* Gold Border */
-    padding: 50px;
+.gold-text {
+    color: #D4AF37;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.status-bar {
+    background: #1a1a1a;
+    padding: 5px;
+    font-size: 10px;
+    color: #00ff00; /* Active Green */
+}
+
+.service-grid {
+    display: grid;
+    gap: 20px;
+    padding: 20px;
+}
+
+.service-card {
+    background: linear-gradient(145deg, #1a1a1a, #000000);
+    border: 1px solid #D4AF37;
+    padding: 20px;
     border-radius: 15px;
 }
 
-h1 {
-    color: #D4AF37; /* Royal Gold */
-    letter-spacing: 4px;
-}
-
-.gold-btn {
-    background-color: #D4AF37;
+.order-btn {
+    background: #D4AF37;
+    color: #000;
     border: none;
-    padding: 10px 20px;
-    font-weight: bold;
+    padding: 10px 25px;
     border-radius: 5px;
-    margin-top: 20px;
+    font-weight: bold;
+    margin-top: 10px;
 }
