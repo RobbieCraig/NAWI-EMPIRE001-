@@ -1,54 +1,39 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require('express');
+const { MongoClient } = require('mongodb');
 const path = require('path');
 const app = express();
 
-// 1. Corrected URI with your real password integrated
-const uri = "mongodb+srv://akpanvictor848_db_user:NAWI-EMPIRE@nawi-empire.3qj9wnj.mongodb.net/?appName=NAWI-EMPIRE";
-
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-async function run() {
-  try {
-    // 2. Connect and STAY connected
-    await client.connect();
-    const database = client.db("NAWI-EMPIRE");
-    console.log("Pinged your deployment. NAWI EMPIRE Engine is LIVE!");
-
-    // 3. This pipe sends your Movies/Posts to the Professional Feed
-    app.get('/api/posts', async (req, res) => {
-      try {
-        const posts = await database.collection("Movies").find({}).toArray();
-        res.json(posts);
-      } catch (err) {
-        res.status(500).send("Database Error");
-      }
-    });
-
-    // 4. This pipe sends the 7 Pillars (Ads, Market, etc.)
-    app.get('/api/tools', async (req, res) => {
-      const tools = await database.collection("Tools").find({}).toArray();
-      res.json(tools);
-    });
-
-  } catch (error) {
-    console.error("Engine failure:", error);
-  }
-  // CRITICAL: The 'finally { client.close() }' block is REMOVED so the app never dies.
-}
-
-run().catch(console.dir);
-
-// Serve your index.html and professional style files
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '/')));
 
+// YOUR SECURE WAREHOUSE LINK
+const uri = "mongodb+srv://akpanvictor848_db_user:NAWI-EMPIRE@nawi-empire.3qj9wnj.mongodb.net/?appName=NAWI-EMPIRE";
+const client = new MongoClient(uri);
+
+async function startPlatform() {
+    try {
+        await client.connect();
+        const db = client.db("NAWI-EMPIRE");
+        const users = db.collection("users");
+        console.log("7 PILLARS SYSTEM: ONLINE & PROTECTED");
+
+        // LOGIN SYSTEM (Stage 2)
+        app.post('/api/auth/login', async (req, res) => {
+            const { email, password } = req.body;
+            const user = await users.findOne({ email, password });
+
+            if (user) {
+                // IDENTITY PROTECTION: We only send the System Title back
+                const publicTitle = user.role === 'admin' ? "7 PILLARS OFFICIAL" : user.username;
+                res.json({ success: true, user: { title: publicTitle, role: user.role } });
+            } else {
+                res.status(401).json({ success: false, error: "Access Denied" });
+            }
+        });
+
+    } catch (e) { console.error("CONNECTION ERROR:", e); }
+}
+
+startPlatform();
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`The Empire is running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Platform moving forward on port ${PORT}`));
