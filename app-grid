@@ -1,10 +1,8 @@
 <div class="app-grid">
     <div class="app-icon" onclick="window.location.href='live.html'"><i>🎥</i><span>Live</span></div>
     <div class="app-icon" onclick="window.location.href='market.html'"><i>🛒</i><span>Market</span></div>
-
     <div class="app-icon" onclick="window.location.href='ads.html'"><i>📈</i><span>Ads Tool</span></div>
     <div class="app-icon" onclick="window.location.href='games.html'"><i>🎮</i><span>Games</span></div>
-
     <div class="app-icon" onclick="window.location.href='kitchen.html'"><i>🍽️</i><span>Kitchen</span></div>
     <div class="app-icon" onclick="window.location.href='design.html'"><i>🎨</i><span>Studio</span></div>
 </div>
