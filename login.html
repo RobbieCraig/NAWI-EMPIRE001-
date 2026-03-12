@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NAWI EMPIRE | SECURE ACCESS</title>
+    <style>
+        body { background: #000; color: #D4AF37; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: #111; padding: 40px; border-radius: 20px; border: 1px solid #D4AF37; width: 300px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #222; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #D4AF37; border: none; color: black; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 10px; }
+        .logo { font-size: 24px; font-weight: 900; margin-bottom: 20px; letter-spacing: 3px; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="logo">NAWI EMPIRE</div>
+        <p style="color: #888; font-size: 12px;">WORLD-WIDE ACCESS PORTAL</p>
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="login()">ENTER THE EMPIRE</button>
+        <p style="font-size: 11px; margin-top: 20px; color: #555;">PROTECTING THE FOUNDERS & THE PLATFORM</p>
+    </div>
+
+    <script>
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('pass').value;
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if(data.success) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = 'index.html';
+            } else {
+                alert("Access Denied: " + data.error);
+            }
+        }
+    </script>
+</body>
+</html>
