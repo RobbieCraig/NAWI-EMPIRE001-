@@ -3,55 +3,42 @@ const { MongoClient } = require('mongodb');
 const path = require('path');
 const app = express();
 
-// Middleware
 app.use(express.json());
-app.use(express.static('./')); 
+app.use(express.static('./'));
 
-// 1. PULL FROM ENVIRONMENT VARIABLES (The Secure Way)
-const uri = process.env.MONGODB_URI; 
-const PORT = process.env.PORT || 3000;
-
+const uri = process.env.MONGODB_URI || "mongodb+srv://akpanvictor848_db_user:NAWI-EMPIRE@nawi-empire.3qj9wnj.mongodb.net/?appName=NAWI-EMPIRE";
 const client = new MongoClient(uri);
 
-async function startEmpire() {
+async function startPlatform() {
     try {
-        // 2. Connect to the Warehouse
         await client.connect();
         const db = client.db("NAWI-EMPIRE");
-        const users = db.collection("users");
+        const posts = db.collection("posts"); // Ensure you created this collection in Atlas
         
-        console.log("------------------------------------");
-        console.log("7 PILLARS SYSTEM: ONLINE");
-        console.log("IDENTITY PROTECTION: ACTIVE");
-        console.log("------------------------------------");
-
-        // 3. Login API (Stage 2)
-        app.post('/api/auth/login', async (req, res) => {
-            const { email, password } = req.body;
-            const user = await users.findOne({ email, password });
-
-            if (user) {
-                // Identity Masking: Forces display as 7 PILLARS OFFICIAL
-                const title = user.role === 'admin' ? "7 PILLARS OFFICIAL" : user.username;
-                res.json({ 
-                    success: true, 
-                    displayName: title,
-                    mission: "NAWI-EMPIRE → A digital ecosystem where people connect, learn, create, and build opportunities."
-                });
-            } else {
-                res.status(401).json({ success: false, error: "ACCESS REJECTED" });
-            }
+        // Feed Pipe: Save Post
+        app.post('/api/posts/create', async (req, res) => {
+            const doc = {
+                author: "7 PILLARS OFFICIAL", // Masking your identity
+                content: req.body.content,
+                timestamp: new Date(),
+                likes: 0
+            };
+            await posts.insertOne(doc);
+            res.json({ success: true });
         });
 
-        // 4. Default route to serve your index.html
+        // Feed Pipe: Load Posts
+        app.get('/api/posts/feed', async (req, res) => {
+            const data = await posts.find().sort({ timestamp: -1 }).toArray();
+            res.json(data);
+        });
+
         app.get('*', (req, res) => {
             res.sendFile(path.join(__dirname, 'index.html'));
         });
 
-    } catch (e) {
-        console.error("FATAL: DATABASE CONNECTION FAILED. Check MONGODB_URI in Render settings.", e);
-    }
+    } catch (e) { console.error(e); }
 }
 
-startEmpire();
-app.listen(PORT, () => console.log(`Empire Authority active on Port ${PORT}`));
+startPlatform();
+app.listen(process.env.PORT || 3000);
