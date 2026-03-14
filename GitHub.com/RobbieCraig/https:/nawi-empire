@@ -6,9 +6,6 @@
     <title>NAWI EMPIRE | Official Sovereign Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap');
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -24,7 +21,7 @@
             <h1 class="imperial-font text-xl tracking-tighter italic font-bold">NAWI EMPIRE</h1>
             <div class="flex items-center gap-2 mt-1">
                 <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                <p class="text-[7px] font-black text-amber-500 uppercase tracking-[0.4em]">Sovereign Node Active</p>
+                <p class="text-[7px] font-black text-amber-500 uppercase tracking-[0.4em]">Sovereign Node node.js Active</p>
             </div>
         </div>
         <div class="w-12 h-12 glass rounded-2xl flex items-center justify-center gold-glow">
@@ -36,7 +33,7 @@
         <div class="glass rounded-[3rem] p-8 relative overflow-hidden gold-glow border-amber-500/20">
             <div class="relative z-10">
                 <p class="text-[8px] font-black text-zinc-500 uppercase tracking-widest mb-2">Central Diamond Reserve</p>
-                <h2 id="balance-display" class="text-5xl font-black italic tracking-tighter mb-8">25,000,000</h2>
+                <h2 id="balance-display" class="text-5xl font-black italic tracking-tighter mb-8">00000</h2>
                 <div class="flex gap-3">
                     <button class="flex-1 bg-white text-black py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Acquire DB</button>
                     <button class="flex-1 glass py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Stake 5%</button>
@@ -51,7 +48,7 @@
             </div>
             <div>
                 <p class="text-[7px] font-black text-zinc-500 uppercase">Verified Founder</p>
-                <p class="text-[10px] font-black uppercase italic">the Nawi-empire</p>
+                <p class="text-[10px] font-black uppercase italic" id="founder-name">7 PILLARS</p>
             </div>
         </div>
 
@@ -77,18 +74,14 @@
 
     <script>
         lucide.createIcons();
-        const firebaseConfig = {
-            apiKey: "AIzaSyCfopu75f08ioKJTBJgGmQu7LgJH2I4M8A",
-            authDomain: "nawi-empire.firebaseapp.com",
-            projectId: "nawi-empire",
-            storageBucket: "nawi-empire.firebasestorage.app",
-            messagingSenderId: "647688594230",
-            appId: "1:647688594230:web:ce034f0a595a342460875e39c997"
-        };
-        firebase.initializeApp(firebaseConfig);
+        
+        // MONGODB CONNECTION LOGIC
+        // Excellency, paste your MongoDB URI into your Render Environment Variables, not here!
+        
         window.onload = () => {
-            document.getElementById('balance-display').innerText = (25000000).toLocaleString();
+            document.getElementById('balance-display').innerText = (0000).toLocaleString();
+            console.log("System Initialized: 7 Pillars Protocol Active.");
         };
     </script>
-</body>51
-</html>nawi-empire.com
+</body>
+</html>
