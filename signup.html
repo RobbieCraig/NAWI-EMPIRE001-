@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWI EMPIRE | VERIFICATION</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #D4AF37; --black: #000; }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        
+        .signup-box { background: rgba(255,255,255,0.05); border: 1px solid var(--gold); padding: 40px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; }
+        .logo { color: var(--gold); font-weight: 900; letter-spacing: 2px; margin-bottom: 30px; }
+        
+        input { width: 100%; padding: 15px; margin-bottom: 15px; background: #111; border: 1px solid #333; border-radius: 10px; color: white; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--gold); }
+        
+        .action-btn { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .footer-link { margin-top: 20px; font-size: 12px; color: #666; }
+        .footer-link a { color: var(--gold); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="signup-box">
+        <div class="logo">7 PILLARS VERIFICATION</div>
+        <p style="font-size: 14px; color: #888; margin-bottom: 25px;">Enter your credentials to join the ecosystem.</p>
+        
+        <form id="signupForm">
+            <input type="text" id="username" placeholder="Choose Username" required>
+            <input type="email" id="email" placeholder="Official Email Address" required>
+            <input type="password" id="password" placeholder="Secure Password" required>
+            
+            <button type="submit" class="action-btn">Create Account</button>
+        </form>
+
+        <div class="footer-link">
+            Already a member? <a href="login.html">Login</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const userData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                // RESET METRICS TO ZERO (Our Rule)
+                followers: 0,
+                following: 0,
+                likes: 0
+            };
+
+            // This sends the data to your NAWI-EMPIRE1 server
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+
+            if (response.ok) {
+                alert("Verification Successful! Redirecting...");
+                localStorage.setItem('empire_token', 'active_session');
+                window.location.href = 'index.html';
+            } else {
+                alert("Error joining the Empire. Please try again.");
+            }
+        };
+    </script>
+</body>
+</html>
