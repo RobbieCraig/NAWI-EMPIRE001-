@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWI-EMPIRE | Music & Promotion</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
+        .header { color: #ffd700; text-align: center; margin-bottom: 30px; }
+        
+        /* Promotion Section */
+        .promo-box { border: 2px solid #ffd700; background: #111; padding: 20px; border-radius: 15px; margin-bottom: 25px; text-align: center; }
+        .promo-box h3 { margin-top: 0; color: #ffd700; }
+        
+        /* Music Feed */
+        .track-list { display: grid; gap: 15px; }
+        .track-card { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; }
+        .track-info { display: flex; align-items: center; gap: 15px; }
+        .play-btn { font-size: 24px; cursor: pointer; color: #ffd700; }
+        
+        /* Earning Badge */
+        .earn-badge { background: rgba(255, 215, 0, 0.1); color: #ffd700; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; border: 1px solid #ffd700; }
+        
+        .action-btn { background: #ffd700; color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        .back-btn { display: block; text-align: center; margin-top: 30px; color: #888; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🎵 MUSIC & PROMO</h1>
+        <p>Listen to Earn. Pay to Grow.</p>
+    </div>
+
+    <div class="promo-box">
+        <h3>Boost Your Track</h3>
+        <p>Reach 10,000 listeners for 10 Coins 🪙</p>
+        <button class="action-btn" onclick="alert('Upload your MP3 to start...')">PROMOTE MY MUSIC</button>
+    </div>
+
+    <div class="track-list">
+        <h4 style="color: #888;">Trending in the Empire:</h4>
+        
+        <div class="track-card">
+            <div class="track-info">
+                <span class="play-btn">▶️</span>
+                <div>
+                    <div style="font-weight: bold;">Empire Anthem (Remix)</div>
+                    <div style="font-size: 12px; color: #888;">Artist: Vicky Para</div>
+                </div>
+            </div>
+            <div class="earn-badge">+2 Coins 🪙</div>
+        </div>
+
+        <div class="track-card">
+            <div class="track-info">
+                <span class="play-btn">▶️</span>
+                <div>
+                    <div style="font-weight: bold;">Naira Dreams</div>
+                    <div style="font-size: 12px; color: #888;">Artist: 7 Pillars Studio</div>
+                </div>
+            </div>
+            <div class="earn-badge">+2 Coins 🪙</div>
+        </div>
+    </div>
+
+    <a href="app-grid.html" class="back-btn">← Back to Headquarters</a>
+
+</body>
+</html>
