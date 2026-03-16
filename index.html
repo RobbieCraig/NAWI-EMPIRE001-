@@ -6,25 +6,40 @@
     <title>NAWI EMPIRE | OFFICIAL SOVEREIGN GATEWAY</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
     <style>
+        :root { --gold: #D4AF37; --glass: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; background: #000; color: white; font-family: 'Inter', sans-serif; }
+        
         /* Specific tweaks for Index logic */
-        #auth-gate { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); padding: 20px; text-align: center; z-index: 3000; position: fixed; width: 100%; top: 0; }
+        #auth-gate { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); padding: 20px; text-align: center; z-index: 3000; position: fixed; width: 100%; top: 0; transition: 0.5s; }
         .authority-card { background: rgba(255,255,255,0.03); border: 1px solid var(--gold); border-radius: 24px; padding: 40px 30px; max-width: 400px; width: 100%; backdrop-filter: blur(10px); }
         .order-text { font-size: 13px; line-height: 1.8; margin-bottom: 30px; color: #eee; border-left: 3px solid var(--gold); padding-left: 15px; text-align: left; }
         .gate-btn { background: var(--gold); color: black; border: none; padding: 18px; border-radius: 12px; width: 100%; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-        #main-platform { display: none; }
+        #main-platform { display: none; padding-bottom: 80px; }
         
+        /* Content Card styling */
+        .content-card { height: 80vh; margin: 10px; border-radius: 20px; background: #111; position: relative; display: flex; align-items: flex-end; padding: 20px; border: 1px solid #222; }
+        .content-overlay h3 { color: var(--gold); margin: 0; font-size: 16px; }
+        .content-overlay p { font-size: 12px; color: #888; margin: 5px 0 0; }
+
         /* Dashboard Overlay Styling */
-        #dash-overlay { position: fixed; bottom: -100%; left: 0; width: 100%; height: 80vh; background: #080808; z-index: 2500; border-top: 1px solid var(--gold); border-radius: 30px 30px 0 0; transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding: 40px 25px; box-sizing: border-box; }
+        #dash-overlay { position: fixed; bottom: -110%; left: 0; width: 100%; height: 85vh; background: #080808; z-index: 2500; border-top: 2px solid var(--gold); border-radius: 30px 30px 0 0; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding: 40px 25px; box-sizing: border-box; overflow-y: auto; }
         #dash-overlay.active { bottom: 0; }
-        .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 30px; }
+        
+        .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 30px; }
         .tool-item { background: var(--glass); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #1a1a1a; text-decoration: none; color: white; transition: 0.3s; }
-        .tool-item:active { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
-        .tool-item i { color: var(--gold); font-size: 28px; margin-bottom: 10px; display: block; }
-        .tool-item span { font-size: 11px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+        .tool-item:active { transform: scale(0.95); border-color: var(--gold); }
+        .tool-item i { color: var(--gold); font-size: 24px; margin-bottom: 10px; display: block; }
+        .tool-item span { font-size: 10px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* Navigation */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #080808; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #111; z-index: 2000; }
+        .nav-btn { text-align: center; text-decoration: none; color: #555; }
+        .nav-btn.active { color: var(--gold); }
+        .nav-btn i { font-size: 20px; }
+        .nav-btn p { font-size: 9px; margin: 5px 0 0; font-weight: bold; }
+        .plus-btn { background: var(--gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -10px; color: black; font-size: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -45,38 +60,17 @@
             <div class="content-card">
                 <div class="content-overlay">
                     <h3>@NAWI_EMPIRE</h3>
-                    <p>NAWI-EMPIRE → A digital ecosystem where people connect, learn, create, and build opportunities. .Join the Founders.</p>
-                </div>
-                <div class="side-actions">
-                    <div><i class="fa-solid fa-heart"></i><span>0.00</span></div>
-                    <div><i class="fa-solid fa-comment"></i><span>0.00</span></div>
-                    <div><i class="fa-solid fa-share"></i><span>Share</span></div>
+                    <p>A digital ecosystem built for Founders to connect, learn, and create. Join the move.</p>
                 </div>
             </div>
         </div>
 
         <nav class="bottom-nav">
-            <a href="index.html" class="nav-btn active">
-                <i class="fa-solid fa-house"></i>
-                <p>Home</p>
-            </a>
-            <a href="discover.html" class="nav-btn">
-                <i class="fa-solid fa-compass"></i>
-                <p>Explore</p>
-            </a>
-            
-            <div class="plus-btn" onclick="toggleDash()">
-                <i class="fa-solid fa-plus"></i>
-            </div>
-
-            <a href="inbox.html" class="nav-btn">
-                <i class="fa-solid fa-message"></i>
-                <p>Inbox</p>
-            </a>
-            <a href="profile.html" class="nav-btn">
-                <i class="fa-solid fa-user"></i>
-                <p>Profile</p>
-            </a>
+            <a href="index.html" class="nav-btn active"><i class="fa-solid fa-house"></i><p>Home</p></a>
+            <a href="discover.html" class="nav-btn"><i class="fa-solid fa-compass"></i><p>Explore</p></a>
+            <div class="plus-btn" onclick="toggleDash()"><i class="fa-solid fa-plus"></i></div>
+            <a href="inbox.html" class="nav-btn"><i class="fa-solid fa-message"></i><p>Inbox</p></a>
+            <a href="profile.html" class="nav-btn"><i class="fa-solid fa-user"></i><p>Profile</p></a>
         </nav>
     </div>
 
@@ -85,28 +79,30 @@
         <h3 style="color:var(--gold); text-align:center; letter-spacing:3px; font-weight:900; font-size:16px;">THE 7 PILLARS</h3>
         
         <div class="tool-grid">
-            <a href="gaming.html" class="tool-item"><i class="fa-solid fa-gamepad"></i><href>GAMING</span></a>
-            <a href="market.html" class="tool-item"><i class="fa-solid fa-shop"></i><href>MARKET</span></a>
-            <a href="music.html" class="tool-item"><i class="fa-solid fa-music"></i><href>MUSIC HUB</span></a>
-            <a href="kitchen.html" class="tool-item"><i class="fa-solid fa-utensils"></i><href>KITCHEN</span></a>
+            <a href="studio.html" class="tool-item"><i class="fa-solid fa-clapperboard"></i><span>CREATOR STUDIO</span></a>
+            <a href="gaming.html" class="tool-item"><i class="fa-solid fa-gamepad"></i><span>GAMING</span></a>
+            <a href="market.html" class="tool-item"><i class="fa-solid fa-shop"></i><span>MARKET</span></a>
+            <a href="music.html" class="tool-item"><i class="fa-solid fa-music"></i><span>MUSIC HUB</span></a>
+            <a href="kitchen.html" class="tool-item"><i class="fa-solid fa-utensils"></i><span>KITCHEN</span></a>
             <a href="live.html" class="tool-item"><i class="fa-solid fa-tower-broadcast"></i><span>LIVE STREAM</span></a>
             <a href="ads.html" class="tool-item"><i class="fa-solid fa-rectangle-ad"></i><span>AD CENTER</span></a>
         </div>
         
-        <p onclick="toggleDash()" style="text-align:center; color:#444; margin-top:40px; cursor:pointer; font-size:11px; font-weight:bold; letter-spacing:2px;">DISMISS SYSTEM</p>
+        <p onclick="toggleDash()" style="text-align:center; color:#555; margin-top:40px; cursor:pointer; font-size:11px; font-weight:bold; letter-spacing:2px;">DISMISS SYSTEM</p>
     </div>
 
-    <script src="p2p-gateway.js"></script>
     <script>
         function toggleDash() { 
             document.getElementById('dash-overlay').classList.toggle('active'); 
         }
         
         function bypassGate() {
-            document.getElementById('auth-gate').style.opacity = '0';
+            const gate = document.getElementById('auth-gate');
+            const main = document.getElementById('main-platform');
+            gate.style.opacity = '0';
             setTimeout(() => {
-                document.getElementById('auth-gate').style.display = 'none';
-                document.getElementById('main-platform').style.display = 'active';
+                gate.style.display = 'none';
+                main.style.display = 'block';
                 localStorage.setItem('nawi_token', 'FOUNDER_VERIFIED');
             }, 500);
         }
