@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NAWI-EMPIRE | Creator Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --black: #050505; --glass: rgba(255, 255, 255, 0.03); --border: rgba(212, 175, 55, 0.2); }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 100px; }
+        
+        /* WALLET STATS BAR */
+        .stats-header { background: linear-gradient(to bottom, #111, #000); padding: 30px 20px; border-bottom: 1px solid var(--border); }
+        .wallet-card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .balance-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 2px; }
+        .balance-amount { font-size: 24px; font-weight: 900; color: var(--gold); display: block; }
+        .withdraw-btn { background: var(--gold); color: black; border: none; padding: 10px 15px; border-radius: 10px; font-weight: 900; font-size: 10px; cursor: pointer; }
+
+        /* MONETIZATION STATUS */
+        .monetization-bar { margin: 20px; padding: 15px; background: #0a0a0a; border-radius: 15px; border: 1px solid #222; }
+        .prog-bg { width: 100%; height: 6px; background: #222; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+        .prog-fill { width: 45%; height: 100%; background: var(--gold); } /* Dynamic based on followers */
+        .monetization-text { font-size: 10px; color: #666; font-weight: 700; }
+
+        /* BROADCAST TUTORIAL AREA */
+        .broadcast-box { margin: 20px; padding: 20px; background: rgba(212, 175, 55, 0.05); border: 1px solid var(--gold); border-radius: 20px; }
+        .broadcast-box h3 { font-size: 14px; color: var(--gold); margin: 0 0 10px 0; display: flex; align-items: center; gap: 10px; }
+        .broadcast-box p { font-size: 12px; color: #ccc; line-height: 1.6; margin: 0; }
+
+        /* CREATOR FEED */
+        .post-input-area { padding: 0 20px; margin-bottom: 30px; }
+        .post-box { background: #111; border: 1px solid #222; border-radius: 20px; padding: 15px; display: flex; align-items: center; gap: 10px; }
+        .post-box input { background: transparent; border: none; color: white; flex: 1; outline: none; font-size: 14px; }
+        
+        .feed-post { background: var(--glass); margin: 0 20px 20px; border-radius: 25px; border: 1px solid #1a1a1a; padding: 20px; }
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #222; border: 1px solid var(--gold); }
+        .handle { font-weight: 800; font-size: 14px; }
+
+        .btn-follow { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: 800; }
+
+        /* MASTER NAV */
+        .master-nav { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
+        .nav-box { text-align: center; color: #555; text-decoration: none; }
+        .nav-box i { font-size: 20px; }
+        .nav-box p { font-size: 9px; margin-top: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="stats-header">
+        <div class="wallet-card">
+            <div>
+                <span class="balance-label">Empire Wallet</span>
+                <span class="balance-amount" id="user-balance">1,500 🪙</span>
+            </div>
+            <button class="withdraw-btn" onclick="requestWithdrawal()">WITHDRAW</button>
+        </div>
+
+        <div class="monetization-bar">
+            <div style="display:flex; justify-content:space-between;">
+                <span class="monetization-text">MONETIZATION GOAL</span>
+                <span style="color:var(--gold); font-size:10px;">6,750 / 15,000 Followers</span>
+            </div>
+            <div class="prog-bg"><div class="prog-fill"></div></div>
+            <p style="font-size:9px; color:#444; margin:0;">Reach 15k followers to start earning from post views.</p>
+        </div>
+    </div>
+
+    <div class="broadcast-box">
+        <h3><i class="fa-solid fa-tower-broadcast"></i> EMPIRE TUTORIAL</h3>
+        <p>Welcome, Founder. Use this studio to share your professional knowledge and brand updates. Posting onsite illegal content is strictly banned. Build your audience to 15,000 to unlock coin rewards. Use the Marketplace to trade your skills.</p>
+    </div>
+
+    <div class="post-input-area">
+        <div class="post-box">
+            <i class="fa-solid fa-video" style="color:#555;"></i>
+            <input type="text" id="postText" placeholder="Share your knowledge...">
+            <i class="fa-solid fa-paper-plane" style="color:var(--gold); cursor:pointer;" onclick="publishContent()"></i>
+        </div>
+    </div>
+
+    <div id="feed">
+        <div class="feed-post">
+            <div class="post-header">
+                <div class="user-info">
+                    <div class="avatar"></div>
+                    <span class="handle">NAWI-EMPIRE OFFICIAL</span>
+                </div>
+                <button class="btn-follow">Follow</button>
+            </div>
+            <p style="font-size:13px; line-height:1.5; color:#ddd;">Opportunities are built through knowledge. Share what you know, build your brand, and the Empire will reward your authority.</p>
+            <div style="margin-top:15px; display:flex; gap:20px; color:#555; font-size:13px;">
+                <span><i class="fa-regular fa-heart"></i> 12.4k</span>
+                <span><i class="fa-solid fa-share-nodes"></i> Share</span>
+            </div>
+        </div>
+    </div>
+
+    <nav class="master-nav">
+        <a href="index.html" class="nav-box"><i class="fa-solid fa-house"></i><p>Home</p></a>
+        <a href="discover.html" class="nav-box"><i class="fa-solid fa-compass"></i><p>Explore</p></a>
+        <a href="index.html" class="nav-box"><div style="background:var(--gold); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:-10px;"><i class="fa-solid fa-plus" style="color:black;"></i></div></a>
+        <a href="inbox.html" class="nav-box"><i class="fa-solid fa-message"></i><p>Inbox</p></a>
+        <a href="profile.html" class="nav-box"><i class="fa-solid fa-user"></i><p>Profile</p></a>
+    </nav>
+
+    <script src="p2p-gateway.js"></script>
+    <script>
+        function publishContent() {
+            const txt = document.getElementById('postText').value;
+            if(txt) {
+                alert("Content Secured in Empire Database! Verified for 15k Goal.");
+                document.getElementById('postText').value = "";
+            }
+        }
+
+        function requestWithdrawal() {
+            const balance = 1500; // This will link to your P2P_GATEWAY.userBalance
+            if(balance < 5000) {
+                alert("❌ Withdrawal Locked: Minimum 5,000 Coins required to transfer to Bank.");
+            } else {
+                alert("✅ Withdrawal Request Sent to Headquarters.");
+            }
+        }
+    </script>
+</body>
+</html>
