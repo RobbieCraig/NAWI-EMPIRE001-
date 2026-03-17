@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NAWI-EMPIRE | VENDOR COMMAND</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #D4AF37; --black: #050505; --card: #111; --input: #1a1a1a; }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px 20px 100px; }
+
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: var(--gold); font-size: 18px; letter-spacing: 3px; text-transform: uppercase; margin: 0; }
+        .header p { font-size: 10px; color: #555; margin-top: 5px; font-weight: 800; }
+
+        .form-section { background: var(--card); border: 1px solid #222; border-radius: 25px; padding: 25px; margin-bottom: 20px; }
+        .section-label { color: var(--gold); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: block; border-left: 3px solid var(--gold); padding-left: 10px; }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 10px; color: #777; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
+        input, select, textarea { 
+            width: 100%; background: var(--input); border: 1px solid #333; color: white; 
+            padding: 15px; border-radius: 12px; font-size: 13px; box-sizing: border-box; outline: none;
+        }
+        input:focus { border-color: var(--gold); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .btn-deploy { 
+            background: var(--gold); color: #000; width: 100%; padding: 20px; border-radius: 15px; 
+            border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; 
+            font-size: 13px; letter-spacing: 2px; margin-top: 20px; box-shadow: 0 10px 30px rgba(212,175,55,0.2);
+        }
+
+        /* MASTER NAV */
+        .master-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
+        .nav-box { text-align: center; color: #555; text-decoration: none; font-size: 20px; }
+        .nav-box p { font-size: 9px; margin-top: 5px; font-weight: bold; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Global Vendor Command</h1>
+        <p>7 Pillars Kitchen Listing Protocol</p>
+    </div>
+
+    <form id="productForm">
+        <div class="form-section">
+            <span class="section-label">Product Identity</span>
+            <div class="input-group">
+                <label>Product Title</label>
+                <input type="text" id="title" placeholder="e.g. Premium Basmati Rice (5kg)" required>
+            </div>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Category</label>
+                    <select id="category">
+                        <option>Kitchen Staples</option>
+                        <option>Ready-to-Cook</option>
+                        <option>Gourmet Ingredients</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Product ID (SKU)</label>
+                    <input type="text" id="sku" placeholder="NW-KITCH-001">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <span class="section-label">P2P Economics</span>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Base Price (USD)</label>
+                    <input type="number" id="price" placeholder="25.00">
+                </div>
+                <div class="input-group">
+                    <label>Shipping Region</label>
+                    <select id="shipping">
+                        <option>Worldwide</option>
+                        <option>Continental</option>
+                        <option>Local Only</option>
+                    </select>
+                </div>
+            </div>
+            <p style="font-size: 9px; color: #00ff64; font-weight: 800;"><i class="fa-solid fa-lock"></i> P2P ESCROW PROTECTED BY DEFAULT</p>
+        </div>
+
+        <div class="form-section">
+            <span class="section-label">Trust & Certification</span>
+            <div class="input-group">
+                <label>Certification Badge</label>
+                <select id="cert">
+                    <option>ISO-9001 Certified</option>
+                    <option>Organic / Halal</option>
+                    <option>Empire Verified</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Origin Country</label>
+                <input type="text" id="origin" placeholder="e.g. Nigeria / India">
+            </div>
+        </div>
+
+        <button type="button" class="btn-deploy" onclick="deployToEmpire()">Deploy to Global Market</button>
+    </form>
+
+    <nav class="master-nav">
+        <a href="index.html" class="nav-box"><i class="fa-solid fa-house"></i><p>Home</p></a>
+        <a href="kitchen.html" class="nav-box"><i class="fa-solid fa-utensils"></i><p>Kitchen</p></a>
+        <a href="profile.html" class="nav-box"><i class="fa-solid fa-user-shield"></i><p>CEO</p></a>
+    </nav>
+
+    <script>
+        function deployToEmpire() {
+            const productData = {
+                title: document.getElementById('title').value,
+                sku: document.getElementById('sku').value,
+                price: document.getElementById('price').value,
+                status: "Escrow Active",
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log("Packaging for MongoDB...", productData);
+            alert("SUCCESS: " + productData.title + " has been deployed to the Global 7 Pillars Market.");
+            // Here you would add your MongoDB upload logic
+        }
+    </script>
+</body>
+</html>
