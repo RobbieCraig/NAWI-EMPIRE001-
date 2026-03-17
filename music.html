@@ -3,134 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI EMPIRE | GLOBAL MUSIC HUB</title>
+    <title>NAWI-EMPIRE | GLOBAL MUSIC HUB</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --black: #050505; --card: #111; }
         body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 100px; }
 
-        /* HEADER & SEARCH */
-        .music-header { padding: 30px 20px; background: linear-gradient(to bottom, #1a1a1a, #000); border-bottom: 1px solid #222; }
-        .music-header h1 { color: var(--gold); font-size: 20px; letter-spacing: 3px; font-weight: 900; margin: 0; text-transform: uppercase; }
-        .search-bar { background: #111; border: 1px solid #333; border-radius: 15px; padding: 12px; margin-top: 20px; display: flex; align-items: center; gap: 10px; }
-        .search-bar input { background: none; border: none; color: white; width: 100%; outline: none; font-size: 14px; }
+        /* PLAYER VIEWPORT */
+        #main-player { width: 100%; height: 220px; background: #000; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
+        iframe { width: 100%; height: 100%; border: none; }
 
-        /* FEATURED VIDEO PLAYER */
-        .main-player { margin: 20px; border-radius: 20px; overflow: hidden; border: 1.5px solid var(--gold); background: #000; position: relative; }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .now-playing-info { padding: 15px; background: #0a0a0a; border-top: 1px solid #222; }
-        .now-playing-info h2 { margin: 0; font-size: 15px; color: var(--gold); }
+        .promo-banner { background: linear-gradient(45deg, #111, #1a1a1a); margin: 15px; padding: 20px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; }
+        .promo-banner h2 { color: var(--gold); font-size: 16px; margin: 0; letter-spacing: 2px; }
+        .btn-boost { background: var(--gold); color: black; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 11px; }
 
-        /* MUSIC EARNING SYSTEM */
-        .earn-banner { background: rgba(212, 175, 55, 0.1); margin: 0 20px 20px; padding: 15px; border-radius: 15px; border: 1px dashed var(--gold); display: flex; justify-content: space-between; align-items: center; }
-        .earn-text { font-size: 11px; font-weight: 800; color: #eee; }
-        .earn-text span { color: var(--gold); }
-
-        /* GLOBAL FEED */
-        .feed-title { padding: 0 20px; font-size: 12px; color: var(--gold); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
-        .music-feed { padding: 0 20px; }
-        .music-card { background: var(--card); border: 1px solid #1a1a1a; border-radius: 18px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; }
-        .music-card:active { transform: scale(0.96); border-color: var(--gold); }
-        .thumbnail { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; }
-        .track-info { flex: 1; }
-        .track-info h3 { margin: 0; font-size: 13px; font-weight: 800; }
-        .track-info p { margin: 3px 0 0; font-size: 10px; color: #555; }
+        /* SCROLLABLE CATEGORIES */
+        .hub-section { padding: 0 15px; margin-top: 25px; }
+        .section-header { color: var(--gold); font-size: 12px; font-weight: 900; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; display: flex; justify-content: space-between; }
         
-        .coin-action { text-align: right; }
-        .reward { display: block; font-size: 10px; color: var(--gold); font-weight: 900; margin-bottom: 5px; }
-        .btn-play { background: #222; color: var(--gold); border: 1px solid #333; padding: 8px 12px; border-radius: 10px; font-size: 11px; cursor: pointer; }
+        .music-list { display: flex; flex-direction: column; gap: 10px; }
+        .track-card { background: var(--card); border: 1px solid #1a1a1a; padding: 12px; border-radius: 15px; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .track-card:active { background: #1a1a1a; transform: scale(0.98); }
+        
+        .track-thumb { width: 50px; height: 50px; background: #222; border-radius: 8px; position: relative; overflow: hidden; }
+        .track-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; }
 
-        /* MASTER NAV */
-        .master-nav { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
-        .nav-box { text-align: center; color: #555; text-decoration: none; font-size: 20px; }
-        .nav-box p { font-size: 9px; margin-top: 5px; font-weight: bold; text-transform: uppercase; }
-        .nav-box.active { color: var(--gold); }
+        .track-info { flex: 1; }
+        .track-title { font-size: 13px; font-weight: 800; display: block; }
+        .track-artist { font-size: 10px; color: #555; }
+
+        .earn-tag { background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; border: 1px solid rgba(212, 175, 55, 0.2); }
     </style>
 </head>
 <body>
 
-    <div class="music-header">
-        <h1>GLOBAL MUSIC HUB</h1>
-        <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass" style="color:#555;"></i>
-            <input type="text" placeholder="Search world albums, artists, or genres...">
+    <div id="main-player">
+        <div id="player-placeholder" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
+            <i class="fa-solid fa-play" style="font-size:40px; color:var(--gold); margin-bottom:10px;"></i>
+            <p style="font-size:10px; color:#444; font-weight:900; letter-spacing:2px;">SELECT A TRACK TO BROADCAST</p>
         </div>
     </div>
 
-    <div class="main-player">
-        <div class="video-container" id="player-container">
-            <iframe id="main-video" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0" allowfullscreen></iframe>
-        </div>
-        <div class="now-playing-info">
-            <h2 id="video-title">World Trending: Global Afrobeats 2026</h2>
-            <p id="video-artist" style="font-size: 11px; color: #555; margin-top: 5px;">Artist: Empire Selected</p>
-        </div>
+    <div class="promo-banner">
+        <h2>BOOST YOUR TRACK</h2>
+        <p style="font-size:10px; color:#888;">Reach the Global Empire Audience</p>
+        <button class="btn-boost" onclick="P2P_GATEWAY.initiateTransaction('Music Promotion', 10)">PROMOTE MY MUSIC (10 🪙)</button>
     </div>
 
-    <div class="earn-banner">
-        <div class="earn-text">WATCH TO EARN: <span>+0.50 Coins 🪙</span> per 10 mins</div>
-        <button class="btn-play" style="background: var(--gold); color: black; border: none; font-weight: 900;" onclick="P2P_GATEWAY.initiateTransaction('Artist Promotion', 10)">BOOST TRACK</button>
-    </div>
+    <div class="hub-section">
+        <div class="section-header"><span>Top Afrobeats</span> <span style="color:#444;">100+ Tracks</span></div>
+        <div class="music-list">
+            <div class="track-card" onclick="loadVideo('490_83iI_8E', 'Empire Anthem', 'Vicky Para')">
+                <div class="track-thumb">
+                    <div class="play-overlay"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div class="track-info">
+                    <span class="track-title">Empire Anthem (Official)</span>
+                    <span class="track-artist">Vicky Para • Trending</span>
+                </div>
+                <div class="earn-tag">+1 🪙</div>
+            </div>
 
-    <h2 class="feed-title">Trending Worldwide</h2>
-    
-    <div class="music-feed">
-        <div class="music-card" onclick="playVideo('https://www.youtube.com/embed/h7SAn8m9tL8', 'Naira Dreams (Official Video)', '7 Pillars Studio')">
-            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=150&q=80" class="thumbnail">
-            <div class="track-info">
-                <h3>Naira Dreams</h3>
-                <p>7 Pillars Studio • Worldwide</p>
+            <div class="track-card" onclick="loadVideo('hVEpS76_Gbg', 'Naira Dreams', '7 Pillars')">
+                <div class="track-thumb">
+                    <div class="play-overlay"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div class="track-info">
+                    <span class="track-title">Naira Dreams</span>
+                    <span class="track-artist">7 Pillars Studio</span>
+                </div>
+                <div class="earn-tag">+1 🪙</div>
             </div>
-            <div class="coin-action">
-                <span class="reward">+2 Coins</span>
-                <button class="btn-play"><i class="fa-solid fa-play"></i></button>
-            </div>
-        </div>
 
-        <div class="music-card" onclick="playVideo('https://www.youtube.com/embed/XqgYj9N2N78', 'Sovereign Sounds', 'Vicky Para')">
-            <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&w=150&q=80" class="thumbnail">
-            <div class="track-info">
-                <h3>Sovereign Sounds</h3>
-                <p>Empire • Digital Master</p>
-            </div>
-            <div class="coin-action">
-                <span class="reward">+2 Coins</span>
-                <button class="btn-play"><i class="fa-solid fa-play"></i></button>
-            </div>
-        </div>
-        
-        <div class="music-card" onclick="playVideo('https://www.youtube.com/embed/q604vO01vH0', 'Global Empire Anthem', 'The Founders')">
-            <img src="https://images.unsplash.com/photo-1459749411177-042180ce673c?auto=format&fit=crop&w=150&q=80" class="thumbnail">
-            <div class="track-info">
-                <h3>Empire Anthem</h3>
-                <p>The Founders • Global</p>
-            </div>
-            <div class="coin-action">
-                <span class="reward">+2 Coins</span>
-                <button class="btn-play"><i class="fa-solid fa-play"></i></button>
+            <div class="track-card" onclick="loadVideo('jfKfPfyJRdk', 'L'Oiseau', 'Global Hit')">
+                <div class="track-thumb">
+                    <div class="play-overlay"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div class="track-info">
+                    <span class="track-title">Worldwide Afrobeats Mix</span>
+                    <span class="track-artist">Global Empire Radio</span>
+                </div>
+                <div class="earn-tag">+2 🪙</div>
             </div>
         </div>
     </div>
 
-    <nav class="master-nav">
-        <a href="index.html" class="nav-box"><i class="fa-solid fa-house"></i><p>Home</p></a>
-        <a href="discover.html" class="nav-box"><i class="fa-solid fa-compass"></i><p>Explore</p></a>
-        <a href="index.html" class="nav-box"><div style="background:var(--gold); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:-10px; color:black;"><i class="fa-solid fa-plus"></i></div></a>
-        <a href="inbox.html" class="nav-box"><i class="fa-solid fa-message"></i><p>Inbox</p></a>
-        <a href="profile.html" class="nav-box active"><i class="fa-solid fa-user"></i><p>Profile</p></a>
-    </nav>
+    <div class="hub-section">
+        <div class="section-header"><span>Global Hip Hop</span></div>
+        <div class="music-list">
+            <div class="track-card" onclick="loadVideo('_I_D_8Z4sJE', 'Empire State of Mind', 'Jay-Z')">
+                <div class="track-info"><span class="track-title">Empire State of Mind</span><span class="track-artist">Foreign Classics</span></div>
+                <div class="earn-tag">+1 🪙</div>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" style="display:block; text-align:center; color:#333; margin-top:40px; text-decoration:none; font-size:10px; font-weight:900; letter-spacing:2px;">← BACK TO HEADQUARTERS</a>
 
     <script src="p2p-gateway.js"></script>
     <script>
-        function playVideo(url, title, artist) {
-            document.getElementById('main-video').src = url + "?autoplay=1";
-            document.getElementById('video-title').innerText = title;
-            document.getElementById('video-artist').innerText = "Artist: " + artist;
-            
-            // Interaction Feedback
-            console.log("Empire System: Playing " + title);
+        function loadVideo(videoId, title, artist) {
+            const player = document.getElementById('main-player');
+            player.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1" allow="autoplay; encrypted-media"></iframe>`;
+            console.log("Playing: " + title + " by " + artist);
         }
     </script>
 </body>
