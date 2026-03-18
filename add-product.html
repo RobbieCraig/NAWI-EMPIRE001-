@@ -56,9 +56,11 @@
                 <div class="input-group">
                     <label>Category</label>
                     <select id="category">
-                        <option>Kitchen Staples</option>
-                        <option>Ready-to-Cook</option>
-                        <option>Gourmet Ingredients</option>
+                        <option value="Kitchen Meal">Kitchen Staples</option>
+                        <option value="Kitchen Meal">Ready-to-Cook</option>
+                        <option value="Kitchen Meal">Gourmet Ingredients</option>
+                        <option value="Gaming">Gaming Studio</option>
+                        <option value="Music">Music Promotion</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -73,14 +75,13 @@
             <div class="grid-2">
                 <div class="input-group">
                     <label>Base Price (USD)</label>
-                    <input type="number" id="price" placeholder="25.00">
+                    <input type="number" id="price" placeholder="25.00" step="0.01" required>
                 </div>
                 <div class="input-group">
                     <label>Shipping Region</label>
                     <select id="shipping">
-                        <option>Worldwide</option>
-                        <option>Continental</option>
-                        <option>Local Only</option>
+                        <option value="Worldwide">Worldwide</option>
+                        <option value="Continental">Continental</option>
                     </select>
                 </div>
             </div>
@@ -103,7 +104,7 @@
             </div>
         </div>
 
-        <button type="button" class="btn-deploy" onclick="deployToEmpire()">Deploy to Global Market</button>
+        <button type="submit" class="btn-deploy">Deploy to Global Market</button>
     </form>
 
     <nav class="master-nav">
@@ -113,19 +114,38 @@
     </nav>
 
     <script>
-        function deployToEmpire() {
-            const productData = {
-                title: document.getElementById('title').value,
-                sku: document.getElementById('sku').value,
-                price: document.getElementById('price').value,
-                status: "Escrow Active",
-                timestamp: new Date().toISOString()
-            };
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            console.log("Packaging for MongoDB...", productData);
-            alert("SUCCESS: " + productData.title + " has been deployed to the Global 7 Pillars Market.");
-            // Here you would add your MongoDB upload logic
-        }
+            const productData = {
+                product_name: document.getElementById('title').value,
+                sku: document.getElementById('sku').value,
+                price: parseFloat(document.getElementById('price').value),
+                category: document.getElementById('category').value,
+                origin: document.getElementById('origin').value,
+                certification: document.getElementById('cert').value,
+                shipping: document.getElementById('shipping').value,
+                status: "Escrow Active"
+            };
+
+            try {
+                const response = await fetch('/api/add-product', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+
+                if (response.ok) {
+                    alert("SUCCESS: " + productData.product_name + " has been deployed to the Global 7 Pillars Market.");
+                    document.getElementById('productForm').reset();
+                } else {
+                    alert("Error: Connection to Empire Vault failed.");
+                }
+            } catch (err) {
+                console.error("Deploy Error:", err);
+                alert("Critical Error: Check your internet or server connection.");
+            }
+        });
     </script>
 </body>
 </html>
