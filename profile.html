@@ -2,107 +2,155 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI-EMPIRE | MASTER IDENTITY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PROFILE | NAWI EMPIRE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --dark-bg: #000; --neon-green: #00ff41; }
-        body { background: var(--dark-bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 80px; transition: 0.4s; }
+        :root { --gold: #D4AF37; --black: #050505; --card: #111; --neon: #00ff41; }
+        body { margin: 0; background: var(--black); color: white; font-family: 'Inter', sans-serif; padding-bottom: 100px; transition: 0.5s; overflow-x: hidden; }
         
-        /* TOP HEADER */
-        .header { padding: 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #111; }
-        .switch-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 6px 14px; border-radius: 4px; font-size: 10px; font-weight: 900; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; }
+        /* PUBLIC VIEW */
+        #publicView { padding: 50px 20px; text-align: center; }
+        .lux-circle { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; transition: 0.3s; }
+        .lux-circle:active { transform: scale(0.9); }
+        .lux-circle i { font-size: 40px; color: var(--gold); }
+        
+        .user-name { font-weight: 900; letter-spacing: 1px; font-size: 20px; margin: 0; }
+        .user-rank { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
 
-        /* VIEW 1: NORMAL LUXURY PROFILE */
-        #normalView { text-align: center; padding-top: 40px; display: block; }
-        .lux-circle { width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--gold); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a1a, #000); }
-        .lux-circle i { font-size: 45px; color: var(--gold); }
-        .stat-row { display: flex; justify-content: center; gap: 35px; margin-top: 25px; }
-        .stat-row div { text-align: center; }
-        .stat-row strong { display: block; font-size: 18px; }
-        .stat-row small { color: #555; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-row { display: flex; justify-content: center; gap: 30px; margin: 25px 0; border-top: 1px solid #111; border-bottom: 1px solid #111; padding: 20px 0; }
+        .stat-box strong { display: block; font-size: 18px; color: #fff; }
+        .stat-box small { font-size: 9px; color: #444; text-transform: uppercase; }
 
-        /* VIEW 2: MASTER COMMAND CENTER (Hidden) */
-        #masterView { display: none; padding: 20px; }
-        .command-title { color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 13px; margin-bottom: 20px; display: block; }
-        .monitor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .monitor-card { background: #080808; border: 1px solid #1a1a1a; padding: 15px; border-radius: 6px; }
+        /* MASTER VIEW (HIDDEN) */
+        #masterView { display: none; padding: 20px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .monitor-card { background: #080808; border: 1px solid #1a1a1a; padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 3px solid var(--neon); }
         .monitor-card label { color: #444; font-size: 9px; text-transform: uppercase; display: block; margin-bottom: 8px; }
-        .monitor-card span { font-size: 16px; font-weight: bold; color: var(--gold); }
-        .pulse { width: 7px; height: 7px; background: var(--neon-green); border-radius: 50%; display: inline-block; margin-right: 6px; box-shadow: 0 0 10px var(--neon-green); }
+        .monitor-card span { font-size: 22px; font-weight: 900; color: var(--gold); font-family: monospace; }
+        
+        /* AUTH OVERLAY */
+        #masterAuth { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.98); z-index: 5000; flex-direction: column; align-items: center; justify-content: center; }
+        #masterAuth input { background: #111; border: 1px solid var(--gold); color: var(--gold); padding: 15px; border-radius: 10px; text-align: center; font-size: 24px; letter-spacing: 10px; outline: none; margin-bottom: 20px; width: 200px; }
 
-        /* BOTTOM NAVIGATION */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 18px 0; z-index: 100; }
-        .nav-icon { color: #333; font-size: 22px; cursor: pointer; }
+        /* NAV */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #080808; display: flex; justify-content: space-around; padding: 20px 0; border-top: 1px solid #111; z-index: 1000; }
+        .nav-btn { color: #333; font-size: 22px; text-decoration: none; }
         .nav-active { color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <i class="fa-solid fa-shield-halved" style="color: var(--gold);"></i>
-        <button class="switch-btn" onclick="toggleMode()">Master Command</button>
-        <i class="fa-solid fa-sliders" style="color: #222;"></i>
-    </div>
-
-    <div id="normalView">
-        <div class="lux-circle"><i class="fa-solid fa-crown"></i></div>
-        <h2 style="letter-spacing: 2px; margin: 0;">NAWI FOUNDER 001</h2>
-        <p style="color: #444; font-size: 11px; margin: 5px 0;">Chief Authority Verified</p>
-        
-        <div class="stat-row">
-            <div><strong>0</strong><small>Followers</small></div>
-            <div><strong>0</strong><small>Following</small></div>
-            <div><strong>0</strong><small>Likes</small></div>
+    <div id="publicView">
+        <div class="lux-circle" onclick="handleMasterTrigger()">
+            <i class="fa-solid fa-crown"></i>
         </div>
+        <h2 class="user-name">CITIZEN NODE</h2>
+        <p class="user-rank">Authorized Platform User</p>
+
+        <div class="stat-row">
+            <div class="stat-box"><strong>0</strong><small>Following</small></div>
+            <div class="stat-box"><strong>0</strong><small>Followers</small></div>
+            <div class="stat-box"><strong>0</strong><small>Assets</small></div>
+        </div>
+        <button style="background:none; border:1px solid #222; color:#555; padding:12px 25px; border-radius:10px; font-size:10px; font-weight:900; text-transform:uppercase;">Edit Profile</button>
     </div>
 
     <div id="masterView">
-        <span class="command-title">> SOVEREIGN ACCESS GRANTED</span>
-        <div class="monitor-grid">
-            <div class="monitor-card">
-                <label><div class="pulse"></div> System Nodes</label>
-                <span>0.00 Active</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <span style="color:var(--neon); font-size:10px; font-family:monospace;">> MASTER_ENCRYPTION_ON</span>
+            <button onclick="exitMaster()" style="background:none; border:1px solid var(--gold); color:var(--gold); font-size:9px; padding:5px 10px; border-radius:4px;">EXIT</button>
+        </div>
+
+        <div class="monitor-card">
+            <label>Sovereign Balance</label>
+            <span id="ceo-balance">$0.00</span>
+        </div>
+
+        <div class="monitor-card" style="border-left-color: var(--gold);">
+            <label>Empire Assets</label>
+            <span id="asset-count">0 Nodes</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="monitor-card" onclick="location.href='add-product.html'" style="cursor:pointer; border-left-color:#fff;">
+                <label>Inventory</label>
+                <span style="font-size:14px;">COMMAND →</span>
             </div>
-            <div class="monitor-card">
-                <label>Total Reserves</label>
-                <span>$35.0M</span>
-            </div>
-            <div class="monitor-card">
-                <label>Platform Coins</label>
-                <span>0.00+ 🪙</span>
-            </div>
-            <div class="monitor-card" onclick="location.href='app-grid.html'" style="border-color: var(--gold);">
-                <label style="color: var(--gold);">Core Management</label>
-                <span style="font-size: 12px;">7 PILLARS →</span>
+            <div class="monitor-card" style="border-left-color:var(--neon);">
+                <label>Visibility</label>
+                <span style="font-size:14px;">HIDDEN</span>
             </div>
         </div>
     </div>
 
-    <div class="nav-bar">
-        <i class="fa-solid fa-house nav-icon" onclick="location.href='index.html'"></i>
-        <i class="fa-solid fa-compass nav-icon"></i>
-        <i class="fa-solid fa-circle-plus nav-icon" style="font-size: 32px;" onclick="location.href='app-grid.html'"></i>
-        <i class="fa-solid fa-message nav-icon"></i>
-        <i class="fa-solid fa-user nav-icon nav-active"></i>
+    <div id="masterAuth">
+        <i class="fa-solid fa-user-shield" style="color:var(--gold); font-size:40px; margin-bottom:20px;"></i>
+        <p style="color:#555; font-size:10px; letter-spacing:2px; margin-bottom:20px;">VERIFY FOUNDER STATUS</p>
+        <input type="password" id="masterKey" maxlength="4" placeholder="0000">
+        <button onclick="verifyKey()" style="background:var(--gold); color:black; border:none; padding:12px 40px; border-radius:8px; font-weight:900; cursor:pointer;">AUTHORIZE</button>
+        <p onclick="document.getElementById('masterAuth').style.display='none'" style="color:#333; font-size:10px; margin-top:20px; cursor:pointer;">CANCEL</p>
     </div>
 
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-btn"><i class="fa-solid fa-house"></i></a>
+        <a href="market.html" class="nav-btn"><i class="fa-solid fa-shop"></i></a>
+        <a href="index.html" class="nav-btn"><i class="fa-solid fa-circle-plus" style="font-size:30px;"></i></a>
+        <a href="inbox.html" class="nav-btn"><i class="fa-solid fa-message"></i></a>
+        <a href="profile.html" class="nav-btn nav-active"><i class="fa-solid fa-user"></i></a>
+    </nav>
+
     <script>
-        function toggleMode() {
-            const v1 = document.getElementById('normalView');
-            const v2 = document.getElementById('masterView');
-            const btn = document.querySelector('.switch-btn');
-            
-            if (v1.style.display === "none") {
-                v1.style.display = "block";
-                v2.style.display = "none";
-                btn.innerText = "Master Command";
-                document.body.style.background = "#000";
+        const API_URL = "https://nawi-empire1.onrender.com";
+        let clicks = 0;
+
+        function handleMasterTrigger() {
+            clicks++;
+            if(clicks === 3) {
+                document.getElementById('masterAuth').style.display = 'flex';
+                clicks = 0;
+            }
+            setTimeout(() => { clicks = 0; }, 2000);
+        }
+
+        async function verifyKey() {
+            const key = document.getElementById('masterKey').value;
+            if(key === "0001") { // Your private key
+                document.getElementById('masterAuth').style.display = 'none';
+                document.getElementById('publicView').style.display = 'none';
+                document.getElementById('masterView').style.display = 'block';
+                syncMasterData();
             } else {
-                v1.style.display = "none";
-                v2.style.display = "block";
-                btn.innerText = "Exit Command";
-                document.body.style.background = "#050505";
+                alert("INVALID KEY");
+                document.getElementById('masterAuth').style.display = 'none';
+            }
+        }
+
+        function exitMaster() {
+            document.getElementById('masterView').style.display = 'none';
+            document.getElementById('publicView').style.display = 'block';
+        }
+
+        async function syncMasterData() {
+            try {
+                // Asset Sync
+                const prodRes = await fetch(`${API_URL}/api/get-products`);
+                if(prodRes.ok) {
+                    const products = await prodRes.json();
+                    document.getElementById('asset-count').innerText = products.length + " Nodes";
+                }
+                
+                // Wallet Sync (Added a check to prevent "Master Error")
+                const walletRes = await fetch(`${API_URL}/api/create-wallet`, { method: 'POST' });
+                if(walletRes.ok) {
+                    const wallet = await walletRes.json();
+                    document.getElementById('ceo-balance').innerText = `$${wallet.balance.toFixed(2)}`;
+                }
+            } catch (err) {
+                console.log("Server currently offline or waking up...");
+                document.getElementById('ceo-balance').innerText = "$0.00 (Syncing...)";
             }
         }
     </script>
