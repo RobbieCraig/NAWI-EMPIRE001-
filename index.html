@@ -8,75 +8,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --glass: rgba(255, 255, 255, 0.05); --black: #080808; }
-        body { margin: 0; background: #000; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { margin: 0; background: #000; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         
         /* Auth Gate */
-        #auth-gate { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); padding: 20px; text-align: center; z-index: 3000; position: fixed; width: 100%; top: 0; transition: 0.5s; }
-        .authority-card { background: rgba(255,255,255,0.03); border: 1px solid var(--gold); border-radius: 24px; padding: 40px 30px; max-width: 400px; width: 100%; backdrop-filter: blur(10px); }
-        .order-text { font-size: 13px; line-height: 1.8; margin-bottom: 30px; color: #eee; border-left: 3px solid var(--gold); padding-left: 15px; text-align: left; }
-        .gate-btn { background: var(--gold); color: black; border: none; padding: 18px; border-radius: 12px; width: 100%; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        #auth-gate { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); padding: 20px; text-align: center; z-index: 3000; position: fixed; width: 100%; top: 0; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .authority-card { background: rgba(255,255,255,0.03); border: 1px solid var(--gold); border-radius: 24px; padding: 40px 30px; max-width: 400px; width: 100%; backdrop-filter: blur(15px); box-shadow: 0 0 50px rgba(212, 175, 55, 0.1); }
+        .order-text { font-size: 13px; line-height: 1.8; margin-bottom: 30px; color: #eee; border-left: 3px solid var(--gold); padding-left: 15px; text-align: left; font-style: italic; }
+        .gate-btn { background: var(--gold); color: black; border: none; padding: 20px; border-radius: 12px; width: 100%; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .gate-btn:active { transform: scale(0.95); opacity: 0.8; }
 
-        #main-platform { display: none; padding-bottom: 100px; }
+        #main-platform { display: none; padding-bottom: 100px; animation: fadeIn 1s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* GLOBAL DISCOVERY SEARCH BAR */
-        .top-search-container { 
-            padding: 20px 15px 10px; 
-            background: #000; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-        }
-        .search-wrapper {
-            background: var(--glass);
-            border: 1px solid #222;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-        }
-        .search-wrapper i { color: #555; margin-right: 10px; }
-        .search-wrapper input {
-            background: none;
-            border: none;
-            color: white;
-            width: 100%;
-            font-size: 14px;
-            outline: none;
-        }
-        .search-wrapper input::placeholder { color: #444; }
+        /* GLOBAL DISCOVERY */
+        .top-search-container { padding: 25px 15px 15px; background: #000; position: sticky; top: 0; z-index: 1000; }
+        .search-wrapper { background: var(--glass); border: 1px solid #222; border-radius: 15px; display: flex; align-items: center; padding: 14px 18px; transition: 0.3s; }
+        .search-wrapper:focus-within { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
+        .search-wrapper i { color: #555; margin-right: 12px; }
+        .search-wrapper input { background: none; border: none; color: white; width: 100%; font-size: 14px; outline: none; }
 
         /* Global Product Feed */
         .feed-wrapper { padding: 15px; }
-        .product-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; }
-        .product-card h3 { color: var(--gold); margin: 0 0 5px; font-size: 16px; text-transform: uppercase; }
-        .product-card p { font-size: 12px; color: #888; margin: 2px 0; }
-        .market-tag { position: absolute; top: 15px; right: 15px; background: rgba(0,255,100,0.1); color: #00ff64; font-size: 9px; padding: 4px 8px; border-radius: 5px; font-weight: 900; }
-        .price-tag { font-size: 18px; font-weight: 900; color: white; margin-top: 10px; display: block; }
+        .product-card { background: #111; border: 1px solid #222; border-radius: 22px; padding: 20px; margin-bottom: 20px; position: relative; border-left: 4px solid var(--gold); transition: 0.3s; }
+        .global-badge { color: #00ff64; font-size: 9px; font-weight: 900; letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+        .global-badge::before { content: ''; width: 6px; height: 6px; background: #00ff64; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .product-card h3 { color: #fff; margin: 0 0 5px; font-size: 17px; text-transform: uppercase; letter-spacing: 1px; }
+        .product-card p { font-size: 12px; color: #888; margin: 4px 0; font-weight: 500; }
+        .price-tag { font-size: 20px; font-weight: 900; color: var(--gold); margin-top: 15px; display: block; }
+        .buy-btn { background: var(--gold); color: black; width: 100%; border: none; padding: 15px; margin-top: 20px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s; }
 
         /* Dashboard Overlay */
-        #dash-overlay { position: fixed; bottom: -110%; left: 0; width: 100%; height: 85vh; background: var(--black); z-index: 2500; border-top: 2px solid var(--gold); border-radius: 30px 30px 0 0; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding: 30px 20px; box-sizing: border-box; overflow-y: auto; }
-        #dash-overlay.active { bottom: 0; }
+        #dash-overlay { position: fixed; bottom: -110%; left: 0; width: 100%; height: 85vh; background: var(--black); z-index: 2500; border-top: 2px solid var(--gold); border-radius: 35px 35px 0 0; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding: 35px 20px; box-sizing: border-box; overflow-y: auto; }
+        #dash-overlay.active { bottom: 0; box-shadow: 0 -20px 50px rgba(0,0,0,0.9); }
         
-        /* P2P WALLET SECTION */
-        .wallet-sector { background: #111; border-radius: 20px; padding: 20px; margin-top: 25px; border: 1px solid #222; }
+        /* P2P WALLET */
+        .wallet-sector { background: #111; border-radius: 25px; padding: 25px; margin-top: 30px; border: 1px solid #222; position: relative; overflow: hidden; }
+        .wallet-sector::after { content: 'P2P GATEWAY'; position: absolute; top: 10px; right: 15px; font-size: 7px; color: #333; font-weight: 900; }
         .balance-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
-        .balance-amount { font-size: 28px; font-weight: 900; color: var(--gold); margin: 5px 0 15px; }
-        .wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .wallet-btn { padding: 12px; border-radius: 10px; border: none; font-weight: 900; font-size: 11px; cursor: pointer; text-transform: uppercase; }
+        .balance-amount { font-size: 32px; font-weight: 900; color: var(--gold); margin: 8px 0 20px; }
+        .wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .wallet-btn { padding: 15px; border-radius: 12px; border: none; font-weight: 900; font-size: 11px; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-deposit { background: #00ff64; color: black; }
-        .btn-withdraw { background: #333; color: white; }
+        .btn-withdraw { background: #222; color: #555; cursor: not-allowed; }
 
         /* Tool Grid */
-        .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
-        .tool-item { background: var(--glass); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #1a1a1a; text-decoration: none; color: white; }
-        .tool-item i { color: var(--gold); font-size: 20px; margin-bottom: 8px; display: block; }
-        .tool-item span { font-size: 9px; font-weight: 900; text-transform: uppercase; }
+        .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+        .tool-item { background: var(--glass); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #1a1a1a; text-decoration: none; color: white; transition: 0.3s; }
+        .tool-item:active { background: #222; border-color: var(--gold); }
+        .tool-item i { color: var(--gold); font-size: 22px; margin-bottom: 10px; display: block; }
+        .tool-item span { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
 
         /* Navigation */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #080808; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #111; z-index: 2000; }
-        .nav-btn { text-align: center; text-decoration: none; color: #555; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #080808; display: flex; justify-content: space-around; padding: 18px 0 25px; border-top: 1px solid #111; z-index: 2000; }
+        .nav-btn { text-align: center; text-decoration: none; color: #444; transition: 0.3s; flex: 1; }
         .nav-btn.active { color: var(--gold); }
-        .plus-btn { background: var(--gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -10px; color: black; font-size: 20px; cursor: pointer; box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+        .nav-btn p { font-size: 9px; margin: 5px 0 0; font-weight: 900; text-transform: uppercase; }
+        .plus-btn { background: var(--gold); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -15px; color: black; font-size: 22px; cursor: pointer; box-shadow: 0 5px 20px rgba(212,175,55,0.4); border: 4px solid #000; }
     </style>
 </head>
 <body>
@@ -87,8 +76,8 @@
             <p class="order-text">
                 "This is my order and my authority to protect the founders and this platform... follow the rules of this platform."
             </p>
-            <button class="gate-btn" onclick="bypassGate()">Enter Ecosystem</button>
-            <p style="font-size:9px; color:#444; margin-top:20px; letter-spacing:1px;">IDENTITY SHIELD ACTIVE: NAWI-EMPIRE</p>
+            <button class="gate-btn" onclick="bypassGate()">Unlock Ecosystem</button>
+            <p style="font-size:9px; color:#444; margin-top:25px; letter-spacing:1px; text-transform: uppercase;">Identity: NAWI-EMPIRE Protocol</p>
         </div>
     </div>
 
@@ -96,12 +85,15 @@
         <div class="top-search-container">
             <div class="search-wrapper">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Discover anything in the world...">
+                <input type="text" id="global-search" placeholder="Discover anything in the world...">
             </div>
         </div>
 
         <div class="feed-wrapper" id="product-display">
-            <p style="text-align:center; color:#555; margin-top:50px;">Syncing with Global Market...</p>
+            <div style="text-align:center; padding:50px;">
+                <i class="fa-solid fa-circle-notch fa-spin" style="color:var(--gold); font-size:30px;"></i>
+                <p style="color:#444; font-size:10px; margin-top:15px; letter-spacing:2px; font-weight:bold;">SYNCING VAULT...</p>
+            </div>
         </div>
 
         <nav class="bottom-nav">
@@ -109,39 +101,37 @@
             <a href="market.html" class="nav-btn"><i class="fa-solid fa-shop"></i><p>Market</p></a>
             <div class="plus-btn" onclick="toggleDash()"><i class="fa-solid fa-plus"></i></div>
             <a href="inbox.html" class="nav-btn"><i class="fa-solid fa-message"></i><p>Inbox</p></a>
-            <a href="profile.html" class="nav-btn"><i class="fa-solid fa-user"></i><p>Profile</p></a>
+            <a href="profile.html" class="nav-btn"><i class="fa-solid fa-user-shield"></i><p>CEO</p></a>
         </nav>
     </div>
 
     <div id="dash-overlay">
-        <div style="width: 40px; height: 4px; background: #333; border-radius: 10px; margin: 0 auto 20px;"></div>
-        <h3 style="color:var(--gold); text-align:center; letter-spacing:3px; font-weight:900; font-size:14px;">THE 7 PILLARS</h3>
+        <div style="width: 40px; height: 4px; background: #333; border-radius: 10px; margin: 0 auto 25px;"></div>
+        <h3 style="color:var(--gold); text-align:center; letter-spacing:4px; font-weight:900; font-size:13px; text-transform: uppercase;">Imperial Dashboard</h3>
         
         <div class="tool-grid">
-            <a href="studio.html" class="tool-item"><i class="fa-solid fa-clapperboard"></i><span>STUDIO</span></a>
-            <a href="gaming.html" class="tool-item"><i class="fa-solid fa-gamepad"></i><span>GAMES</span></a>
-            <a href="market.html" class="tool-item"><i class="fa-solid fa-shop"></i><span>MARKET</span></a>
-            <a href="kitchen.html" class="tool-item"><i class="fa-solid fa-utensils"></i><span>KITCHEN</span></a>
-            <a href="music.html" class="tool-item"><i class="fa-solid fa-music"></i><span>MUSIC</span></a>
-            <a href="add-product.html" class="tool-item"><i class="fa-solid fa-plus-circle"></i><span>VENDOR</span></a>
+            <a href="studio.html" class="tool-item"><i class="fa-solid fa-clapperboard"></i><span>Studio</span></a>
+            <a href="gaming.html" class="tool-item"><i class="fa-solid fa-gamepad"></i><span>Gaming</span></a>
+            <a href="market.html" class="tool-item"><i class="fa-solid fa-shop"></i><span>Market</span></a>
+            <a href="kitchen.html" class="tool-item"><i class="fa-solid fa-utensils"></i><span>Kitchen</span></a>
+            <a href="music.html" class="tool-item"><i class="fa-solid fa-music"></i><span>Music</span></a>
+            <a href="add-product.html" class="tool-item"><i class="fa-solid fa-plus-circle" style="color:#00ff64;"></i><span>Add Asset</span></a>
         </div>
 
         <div class="wallet-sector">
             <span class="balance-label">P2P Gateway Balance</span>
-            <div class="balance-amount">$0.00 <span style="font-size:12px; color:#555;">USD</span></div>
+            <div class="balance-amount">$0.00 <span style="font-size:12px; color:#555; letter-spacing:1px;">USD</span></div>
             <div class="wallet-actions">
-                <button class="wallet-btn btn-deposit"><i class="fa-solid fa-arrow-down"></i> Deposit</button>
-                <button class="wallet-btn btn-withdraw"><i class="fa-solid fa-arrow-up"></i> Withdraw</button>
+                <button class="wallet-btn btn-deposit" onclick="alert('P2P Gateway Active: Please link a payment node in settings.')"><i class="fa-solid fa-plus"></i> Deposit</button>
+                <button class="wallet-btn btn-withdraw" title="Balance Insufficient"><i class="fa-solid fa-lock"></i> Withdraw</button>
             </div>
         </div>
         
-        <p onclick="toggleDash()" style="text-align:center; color:#444; margin-top:30px; cursor:pointer; font-size:10px; font-weight:bold; letter-spacing:2px;">DISMISS SYSTEM</p>
+        <p onclick="toggleDash()" style="text-align:center; color:#555; margin-top:40px; cursor:pointer; font-size:10px; font-weight:900; letter-spacing:3px; text-transform: uppercase;">Dismiss System</p>
     </div>
 
     <script>
-        // --- LIFE CONNECTION BRIDGE ---
         const API_URL = "https://nawi-empire1.onrender.com";
-        
         let allEmpireProducts = [];
 
         function toggleDash() { 
@@ -152,72 +142,89 @@
             const gate = document.getElementById('auth-gate');
             const main = document.getElementById('main-platform');
             gate.style.opacity = '0';
+            gate.style.pointerEvents = 'none';
             setTimeout(() => {
                 gate.style.display = 'none';
                 main.style.display = 'block';
                 localStorage.setItem('nawi_token', 'FOUNDER_VERIFIED');
-                displayEmpireProducts(); 
-            }, 500);
+                loadGlobalMarket(); 
+            }, 800);
         }
 
-        // UPDATED MASTER CONNECTION FUNCTION
-        async function displayEmpireProducts() {
-            const productList = document.getElementById('product-display');
+        async function loadGlobalMarket() {
+            const displayArea = document.getElementById('product-display');
             try {
-                // Using the Global API_URL and checking for a healthy response
+                // Fetching from your Render database
                 const response = await fetch(`${API_URL}/api/get-products`);
-                
-                if (!response.ok) throw new Error('Vault Offline');
+                if (!response.ok) throw new Error('Platform Node Offline');
                 
                 allEmpireProducts = await response.json();
-                renderFilteredProducts(allEmpireProducts);
+                renderMarket(allEmpireProducts);
             } catch (err) {
-                console.error("Connection Error:", err);
-                productList.innerHTML = '<p style="text-align:center; color:red; font-size:12px;">Connection to Vault Interrupted</p>';
+                console.error("Empire Sync Failed:", err);
+                displayArea.innerHTML = `
+                    <div style="text-align:center; padding:50px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color:var(--gold); font-size:25px;"></i>
+                        <p style="color:#888; font-size:11px; margin-top:15px;">VAULT SYNC INTERRUPTED<br>Ensure server is active on Render.</p>
+                        <button onclick="loadGlobalMarket()" style="background:none; border:1px solid #333; color:var(--gold); padding:10px 20px; border-radius:10px; margin-top:15px; font-size:10px; font-weight:bold; cursor:pointer;">RE-SYNC SYSTEM</button>
+                    </div>
+                `;
             }
         }
 
-        function renderFilteredProducts(products) {
-            const productList = document.getElementById('product-display');
-            productList.innerHTML = ''; 
+        function renderMarket(products) {
+            const displayArea = document.getElementById('product-display');
+            displayArea.innerHTML = ''; 
 
             if(products.length === 0) {
-                productList.innerHTML = '<p style="text-align:center; color:#444; margin-top:50px;">No matches found in the Empire.</p>';
+                displayArea.innerHTML = `
+                    <div style="text-align:center; padding:60px 20px;">
+                        <i class="fa-solid fa-box-open" style="font-size:40px; color:#222;"></i>
+                        <p style="color:#444; font-size:11px; margin-top:15px; font-weight:bold; letter-spacing:1px;">THE VAULT IS CURRENTLY EMPTY.<br>Deploy assets via the Vendor Command.</p>
+                    </div>
+                `;
                 return;
             }
 
             products.forEach(item => {
-                productList.innerHTML += `
+                const card = `
                     <div class="product-card">
-                        <span class="market-tag">${item.market || 'WORLDWIDE'}</span>
+                        <span class="global-badge">GLOBAL ACTIVE (${item.origin_country || 'Worldwide'})</span>
                         <h3>${item.product_name}</h3>
-                        <p>${item.category}</p>
-                        <span class="price-tag">${item.price} ${item.currency || 'USD'}</span>
+                        <p>${item.category} | ${item.sku || 'NW-GATE-001'}</p>
+                        <span class="price-tag">$${parseFloat(item.price).toFixed(2)}</span>
+                        <button class="buy-btn" onclick="processPurchase('${item.product_name}')">Acquire Asset</button>
                     </div>
                 `;
+                displayArea.insertAdjacentHTML('beforeend', card);
             });
         }
 
-        // GLOBAL DISCOVERY SEARCH LOGIC
-        document.querySelector('.search-wrapper input').addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            const filtered = allEmpireProducts.filter(product => {
-                return (
-                    product.product_name.toLowerCase().includes(searchTerm) ||
-                    product.category.toLowerCase().includes(searchTerm) ||
-                    (product.description && product.description.toLowerCase().includes(searchTerm))
-                );
-            });
+        function processPurchase(name) {
+            // Future logic for P2P transaction
+            alert(`P2P GATEWAY INITIATED:\nVerifying escrow for ${name}...\n\nBalance: $0.00\nPlease deposit funds to continue.`);
+        }
 
-            renderFilteredProducts(filtered);
+        // --- Search Logic (Instant) ---
+        document.getElementById('global-search').addEventListener('input', (e) => {
+            const search = e.target.value.toLowerCase().trim();
+            if (!search) {
+                renderMarket(allEmpireProducts);
+                return;
+            }
+            const filtered = allEmpireProducts.filter(p => 
+                p.product_name.toLowerCase().includes(search) || 
+                p.category.toLowerCase().includes(search)
+            );
+            renderMarket(filtered);
         });
 
+        // --- Session Management ---
         window.onload = function() {
             if(localStorage.getItem('nawi_token') === 'FOUNDER_VERIFIED') {
                 document.getElementById('auth-gate').style.display = 'none';
                 document.getElementById('main-platform').style.display = 'block';
-                displayEmpireProducts();
+                loadGlobalMarket();
             }
         };
     </script>
