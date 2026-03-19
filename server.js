@@ -5,21 +5,25 @@ const path = require('path');
 
 const app = express();
 
-// --- MIDDLEWARE (The Airway) ---
-// This version allows your Render URL and local testing to both work
-app.use(cors()); 
+// --- FIX 1: ULTRA-COMPATIBLE CORS ---
+// This ensures your frontend can "talk" to the backend without being blocked.
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
-// This ensures all your CSS/JS files are served correctly from the root folder
 app.use(express.static(path.join(__dirname, '/')));
 
-// --- DATABASE CONNECTION (The Vault) ---
+// --- DATABASE CONNECTION ---
 const uri = "mongodb+srv://NAWIEMPIRE001:NAWI-EMPIRE01@nawi-empire001.zwidxex.mongodb.net/NAWI_DB?retryWrites=true&w=majority";
 
+// FIX 2: Added connection options for stability on mobile-managed servers
 mongoose.connect(uri)
   .then(() => console.log("🏰 NAWI EMPIRE: Database Connected Successfully"))
   .catch(err => console.log("❌ Connection Error:", err));
 
-// --- GLOBAL PRODUCT SCHEMA (The Blueprint) ---
 const productSchema = new mongoose.Schema({
     product_name: { type: String, required: true },
     category: String,
@@ -36,49 +40,36 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model('Product', productSchema, 'products');
 
-// --- ROUTES (The Nerve System) ---
+// --- ROUTES ---
 
-// 1. Discovery Route: Fetches all products for the Gateway
 app.get('/api/get-products', async (req, res) => {
     try {
-        // Sort by newest first (-1)
         const products = await Product.find().sort({ timestamp: -1 }); 
         res.json(products);
     } catch (err) {
-        console.error("Vault Retrieval Error:", err);
         res.status(500).json({ message: "Internal Empire Error" });
     }
 });
 
-// 2. Global Registration Route: Deploys new assets to the Vault
 app.post('/api/add-product', async (req, res) => {
     try {
         const newProduct = new Product({
             ...req.body,
-            status: "Escrow Active", // P2P Protection enabled by default
+            status: "Escrow Active",
             timestamp: new Date()
         });
-        
         await newProduct.save();
         res.status(201).json({ success: true, message: "Worldwide Asset Registered" });
     } catch (err) {
-        console.error("Vault Save Error:", err);
         res.status(500).json({ success: false, error: "Vault Entry Failed" });
     }
 });
 
-// 3. P2P Gateway: Initializing new accounts with Zero Balance
 app.post('/api/create-wallet', (req, res) => {
-    // Every new citizen starts at 0.00 to protect the platform
-    const initialBalance = { 
-        balance: 0.00, 
-        currency: "USD",
-        status: "Verified"
-    };
-    res.json(initialBalance);
+    res.json({ balance: 0.00, currency: "USD", status: "Verified" });
 });
 
-// 4. Founder Login Route
+// FOUNDER LOGIN
 const ADMIN_EMAIL = "akpanvictor848@gmail.com";
 const ADMIN_PASS = "$Nsikak111";
 
@@ -90,13 +81,17 @@ app.post('/api/login', (req, res) => {
     res.status(401).json({ success: false, message: "Invalid Identity" });
 });
 
-// 5. Serve the Gateway (Front-end)
+// FIX 3: Health Check Route
+// This tells Render "I am alive" every 30 seconds so it doesn't sleep.
+app.get('/health', (req, res) => { res.status(200).send('Empire Active'); });
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // --- START ENGINE ---
+// Use 0.0.0.0 to make sure Render can see the port externally
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Empire Engine Active on Port ${PORT}`);
 });
