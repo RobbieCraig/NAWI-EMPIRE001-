@@ -1,4 +1,4 @@
- /**
+/**
  * NAWI-EMPIRE MONGODB GATEWAY
  * Authority: 7 Pillars Control Center
  * Status: ACTIVE SOVEREIGN CONNECTION
@@ -24,29 +24,31 @@ const KitchenMeal = mongoose.model('KitchenMeal', kitchenSchema, 'Kitchen-meals'
 
 /**
  * Pushes new assets directly to the Global Market
- * Authority: NAWI-EMPIRE CEO
+ * Authority: NAWI-EMPIRE CEO (Victor Johnson)
  */
 async function pushToGlobalMarket(productData) {
     try {
-        // Check if we are already connected via server.js
+        // Validation: Ensure the system is connected before attempting push
         if (mongoose.connection.readyState !== 1) {
-            throw new Error("Vault Connection Offline. Ensure server.js is running.");
+            console.log("Attempting to reconnect to Vault...");
+            return { success: false, error: "Database not ready. Please wait 5 seconds and try again." };
         }
 
         const finalProduct = new KitchenMeal({
             ...productData,
             market: "Worldwide",
             currency: "USD",
-            tier: "7 Pillars Elite"
+            tier: "7 Pillars Elite",
+            status: "Available"
         });
 
         const result = await finalProduct.save();
-        console.log("✅ Success: Asset pushed to Kitchen-meals. ID:", result._id);
+        console.log("✅ Success: Asset registered in Kitchen-meals. ID:", result._id);
         
         return { 
             success: true, 
             id: result._id,
-            message: "Worldwide Asset Registered" 
+            message: "Worldwide Asset Registered Successfully" 
         };
 
     } catch (err) {
