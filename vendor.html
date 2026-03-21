@@ -119,7 +119,7 @@
                 escrowStatus: "Held_by_Empire"
             };
 
-            if(!data.productName || !data.priceLocal) {
+            if(data.productName || !data.priceLocal) {
                 status.innerHTML = "❌ Error: Asset Name & Price Required";
                 return;
             }
