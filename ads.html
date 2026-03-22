@@ -7,103 +7,157 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --card: #111; }
-        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; }
+        :root { --gold: #D4AF37; --black: #050505; --card: #111; --glass: rgba(255,255,255,0.03); --green: #00ff64; }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 100px; }
 
         /* HEADER */
-        .ads-header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
-        .ads-header h1 { color: var(--gold); font-size: 20px; letter-spacing: 4px; font-weight: 900; margin: 0; text-transform: uppercase; }
+        .header { padding: 40px 20px 20px; text-align: center; border-bottom: 1px solid #111; }
+        .header h1 { font-size: 18px; letter-spacing: 5px; color: var(--gold); text-transform: uppercase; margin: 0; font-weight: 900; }
         
-        /* ANALYTICS - Setting to 0 until real data flows */
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 25px 0; }
-        .stat-box { background: var(--card); border: 1px solid #222; padding: 15px 5px; border-radius: 15px; text-align: center; }
-        .stat-box span { display: block; font-size: 9px; color: #555; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; }
-        .stat-box div { font-size: 16px; font-weight: 900; color: #fff; }
+        /* ANALYTICS BOARD */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 20px; }
+        .stat-card { background: var(--card); border: 1px solid #222; padding: 15px 5px; border-radius: 15px; text-align: center; }
+        .stat-card b { display: block; font-size: 16px; color: #fff; }
+        .stat-card span { font-size: 8px; color: #555; text-transform: uppercase; letter-spacing: 1px; font-weight: 900; }
 
+        /* SECTION LABELS */
+        .section-label { padding: 0 20px; font-size: 11px; font-weight: 900; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-top: 20px; }
+        
         /* AD PACKAGES */
-        .package-title { font-size: 11px; color: var(--gold); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
-        .ad-item { background: var(--card); border: 1px solid #1a1a1a; border-radius: 20px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
-        .ad-item:active { transform: scale(0.98); border-color: var(--gold); }
+        .ad-package { 
+            background: linear-gradient(145deg, #0a0a0a, #111); 
+            margin: 15px 20px; padding: 20px; border-radius: 20px; 
+            border: 1px solid #222; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .ad-package.featured { border-color: var(--gold); box-shadow: 0 0 15px rgba(212,175,55,0.05); }
         
-        .ad-icon { width: 45px; height: 45px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--gold); border: 1px solid #222; font-size: 20px; }
-        .ad-body { flex: 1; }
-        .ad-body h3 { margin: 0; font-size: 13px; font-weight: 800; }
-        .ad-body p { margin: 3px 0 0; font-size: 10px; color: #666; font-weight: 600; line-height: 1.3; }
+        .package-top { display: flex; align-items: center; gap: 15px; }
+        .package-icon { font-size: 20px; color: var(--gold); width: 40px; }
+        
+        .package-info h3 { margin: 0; font-size: 14px; color: #fff; font-weight: 800; }
+        .package-info p { font-size: 10px; color: #666; margin: 4px 0 0; line-height: 1.4; }
+        
+        .price-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #222; padding-top: 15px; margin-top: 5px; }
+        .cost { font-size: 18px; font-weight: 900; color: var(--gold); }
+        .cost span { font-size: 12px; }
+        
+        .deploy-btn { 
+            background: var(--gold); color: black; border: none; 
+            padding: 10px 18px; border-radius: 10px; font-weight: 900; 
+            font-size: 10px; text-transform: uppercase; cursor: pointer;
+        }
 
-        .ad-action { text-align: right; }
-        .price-chip { color: var(--gold); font-weight: 900; font-size: 14px; display: block; margin-bottom: 8px; }
-        .price-chip span { font-size: 10px; }
+        /* ACTIVE CAMPAIGNS */
+        .campaign-list { padding: 20px; }
+        .campaign-item { 
+            display: flex; align-items: center; gap: 15px; 
+            background: #0f0f0f; padding: 12px; border-radius: 15px; 
+            margin-bottom: 10px; border-left: 3px solid var(--green);
+        }
+        .cam-icon { width: 35px; height: 35px; border-radius: 8px; background: #222; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 14px; }
 
-        .btn-activate { background: var(--gold); color: #000; border: none; padding: 8px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
-
-        /* PREVIEW */
-        .preview-box { margin-top: 30px; border-top: 1px solid #1a1a1a; padding-top: 20px; }
-        .promoted-item { background: #0a0a0a; padding: 15px; border-radius: 15px; border: 1px solid #222; position: relative; }
-        .promoted-item::after { content: 'PROMOTED'; position: absolute; top: 12px; right: 15px; background: var(--gold); color: black; font-size: 8px; font-weight: 900; padding: 3px 6px; border-radius: 4px; }
-
-        .back-btn { display: block; text-align: center; margin-top: 40px; color: #444; text-decoration: none; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+        .back-btn { display: block; text-align: center; margin-top: 30px; color: #444; text-decoration: none; font-size: 10px; font-weight: 900; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="ads-header">
-        <h1>ADVERTISING COMMAND</h1>
+    <div class="header">
+        <h1>ADS COMMAND</h1>
+        <p style="font-size: 10px; color: #444; margin-top: 8px; letter-spacing: 1px;">GLOBAL VISIBILITY ENGINE</p>
     </div>
 
-    <div class="stats-row">
-        <div class="stat-box"><span>IMPRESSIONS</span><div id="stat-views">0</div></div>
-        <div class="stat-box"><span>CLICKS</span><div id="stat-clicks">0</div></div>
-        <div class="stat-box"><span>ACTIVE</span><div id="stat-active">0</div></div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span>Impressions</span>
+            <b id="total-reach">1.2M+</b>
+        </div>
+        <div class="stat-card">
+            <span>Clicks</span>
+            <b id="total-clicks">48.2K</b>
+        </div>
+        <div class="stat-card">
+            <span>Active</span>
+            <b id="active-ads">12</b>
+        </div>
     </div>
 
-    <h2 class="package-title">Empire Ad Packages</h2>
+    <div class="section-label">Deployment Tiers</div>
+
+    <div class="ad-package featured">
+        <div style="position:absolute; top:10px; right:15px; color:var(--gold); font-size:8px; font-weight:900;">HIGH PRIORITY</div>
+        <div class="package-top">
+            <div class="package-icon"><i class="fa-solid fa-shop"></i></div>
+            <div class="package-info">
+                <h3>Marketplace Spotlight</h3>
+                <p>Pin your brand to the top of the Global Market for 24 hours.</p>
+            </div>
+        </div>
+        <div class="price-row">
+            <span class="cost">5 <span>🪙</span></span>
+            <button class="deploy-btn" onclick="initiateAd('Marketplace Spotlight', 5)">Activate</button>
+        </div>
+    </div>
+
+    <div class="ad-package">
+        <div class="package-top">
+            <div class="package-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div class="package-info">
+                <h3>Kitchen Spotlight</h3>
+                <p>Feature your food menu in the Global Culinary Pillar.</p>
+            </div>
+        </div>
+        <div class="price-row">
+            <span class="cost">3 <span>🪙</span></span>
+            <button class="deploy-btn" onclick="initiateAd('Kitchen Spotlight', 3)">Activate</button>
+        </div>
+    </div>
+
+    <div class="ad-package">
+        <div class="package-top">
+            <div class="package-icon"><i class="fa-solid fa-music"></i></div>
+            <div class="package-info">
+                <h3>Music Trending</h3>
+                <p>Push your track to the top of the Empire Playlist.</p>
+            </div>
+        </div>
+        <div class="price-row">
+            <span class="cost">4 <span>🪙</span></span>
+            <button class="deploy-btn" onclick="initiateAd('Music Trending', 4)">Activate</button>
+        </div>
+    </div>
+
+    <div class="section-label">Live Campaign Status</div>
     
-    <div class="ad-item" onclick="P2P_GATEWAY.initiateTransaction('Marketplace Boost', 5)">
-        <div class="ad-icon"><i class="fa-solid fa-shop"></i></div>
-        <div class="ad-body">
-            <h3>Marketplace Boost</h3>
-            <p>Pin your brand to the top of the Global Market for 24 hours.</p>
-        </div>
-        <div class="ad-action">
-            <span class="price-chip">5 <span>🪙</span></span>
-            <button class="btn-activate">ACTIVATE</button>
-        </div>
-    </div>
-
-    <div class="ad-item" onclick="P2P_GATEWAY.initiateTransaction('Kitchen Spotlight', 3)">
-        <div class="ad-icon"><i class="fa-solid fa-utensils"></i></div>
-        <div class="ad-body">
-            <h3>Kitchen Spotlight</h3>
-            <p>Get your food menu featured in the Culinary Pillar.</p>
-        </div>
-        <div class="ad-action">
-            <span class="price-chip">3 <span>🪙</span></span>
-            <button class="btn-activate">ACTIVATE</button>
-        </div>
-    </div>
-
-    <div class="ad-item" onclick="P2P_GATEWAY.initiateTransaction('Music Trending', 4)">
-        <div class="ad-icon"><i class="fa-solid fa-music"></i></div>
-        <div class="ad-body">
-            <h3>Music Trending</h3>
-            <p>Push your track to the top of the Empire Playlist.</p>
-        </div>
-        <div class="ad-action">
-            <span class="price-chip">4 <span>🪙</span></span>
-            <button class="btn-activate">ACTIVATE</button>
-        </div>
-    </div>
-
-    <div class="preview-box">
-        <h2 class="package-title">Live Preview</h2>
-        <div class="promoted-item">
-            <div style="font-weight:900; font-size:14px; margin-bottom:5px;">Your Brand Name</div>
-            <p style="font-size:11px; color:#666; margin:0;">Your business description will appear here across the 7 Pillars.</p>
+    <div class="campaign-list">
+        <div class="campaign-item">
+            <div class="cam-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div style="flex:1;">
+                <b style="font-size:12px;">Music Hub Banner</b>
+                <p style="margin:2px 0; font-size:9px; color:#555;">Status: <span style="color:var(--green)">RUNNING</span></p>
+            </div>
+            <div style="text-align:right;">
+                <span style="display:block; font-size:11px; font-weight:900;">428</span>
+                <span style="font-size:8px; color:#444;">CLICKS</span>
+            </div>
         </div>
     </div>
 
     <a href="index.html" class="back-btn">← RETURN TO HEADQUARTERS</a>
 
     <script src="p2p-gateway.js"></script>
+    <script>
+        function initiateAd(plan, cost) {
+            // This calls your existing P2P system to handle the payment
+            if(typeof P2P_GATEWAY !== 'undefined') {
+                P2P_GATEWAY.initiateTransaction(plan, cost);
+            } else {
+                const confirmDeploy = confirm(`Confirm deployment of ${plan} for ${cost} 🪙?`);
+                if(confirmDeploy) {
+                    alert("Empire Authorization Verified. Ad will go live shortly.");
+                }
+            }
+        }
+    </script>
 </body>
 </html>
