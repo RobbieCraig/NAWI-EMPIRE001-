@@ -3,26 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 PILLARS | HQ</title>
+    <title>7 PILLARS | HQ COMMAND</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --dark: #000; }
-        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
-        .hq-card { border: 1px solid var(--gold); padding: 40px 20px; border-radius: 20px; background: rgba(255,255,255,0.03); max-width: 350px; width: 90%; }
-        .shield-icon { font-size: 50px; color: var(--gold); margin-bottom: 20px; }
-        h1 { font-size: 18px; letter-spacing: 4px; margin-bottom: 10px; }
-        p { color: #666; font-size: 12px; line-height: 1.6; }
-        .status-dot { height: 8px; width: 8px; background: #0f0; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        .back-btn { margin-top: 30px; color: var(--gold); text-decoration: none; font-size: 12px; font-weight: bold; border-bottom: 1px solid var(--gold); padding-bottom: 5px; }
+        :root { --gold: #D4AF37; --dark: #000; --card: #080808; --red: #800000; }
+        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; }
+        
+        /* HEADER SECTION */
+        .hq-header { text-align: center; padding: 40px 0; border-bottom: 1px solid #111; margin-bottom: 30px; }
+        .shield-icon { font-size: 40px; color: var(--gold); margin-bottom: 15px; text-shadow: 0 0 20px rgba(212,175,55,0.3); }
+        h1 { font-size: 14px; letter-spacing: 5px; text-transform: uppercase; margin: 0; color: #fff; }
+        .status-tag { font-size: 9px; color: #0f0; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; font-weight: 900; }
+
+        /* COMMAND SECTIONS */
+        .command-section { margin-bottom: 40px; }
+        .section-title { color: var(--gold); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; border-left: 2px solid var(--gold); padding-left: 15px; margin-bottom: 20px; font-weight: 900; }
+
+        /* FEED CARDS */
+        .feed-container { display: grid; gap: 15px; }
+        .admin-card { background: var(--card); border: 1px solid #1a1a1a; padding: 18px; border-radius: 15px; position: relative; }
+        .card-label { font-size: 8px; color: #444; text-transform: uppercase; font-weight: 900; margin-bottom: 8px; display: block; }
+        .card-main { font-size: 12px; color: #eee; line-height: 1.5; margin: 10px 0; }
+
+        /* BUTTONS */
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        button { cursor: pointer; border-radius: 8px; font-size: 9px; font-weight: 900; padding: 10px; text-transform: uppercase; transition: 0.3s; }
+        .btn-gold { background: none; border: 1px solid var(--gold); color: var(--gold); }
+        .btn-gold:hover { background: var(--gold); color: #000; }
+        .btn-red { background: var(--red); border: none; color: #fff; }
+        
+        .back-btn { display: block; text-align: center; margin-top: 50px; color: #333; text-decoration: none; font-size: 10px; font-weight: 900; letter-spacing: 2px; }
     </style>
 </head>
 <body>
-    <div class="hq-card">
+
+    <div class="hq-header">
         <div class="shield-icon"><i class="fa-solid fa-shield-halved"></i></div>
         <h1>7 PILLARS HQ</h1>
-        <p><span class="status-dot"></span> SYSTEM SECURED & ACTIVE</p>
-        <p style="margin-top: 20px; font-style: italic; color: #aaa;">"This is my order and my authority to protect the founders and this platform."</p>
-        <a href="index.html" class="back-btn">RETURN TO FRONTEND</a>
+        <div class="status-tag"><span style="display:inline-block; width:6px; height:6px; background:#0f0; border-radius:50%; margin-right:5px;"></span> Authority Active</div>
+        <p style="font-size: 10px; color: #444; margin-top: 15px; font-style: italic;">"This is my order and my authority to protect the founders and this platform."</p>
     </div>
+
+    <div class="command-section">
+        <div class="section-title">Global Violation Feed</div>
+        <div id="report-list" class="feed-container">
+            <p style="color: #222; font-size: 9px; text-align: center;">Scanning for stubborn nodes...</p>
+        </div>
+    </div>
+
+    <div class="command-section">
+        <div class="section-title">Asset Release Requests</div>
+        <div id="withdrawal-list" class="feed-container">
+            <p style="color: #222; font-size: 9px; text-align: center;">No pending transactions in the vault.</p>
+        </div>
+    </div>
+
+    <a href="profile.html" class="back-btn">EXIT COMMAND CENTER</a>
+
+    <script>
+        const API_URL = "https://nawi-empire1.onrender.com";
+        const FOUNDER_TOKEN = "FOUNDER_001"; // Used for authorization headers
+
+        // --- FETCH REPORTS (VIOLATIONS) ---
+        async function fetchReports() {
+            try {
+                const response = await fetch(`${API_URL}/api/get-all-reports`);
+                const reports = await response.json();
+                const container = document.getElementById('report-list');
+                if (reports.length === 0) return;
+                
+                container.innerHTML = "";
+                reports.forEach(report => {
+                    const card = document.createElement('div');
+                    card.className = "admin-card";
+                    card.style.borderLeft = "3px solid var(--gold)";
+                    card.innerHTML = `
+                        <span class="card-label">Target: ${report.suspect}</span>
+                        <div class="card-main">"${report.reason}"</div>
+                        <div class="btn-grid">
+                            <button class="btn-gold" onclick="issueWarning('${report.suspect}')">Issue Warning</button>
+                            <button class="btn-red" onclick="terminateNode('${report.suspect}')">Terminate</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) { console.log("Report Sync Failed."); }
+        }
+
+        // --- FETCH WITHDRAWALS (MONEY) ---
+        async function fetchWithdrawals() {
+            try {
+                const res = await fetch(`${API_URL}/api/get-withdrawals`, {
+                    headers: { 'Authorization': FOUNDER_TOKEN }
+                });
+                const requests = await res.json();
+                const container = document.getElementById('withdrawal-list');
+                if (requests.length === 0) return;
+
+                container.innerHTML = "";
+                requests.forEach(req => {
+                    const card = document.createElement('div');
+                    card.className = "admin-card";
+                    card.innerHTML = `
+                        <span class="card-label">Citizen: ${req.fullName}</span>
+                        <div class="card-main">${req.amount} 🪙 | ${req.bankDetails.bankName}</div>
+                        <div class="btn-grid">
+                            <button class="btn-gold" onclick="updateAsset('${req._id}', 'APPROVED')">Release</button>
+                            <button class="btn-red" onclick="updateAsset('${req._id}', 'REJECTED')">Block</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) { console.log("Vault Sync Failed."); }
+        }
+
+        // --- JUDICIAL ACTIONS ---
+        async function issueWarning(id) {
+            await fetch(`${API_URL}/api/admin/issue-warning`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': FOUNDER_TOKEN },
+                body: JSON.stringify({ suspectId: id })
+            });
+            alert("⚠️ WARNING SENT TO NODE");
+            fetchReports();
+        }
+
+        async function terminateNode(id) {
+            if(!confirm("ARE YOU SURE? This node will be erased.")) return;
+            await fetch(`${API_URL}/api/admin/terminate-node`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': FOUNDER_TOKEN },
+                body: JSON.stringify({ suspectId: id })
+            });
+            alert("💀 NODE TERMINATED");
+            fetchReports();
+        }
+
+        async function updateAsset(id, status) {
+            await fetch(`${API_URL}/api/update-withdrawal`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': FOUNDER_TOKEN },
+                body: JSON.stringify({ id, status })
+            });
+            alert("LEDGER UPDATED");
+            fetchWithdrawals();
+        }
+
+        // --- AUTO REFRESH ---
+        window.onload = () => {
+            fetchReports();
+            fetchWithdrawals();
+            setInterval(() => {
+                fetchReports();
+                fetchWithdrawals();
+            }, 30000); // Check every 30 seconds
+        };
+    </script>
 </body>
 </html>
