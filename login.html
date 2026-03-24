@@ -2,101 +2,126 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI EMPIRE | SECURE ACCESS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LOGIN | NAWI EMPIRE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --black: #000; --dark: #111; }
-        body { background: var(--black); color: var(--gold); font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        :root { --gold: #D4AF37; --black: #050505; --dark: #0a0a0a; }
+        body { margin: 0; background: var(--black); color: white; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
         
-        .login-box { 
-            background: var(--dark); 
-            padding: 40px; 
-            border-radius: 25px; 
-            border: 1px solid var(--gold); 
-            width: 320px; 
-            text-align: center; 
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
-        }
+        .login-card { width: 90%; max-width: 380px; background: var(--dark); padding: 30px; border-radius: 25px; border: 1px solid #1a1a1a; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        
+        /* 🛡️ LOGO GESTURE POINT */
+        .logo-icon { font-size: 45px; color: var(--gold); margin-bottom: 15px; cursor: pointer; -webkit-user-select: none; user-select: none; transition: 0.3s; }
+        .logo-icon:active { transform: scale(0.9); opacity: 0.7; }
 
-        .logo { font-size: 26px; font-weight: 900; margin-bottom: 5px; letter-spacing: 3px; }
-        .sub-text { color: #888; font-size: 11px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        /* 📜 THE COVENANT */
+        #covenant-overlay { animation: fadeIn 0.5s ease; }
+        .rule-box { background: #000; border: 1px solid #111; padding: 15px; height: 180px; overflow-y: scroll; border-radius: 12px; text-align: left; font-size: 11px; color: #666; margin-bottom: 20px; line-height: 1.6; border-left: 2px solid var(--gold); }
+        .rule-box b { color: var(--gold); display: block; margin-top: 10px; font-size: 10px; letter-spacing: 1px; }
 
-        input { 
-            width: 100%; 
-            padding: 14px; 
-            margin: 10px 0; 
-            background: #1a1a1a; 
-            border: 1px solid #333; 
-            color: white; 
-            border-radius: 10px; 
-            box-sizing: border-box; 
-            outline: none;
-            transition: 0.3s;
-        }
-
+        .btn-accept { background: none; border: 1px solid var(--gold); color: var(--gold); width: 100%; padding: 14px; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
+        .btn-accept:hover { background: var(--gold); color: black; }
+        
+        /* 🔑 LOGIN FORM */
+        #login-form { display: none; animation: slideUp 0.5s ease; }
+        input { width: 100%; background: #000; border: 1px solid #222; padding: 15px; border-radius: 12px; color: white; margin-bottom: 15px; box-sizing: border-box; outline: none; transition: 0.3s; }
         input:focus { border-color: var(--gold); }
+        .btn-login { width: 100%; background: var(--gold); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; }
 
-        button { 
-            width: 100%; 
-            padding: 14px; 
-            background: var(--gold); 
-            border: none; 
-            color: black; 
-            font-weight: 800; 
-            cursor: pointer; 
-            border-radius: 10px; 
-            margin-top: 15px; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        button:hover { opacity: 0.9; transform: scale(0.98); }
-
-        .footer-note { font-size: 10px; margin-top: 25px; color: #444; font-weight: bold; line-height: 1.4; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <div class="logo">NAWI EMPIRE</div>
-        <div class="sub-text">World-Wide Access Portal</div>
+    <div class="login-card">
+        <div class="logo-icon" id="masterTrigger"><i class="fa-solid fa-shield-halved"></i></div>
         
-        <input type="email" id="email" placeholder="Founder Email">
-        <input type="password" id="pass" placeholder="Master Password">
-        
-        <button onclick="handleLogin()">Enter the Empire</button>
-        
-        <p class="footer-note">
-            OFFICIAL AUTHORITY: PROTECTING THE FOUNDERS AND THE 7 PILLARS PLATFORM
-        </p>
+        <div id="covenant-overlay">
+            <h2 style="font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase;">The Imperial Covenant</h2>
+            <div class="rule-box">
+                <b>01. THE FOUNDER'S ORDER</b>
+                This platform is built to protect the founders and the platform. We are not here to collect your money; we require only that you follow the rules of the empire.
+                <b>02. EXTERNAL LINKS</b>
+                Sharing Telegram, WhatsApp, or outside links is a banishment offense.
+                <b>03. IDENTITY INTEGRITY</b>
+                One human, one node. Multiple accounts or identity mismatches result in immediate asset loss.
+                <b>04. PURGE PROTOCOL</b>
+                Destructive behavior, scams, or NSFW content will be purged by the All-Seeing Eye.
+            </div>
+            <button class="btn-accept" onclick="acceptCovenant()">I Accept the 7 Pillars</button>
+        </div>
+
+        <div id="login-form">
+            <h2 style="font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;">Access Your Node</h2>
+            <input type="email" id="email" placeholder="Empire Email">
+            <input type="password" id="password" placeholder="Master Password">
+            <button class="btn-login" onclick="handleLogin()">Authorize Entry</button>
+        </div>
     </div>
 
     <script>
+        const API_URL = "https://nawi-empire1.onrender.com";
+
+        // --- 1. COVENANT LOGIC ---
+        function acceptCovenant() {
+            document.getElementById('covenant-overlay').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
+
+        // --- 2. GHOST TOGGLE (FOR YOU ONLY) ---
+        let pressTimer;
+        const trigger = document.getElementById('masterTrigger');
+
+        trigger.addEventListener('touchstart', () => {
+            pressTimer = window.setTimeout(() => {
+                activateMasterDevice();
+            }, 5000); // 5 Second Hold
+        });
+
+        trigger.addEventListener('touchend', () => {
+            clearTimeout(pressTimer);
+        });
+
+        function activateMasterDevice() {
+            const masterPin = prompt("ENTER SOVEREIGN ACCESS CODE:");
+            
+            // YOUR LOGIN PIN IS: 7777
+            if (masterPin === "7777") { 
+                localStorage.setItem('NAWI_MASTER_TOKEN', 'SOVEREIGN_001_ALPHA_OMEGA');
+                localStorage.setItem('NAWI_DEVICE_SIG', 'Tecno-Spark-30C-EMPIRE');
+                
+                alert("🛡️ DEVICE AUTHORIZED: SOVEREIGN 001 ACTIVE");
+                window.location.href = "sys-log-cache-82.html"; 
+            } else if (masterPin) {
+                alert("ACCESS DENIED: NODE RESTRICTED");
+            }
+        }
+
+        // --- 3. STANDARD LOGIN LOGIC ---
         async function handleLogin() {
-            const emailInput = document.getElementById('email').value;
-            const passInput = document.getElementById('pass').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            // Targeting the professional endpoint we created in node.js
+            if(!email || !password) return alert("Please provide credentials.");
+
             try {
-                const res = await fetch('/api/login', {
+                const res = await fetch(`${API_URL}/api/login`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email: emailInput, password: passInput })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
                 });
-
                 const data = await res.json();
 
-                if(data.success) {
-                    // Store founder session
-                    localStorage.setItem('nawi_token', 'FOUNDER_VERIFIED');
-                    // Redirect to the 8-Pillar grid
-                    window.location.href = data.redirect; 
+                if (data.success) {
+                    localStorage.setItem('user_id', data.userId);
+                    window.location.href = "dashboard.html";
                 } else {
-                    alert("ACCESS DENIED: " + data.message);
+                    alert(data.message || "Invalid Authority");
                 }
-            } catch (error) {
-                console.error("Empire Connection Error:", error);
-                alert("Platform connection failed. Check your Render server.");
+            } catch (err) { 
+                alert("Vault Connection Failed. Ensure your Render server is awake."); 
             }
         }
     </script>
