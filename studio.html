@@ -3,126 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI-EMPIRE | Creator Studio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <title>STUDIO | NAWI EMPIRE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --glass: rgba(255, 255, 255, 0.03); --border: rgba(212, 175, 55, 0.2); }
-        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 100px; }
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;700;900&display=swap');
+        :root { --gold: #D4AF37; --deep-black: #050505; --glass: rgba(255, 255, 255, 0.03); --border: rgba(212, 175, 55, 0.15); }
         
-        /* WALLET STATS BAR */
-        .stats-header { background: linear-gradient(to bottom, #111, #000); padding: 30px 20px; border-bottom: 1px solid var(--border); }
-        .wallet-card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .balance-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 2px; }
-        .balance-amount { font-size: 24px; font-weight: 900; color: var(--gold); display: block; }
-        .withdraw-btn { background: var(--gold); color: black; border: none; padding: 10px 15px; border-radius: 10px; font-weight: 900; font-size: 10px; cursor: pointer; }
-
-        /* MONETIZATION STATUS */
-        .monetization-bar { margin: 20px; padding: 15px; background: #0a0a0a; border-radius: 15px; border: 1px solid #222; }
-        .prog-bg { width: 100%; height: 6px; background: #222; border-radius: 10px; margin: 10px 0; overflow: hidden; }
-        .prog-fill { width: 45%; height: 100%; background: var(--gold); } /* Dynamic based on followers */
-        .monetization-text { font-size: 10px; color: #666; font-weight: 700; }
-
-        /* BROADCAST TUTORIAL AREA */
-        .broadcast-box { margin: 20px; padding: 20px; background: rgba(212, 175, 55, 0.05); border: 1px solid var(--gold); border-radius: 20px; }
-        .broadcast-box h3 { font-size: 14px; color: var(--gold); margin: 0 0 10px 0; display: flex; align-items: center; gap: 10px; }
-        .broadcast-box p { font-size: 12px; color: #ccc; line-height: 1.6; margin: 0; }
-
-        /* CREATOR FEED */
-        .post-input-area { padding: 0 20px; margin-bottom: 30px; }
-        .post-box { background: #111; border: 1px solid #222; border-radius: 20px; padding: 15px; display: flex; align-items: center; gap: 10px; }
-        .post-box input { background: transparent; border: none; color: white; flex: 1; outline: none; font-size: 14px; }
+        body { background: var(--deep-black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 120px; overflow-x: hidden; }
+        .imperial-font { font-family: 'Syncopate', sans-serif; letter-spacing: 2px; }
         
-        .feed-post { background: var(--glass); margin: 0 20px 20px; border-radius: 25px; border: 1px solid #1a1a1a; padding: 20px; }
-        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .user-info { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #222; border: 1px solid var(--gold); }
-        .handle { font-weight: 800; font-size: 14px; }
+        /* Empire Notification Bar (Internal) */
+        #empire-notifier { 
+            position: fixed; top: -100px; left: 0; width: 100%; background: var(--gold); 
+            color: black; padding: 15px; font-weight: 900; font-size: 10px; 
+            text-align: center; z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
-        .btn-follow { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: 800; }
+        .luxury-card { background: linear-gradient(165deg, #111 0%, #000 100%); border: 1px solid var(--border); border-radius: 30px; }
+        .service-node { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 25px; border-radius: 24px; transition: 0.3s; }
+        .service-node:active { border-color: var(--gold); background: #111; }
 
-        /* MASTER NAV */
-        .master-nav { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
-        .nav-box { text-align: center; color: #555; text-decoration: none; }
-        .nav-box i { font-size: 20px; }
-        .nav-box p { font-size: 9px; margin-top: 5px; font-weight: bold; }
+        /* Stats & Progress */
+        .prog-bg { width: 100%; height: 6px; background: #1a1a1a; border-radius: 10px; overflow: hidden; }
+        .prog-fill { width: 45%; height: 100%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+
+        /* Product Showcase Scrolls */
+        .product-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+        .product-scroll::-webkit-scrollbar { display: none; }
+        .product-item { min-width: 140px; height: 180px; background: #111; border-radius: 20px; border: 1px solid #222; overflow: hidden; position: relative; }
+        .product-tag { position: absolute; top: 10px; right: 10px; background: var(--gold); color: black; font-size: 7px; font-weight: 900; padding: 3px 6px; border-radius: 5px; }
+
+        /* Master Nav */
+        .master-nav { position: fixed; bottom: 0; width: 100%; background: rgba(5,5,5,0.98); border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 20px 0; z-index: 1000; }
+        .nav-item { color: #444; font-size: 18px; text-align: center; text-decoration: none; }
+        .nav-item.active { color: var(--gold); }
+        .nav-label { font-size: 8px; font-weight: 900; text-transform: uppercase; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="stats-header">
-        <div class="wallet-card">
-            <div>
-                <span class="balance-label">Empire Wallet</span>
-                <span class="balance-amount" id="user-balance">1,500 🪙</span>
-            </div>
-            <button class="withdraw-btn" onclick="requestWithdrawal()">WITHDRAW</button>
-        </div>
+    <div id="empire-notifier">Handshake Protocol Initiated...</div>
 
-        <div class="monetization-bar">
-            <div style="display:flex; justify-content:space-between;">
-                <span class="monetization-text">MONETIZATION GOAL</span>
-                <span style="color:var(--gold); font-size:10px;">6,750 / 15,000 Followers</span>
+    <div class="p-6 bg-gradient-to-b from-[#0a0a0a] to-black border-b border-zinc-900">
+        <div class="luxury-card p-6 flex justify-between items-center mb-6">
+            <div>
+                <p class="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Empire Reserve 🪙</p>
+                <span class="text-2xl font-black text-amber-500" id="user-balance">1,500</span>
+            </div>
+            <button onclick="notify('Withdrawal Locked: Reach 5,000 🪙')" class="bg-amber-500 text-black px-5 py-3 rounded-2xl font-black text-[10px] uppercase active:scale-95">Withdraw</button>
+        </div>
+        
+        <div class="px-2">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-[9px] font-black text-zinc-600 uppercase tracking-tighter">Monetization: 6.7k / 15k Followers</span>
             </div>
             <div class="prog-bg"><div class="prog-fill"></div></div>
-            <p style="font-size:9px; color:#444; margin:0;">Reach 15k followers to start earning from post views.</p>
         </div>
     </div>
 
-    <div class="broadcast-box">
-        <h3><i class="fa-solid fa-tower-broadcast"></i> EMPIRE TUTORIAL</h3>
-        <p>Welcome, Founder. Use this studio to share your professional knowledge and brand updates. Posting onsite illegal content is strictly banned. Build your audience to 15,000 to unlock coin rewards. Use the Marketplace to trade your skills.</p>
-    </div>
+    <main class="p-6 space-y-8">
+        <header>
+            <h1 class="imperial-font text-[9px] text-amber-500 mb-1 uppercase">Sovereign Node</h1>
+            <h2 class="text-xl font-black italic uppercase tracking-tighter leading-none">Apparel & Accessories<br>Designing Studio</h2>
+        </header>
 
-    <div class="post-input-area">
-        <div class="post-box">
-            <i class="fa-solid fa-video" style="color:#555;"></i>
-            <input type="text" id="postText" placeholder="Share your knowledge...">
-            <i class="fa-solid fa-paper-plane" style="color:var(--gold); cursor:pointer;" onclick="publishContent()"></i>
-        </div>
-    </div>
-
-    <div id="feed">
-        <div class="feed-post">
-            <div class="post-header">
-                <div class="user-info">
-                    <div class="avatar"></div>
-                    <span class="handle">NAWI-EMPIRE OFFICIAL</span>
+        <section>
+            <h3 class="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4">Imperial Collection</h3>
+            <div class="product-scroll">
+                <div class="product-item flex items-center justify-center" onclick="notify('Imperial Suit Template Loading...')">
+                    <i class="fa-solid fa-user-tie text-3xl text-zinc-800"></i>
+                    <span class="product-tag text-[7px]">Adult Wear</span>
+                    <div class="absolute bottom-3 left-3 text-[10px] font-bold uppercase">Sovereign Suit</div>
                 </div>
-                <button class="btn-follow">Follow</button>
+                <div class="product-item flex items-center justify-center" onclick="notify('Luxe Footwear Node Active')">
+                    <i class="fa-solid fa-shoe-prints text-3xl text-zinc-800"></i>
+                    <span class="product-tag">Luxe Shoes</span>
+                    <div class="absolute bottom-3 left-3 text-[10px] font-bold uppercase">Empire Step</div>
+                </div>
+                <div class="product-item flex items-center justify-center" onclick="notify('Streetwear Catalog Access Only')">
+                    <i class="fa-solid fa-shirt text-3xl text-zinc-800"></i>
+                    <span class="product-tag">Streetwear</span>
+                    <div class="absolute bottom-3 left-3 text-[10px] font-bold uppercase">Empire Hood</div>
+                </div>
             </div>
-            <p style="font-size:13px; line-height:1.5; color:#ddd;">Opportunities are built through knowledge. Share what you know, build your brand, and the Empire will reward your authority.</p>
-            <div style="margin-top:15px; display:flex; gap:20px; color:#555; font-size:13px;">
-                <span><i class="fa-regular fa-heart"></i> 12.4k</span>
-                <span><i class="fa-solid fa-share-nodes"></i> Share</span>
+        </section>
+
+        <div class="grid grid-cols-1 gap-4">
+            <div class="service-node" onclick="notify('Branding Protocol Initiated in Studio Vault')">
+                <div class="flex justify-between mb-4">
+                    <i class="fa-solid fa-gem text-amber-500 text-xl"></i>
+                    <span class="text-[8px] font-black text-zinc-600 border border-zinc-800 px-2 py-1 rounded tracking-widest uppercase">Visuals</span>
+                </div>
+                <h3 class="text-sm font-black uppercase mb-1">Corporate Identity</h3>
+                <p class="text-zinc-500 text-[10px]">Logos, Flyers, and Record Covers architectural design.</p>
+            </div>
+
+            <div class="service-node" onclick="notify('Asset Node Syncing: Requesting Customization...')">
+                <div class="flex justify-between mb-4">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-500 text-xl"></i>
+                    <span class="text-[8px] font-black text-zinc-600 border border-zinc-800 px-2 py-1 rounded tracking-widest uppercase">Customs</span>
+                </div>
+                <h3 class="text-sm font-black uppercase mb-1">Accessories & 3D Assets</h3>
+                <p class="text-zinc-500 text-[10px]">Stickers, product mockups, and high-end digital assets.</p>
             </div>
         </div>
-    </div>
+
+        <div class="mt-8">
+            <div class="bg-[#111] border border-zinc-800 rounded-2xl p-4 flex items-center gap-3">
+                <i class="fa-solid fa-video text-zinc-700"></i>
+                <input type="text" id="postText" class="bg-transparent border-none text-zinc-400 text-xs flex-1 outline-none" placeholder="Share professional knowledge...">
+                <i class="fa-solid fa-paper-plane text-amber-500 cursor-pointer" onclick="publishContent()"></i>
+            </div>
+        </div>
+    </main>
 
     <nav class="master-nav">
-        <a href="index.html" class="nav-box"><i class="fa-solid fa-house"></i><p>Home</p></a>
-        <a href="discover.html" class="nav-box"><i class="fa-solid fa-compass"></i><p>Explore</p></a>
-        <a href="index.html" class="nav-box"><div style="background:var(--gold); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:-10px;"><i class="fa-solid fa-plus" style="color:black;"></i></div></a>
-        <a href="inbox.html" class="nav-box"><i class="fa-solid fa-message"></i><p>Inbox</p></a>
-        <a href="profile.html" class="nav-box"><i class="fa-solid fa-user"></i><p>Profile</p></a>
+        <a href="app-grid.html" class="nav-item"><i class="fa-solid fa-house"></i><div class="nav-label">HQ</div></a>
+        <a href="market.html" class="nav-item"><i class="fa-solid fa-cart-shopping"></i><div class="nav-label">Market</div></a>
+        <a href="studio.html" class="nav-item active"><i class="fa-solid fa-palette"></i><div class="nav-label">Studio</div></a>
+        <a href="kitchen.html" class="nav-item"><i class="fa-solid fa-utensils"></i><div class="nav-label">Kitchen</div></a>
+        <a href="sys-log-cache-82.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><div class="nav-label">Vault</div></a>
     </nav>
 
-    <script src="p2p-gateway.js"></script>
     <script>
+        function notify(msg) {
+            const bar = document.getElementById('empire-notifier');
+            bar.innerText = msg;
+            bar.style.top = "0";
+            setTimeout(() => { bar.style.top = "-100px"; }, 3500);
+        }
+
         function publishContent() {
             const txt = document.getElementById('postText').value;
             if(txt) {
-                alert("Content Secured in Empire Database! Verified for 15k Goal.");
+                notify('✅ CONTENT AUTHENTICATED: Logged in Empire Database');
                 document.getElementById('postText').value = "";
-            }
-        }
-
-        function requestWithdrawal() {
-            const balance = 1500; // This will link to your P2P_GATEWAY.userBalance
-            if(balance < 5000) {
-                alert("❌ Withdrawal Locked: Minimum 5,000 Coins required to transfer to Bank.");
-            } else {
-                alert("✅ Withdrawal Request Sent to Headquarters.");
             }
         }
     </script>
