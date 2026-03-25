@@ -14,7 +14,6 @@
                 window.location.href = "https://nawi-empire1.onrender.com/404"; 
                 setInterval(() => { debugger; }, 100); 
             } else {
-                // Wash the URL to hide the ghost filename from the address bar
                 window.history.replaceState(null, "", "/portal-access-verified");
             }
         })();
@@ -26,7 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --dark: #0a0a0a; --alert: #ff3b3b; }
+        :root { --gold: #D4AF37; --black: #050505; --dark: #0a0a0a; --alert: #ff3b3b; --success: #00ff88; }
         body { margin: 0; background: var(--black); color: white; font-family: 'Inter', sans-serif; padding-bottom: 120px; overflow-x: hidden; }
 
         /* HEADER */
@@ -37,15 +36,20 @@
         /* CENTRAL COIN RESERVE */
         .reserve-card { background: linear-gradient(145deg, #0d0d0d, #050505); margin: 20px; padding: 30px; border-radius: 25px; border: 1px solid #1a1a1a; position: relative; }
         .reserve-label { font-size: 9px; color: #555; letter-spacing: 2px; text-transform: uppercase; }
-        .reserve-amount { font-size: 48px; font-weight: 900; margin: 15px 0; }
+        .reserve-amount { font-size: 48px; font-weight: 900; margin: 15px 0; color: white; }
+        .reserve-amount span { font-size: 18px; color: var(--gold); margin-left: 5px; }
         .btn-acquire { background: #111; border: 1px solid #222; color: white; padding: 12px 25px; border-radius: 12px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
 
         /* MASTER PROFILE CONTROL BOX */
         .control-box { background: var(--dark); margin: 20px; padding: 25px; border-radius: 25px; border: 1px solid #1a1a1a; }
         .control-title { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .master-identity { display: flex; align-items: center; gap: 15px; padding: 15px; background: #000; border-radius: 15px; border-left: 3px solid var(--gold); }
+        .master-identity { display: flex; align-items: center; gap: 15px; padding: 15px; background: #000; border-radius: 15px; border-left: 3px solid var(--gold); margin-bottom: 15px; }
         .master-avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; background: #111; }
         .master-name { font-size: 14px; font-weight: 900; letter-spacing: 1px; }
+
+        /* STEALTH DISBURSEMENT BUTTON */
+        .stealth-btn { width: 100%; background: transparent; border: 1px solid var(--success); color: var(--success); padding: 12px; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 10px; cursor: pointer; letter-spacing: 1px; transition: 0.3s; }
+        .stealth-btn:active { background: var(--success); color: black; }
 
         /* EMERGENCY OVERRIDE */
         .emergency-box { margin: 20px; padding: 20px; border: 1px solid var(--alert); border-radius: 25px; background: rgba(255,0,0,0.05); }
@@ -76,7 +80,7 @@
 
     <div class="reserve-card">
         <div class="reserve-label">Central Coin Reserve <i class="fa-solid fa-circle" style="color:var(--gold); font-size:8px;"></i></div>
-        <div class="reserve-amount">0</div>
+        <div class="reserve-amount" id="coin-balance">35.000<span>m $EMPR</span></div>
         <button class="btn-acquire">ACQUIRE ASSETS</button>
     </div>
 
@@ -89,6 +93,7 @@
                 <div style="font-size: 8px; color: #444; margin-top: 3px;">Official Sovereign Portal</div>
             </div>
         </div>
+        <button class="stealth-btn" onclick="executePrivateDisbursement()">Authorize Stealth Payout</button>
     </div>
 
     <div class="emergency-box">
@@ -123,6 +128,32 @@
     <script>
         function togglePillarMenu() { document.getElementById('pillar-overlay').classList.add('active'); }
         function closePillarMenu() { document.getElementById('pillar-overlay').classList.remove('active'); }
+
+        // STEALTH DISBURSEMENT LOGIC
+        function executePrivateDisbursement() {
+            const reserveTotal = 35000000; 
+            const transferAmount = 20000; 
+            
+            const auth = confirm("CEO IDENTITY CONFIRMED. Authorize $20,000 disbursement to External Node (GP-V-01)?");
+            
+            if (auth) {
+                const newBalance = reserveTotal - transferAmount;
+                const display = document.getElementById('coin-balance');
+                if (display) {
+                    display.innerHTML = `${(newBalance / 1000000).toFixed(3)}<span>m $EMPR</span>`;
+                }
+
+                const stealthLog = {
+                    timestamp: new Date().toISOString(),
+                    action: "EXTERNAL_DISBURSE_AD_BUDGET",
+                    amount: transferAmount,
+                    target: "GEEGPAY_VIRTUAL_BRIDGE"
+                };
+                
+                localStorage.setItem('_sys_cache_null_void', JSON.stringify(stealthLog));
+                alert("TRANSACTION COMPLETED. $20k allocated. System trace cleared.");
+            }
+        }
 
         async function triggerLockdown() {
             const pin = prompt("CONFIRM MASTER PIN TO LOCK EMPIRE:");
