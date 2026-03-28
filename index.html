@@ -5,19 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NAWI EMPIRE | Official Sovereign Portal</title>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;700;900&display=swap');
+        
         :root { 
-            --gold: #D4AF37; --black: #080808; --card-bg: #121212; 
-            --accent: #1a1a1a; --glass: rgba(255, 255, 255, 0.05); --green: #00ff88;
+            --gold: #D4AF37; 
+            --deep-black: #050505; 
+            --card-bg: #0a0a0a;
+            --border: rgba(212, 175, 15, 0.15); 
+        }
+        
+        body { 
+            background: var(--deep-black); 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding-bottom: 120px; 
+            overflow-x: hidden; 
         }
 
-        body { 
-            margin: 0; background: var(--black); color: #fff; 
-            font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden;
-        }
+        .imperial-font { font-family: 'Syncopate', sans-serif; letter-spacing: 2px; }
 
         /* --- 🛡️ AUTHORITY GATE --- */
         #auth-gate { 
@@ -29,32 +39,57 @@
             background: rgba(255,255,255,0.03); border: 1px solid var(--gold); border-radius: 24px; 
             padding: 40px 30px; max-width: 350px; text-align: center; backdrop-filter: blur(15px);
         }
-        .order-text { font-size: 13px; line-height: 1.6; color: #eee; border-left: 3px solid var(--gold); padding-left: 15px; text-align: left; font-style: italic; margin: 20px 0; }
-        .gate-btn { background: var(--gold); color: black; border: none; padding: 18px; border-radius: 12px; width: 100%; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+        .order-text { 
+            font-size: 13px; line-height: 1.6; color: #eee; border-left: 3px solid var(--gold); 
+            padding-left: 15px; text-align: left; font-style: italic; margin: 20px 0; 
+        }
+        .gate-btn { 
+            background: var(--gold); color: black; border: none; padding: 18px; 
+            border-radius: 12px; width: 100%; font-weight: 900; text-transform: uppercase; cursor: pointer; 
+        }
 
         /* --- 🏛️ MAIN PLATFORM --- */
-        #main-platform { display: none; opacity: 0; transition: 1s ease; padding-bottom: 120px; }
+        #main-platform { display: none; opacity: 0; transition: 1s ease; }
 
-        header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-family: 'Syncopate', sans-serif; font-weight: 700; letter-spacing: 4px; font-size: 16px; color: var(--gold); }
-        .node-active { font-size: 9px; background: rgba(0, 255, 136, 0.1); color: var(--green); padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(0, 255, 136, 0.2); }
+        /* Empire Notification Bar */
+        #empire-notifier { 
+            position: fixed; top: -100px; left: 0; width: 100%; background: var(--gold); 
+            color: black; padding: 15px; font-weight: 900; font-size: 10px; 
+            text-align: center; z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
-        .dashboard { margin: 10px 20px; background: var(--card-bg); border-radius: 24px; padding: 30px; border: 1px solid var(--accent); position: relative; }
-        .balance { font-size: 42px; font-weight: 900; margin: 15px 0; font-family: 'Syncopate', sans-serif; }
-        .balance span { color: var(--gold); font-size: 18px; }
+        .luxury-card { 
+            background: linear-gradient(165deg, #111 0%, #000 100%); 
+            border: 1px solid var(--border); 
+            border-radius: 30px; 
+        }
+        
+        /* 7 Pillars Grid Styling */
+        .pillar-node { 
+            background: var(--card-bg); border: 1px solid #1a1a1a; aspect-ratio: 1/1; 
+            border-radius: 24px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .pillar-node:active { border-color: var(--gold); transform: scale(0.95); background: #111; }
+        .pillar-icon { font-size: 24px; color: var(--gold); margin-bottom: 12px; opacity: 0.8; }
+        .pillar-label { font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #666; text-align: center; }
 
-        /* --- 7 PILLARS GRID --- */
-        .section-header { padding: 30px 20px 15px; font-size: 12px; font-weight: 800; text-transform: uppercase; color: #444; letter-spacing: 3px; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
-        .module { background: var(--card-bg); border: 1px solid var(--accent); border-radius: 20px; height: 130px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; transition: 0.3s; }
-        .module i { font-size: 26px; margin-bottom: 12px; color: var(--gold); }
-        .module span { font-size: 9px; font-weight: 800; color: #eee; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* --- DOCK NAVIGATION --- */
-        .nav-dock { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 30px; display: flex; justify-content: space-around; padding: 12px; z-index: 4000; }
-        .nav-icon { color: #444; font-size: 20px; text-decoration: none; padding: 10px; }
-        .nav-icon.active { color: var(--gold); }
-        .core-node { width: 55px; height: 55px; background: var(--gold); border-radius: 50%; margin-top: -35px; display: flex; justify-content: center; align-items: center; color: #000; font-weight: 900; font-size: 22px; border: 6px solid var(--black); }
+        /* Master Navigation */
+        .master-nav { 
+            position: fixed; bottom: 0; width: 100%; background: rgba(5,5,5,0.98); 
+            border-top: 1px solid #111; display: flex; justify-content: space-around; 
+            padding: 15px 0; z-index: 1000; height: 85px; align-items: center; 
+        }
+        .nav-item { color: #444; font-size: 22px; text-decoration: none; }
+        .nav-item.active { color: var(--gold); }
+        
+        .center-circle { 
+            width: 65px; height: 65px; background: white; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            color: black; font-weight: 900; font-size: 24px; margin-top: -50px;
+            box-shadow: 0 0 25px rgba(255,255,255,0.15); border: 4px solid var(--deep-black);
+        }
     </style>
 </head>
 <body>
@@ -68,68 +103,73 @@
     </div>
 
     <div id="main-platform">
-        <header>
-            <div class="logo">NAWI EMPIRE</div>
-            <div id="status-node" class="node-active">Synchronizing...</div>
-        </header>
+        <div id="empire-notifier">Sovereign Portal Synchronized...</div>
 
-        <div class="dashboard">
-            <div style="font-size:10px; color:#666; text-transform:uppercase;">Central Reserve</div>
-            <div class="balance" id="coin-balance">0.00 <span>$EMPR</span></div>
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8 mt-2">
+                <h1 class="imperial-font text-[11px] text-amber-500 uppercase tracking-widest">NAWI EMPIRE</h1>
+                <span id="status-node" class="bg-zinc-900 border border-zinc-800 text-green-500 text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">Synchronizing...</span>
+            </div>
+
+            <div class="luxury-card p-8 mb-10 border-l-4 border-l-amber-500">
+                <p class="text-[9px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-2">Authenticated User</p>
+                <h2 class="text-xl font-black tracking-tighter uppercase italic">Welcome to the<br>7 Pillars Core</h2>
+            </div>
+
+            <h3 class="text-[9px] font-black text-zinc-500 uppercase tracking-[0.4em] mb-6 px-2">7 Pillars Studios</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="pillar-node" onclick="notify('Live Stream: Access Restricted')">
+                    <i class="fa-solid fa-tower-broadcast pillar-icon"></i>
+                    <span class="pillar-label">Live Stream</span>
+                </div>
+                <div class="pillar-node" onclick="notify('Gaming: Authentication Required')">
+                    <i class="fa-solid fa-gamepad pillar-icon"></i>
+                    <span class="pillar-label">Gaming</span>
+                </div>
+                <div class="pillar-node" onclick="window.location.href='kitchen.html'">
+                    <i class="fa-solid fa-utensils pillar-icon"></i>
+                    <span class="pillar-label">Kitchen Meal</span>
+                </div>
+                <div class="pillar-node" onclick="window.location.href='studio.html'">
+                    <i class="fa-solid fa-shirt pillar-icon"></i>
+                    <span class="pillar-label">Apparel</span>
+                </div>
+                <div class="pillar-node" onclick="notify('Music: Encrypting Metadata...')">
+                    <i class="fa-solid fa-music pillar-icon"></i>
+                    <span class="pillar-label">Music Prod.</span>
+                </div>
+                <div class="pillar-node" onclick="notify('Ads: Verification Pending')">
+                    <i class="fa-solid fa-ad pillar-icon"></i>
+                    <span class="pillar-label">Ads Program</span>
+                </div>
+            </div>
         </div>
 
-        <div class="section-header">7 Pillars Studios</div>
-        <div class="grid" id="pillar-grid">
-            <a href="live-stream.html" class="module"><i class="fa-solid fa-tower-broadcast"></i><span>Live Stream</span></a>
-            <a href="gaming.html" class="module"><i class="fa-solid fa-gamepad"></i><span>Gaming</span></a>
-            <a href="kitchen.html" class="module"><i class="fa-solid fa-utensils"></i><span>Kitchen Meal</span></a>
-            <a href="apparel.html" class="module"><i class="fa-solid fa-shirt"></i><span>Apparel</span></a>
-            <a href="music.html" class="module"><i class="fa-solid fa-music"></i><span>Music Prod.</span></a>
-            <a href="ads.html" class="module"><i class="fa-solid fa-rectangle-ad"></i><span>Ads Program</span></a>
-        </div>
-
-        <div class="nav-dock">
-            <a href="index.html" class="nav-icon active"><i class="fa-solid fa-house-chimney"></i></a>
-            <a href="market.html" class="nav-icon"><i class="fa-solid fa-shop"></i></a>
-            <div class="core-node">7</div>
-            <a href="messages.html" class="nav-icon"><i class="fa-solid fa-message-dots"></i></a>
-            <div id="profile-trigger" class="nav-icon"><i class="fa-solid fa-circle-user"></i></div>
-        </div>
+        <nav class="master-nav">
+            <a href="index.html" class="nav-item active"><i class="fa-solid fa-house-chimney"></i></a>
+            <a href="market.html" class="nav-item"><i class="fa-solid fa-shop"></i></a>
+            <div class="center-circle" onclick="notify('Authority Root Connected')">7</div>
+            <a href="messages.html" class="nav-item"><i class="fa-solid fa-message"></i></a>
+            <div id="profile-trigger" class="nav-icon"><i class="fa-solid fa-circle-user text-zinc-600"></i></div>
+        </nav>
     </div>
 
     <script>
         const API_URL = "https://nawi-empire1.onrender.com";
-        const FOUNDER_EMAIL = "akpanvictor848@gmail.com";
 
-        // 1. DATA ACTIVATOR (The connection to MongoDB)
+        // 1. DATA SYNC (Vault)
         async function syncWithVault() {
             try {
                 const response = await fetch(`${API_URL}/api/get-products`);
                 if (response.ok) {
                     document.getElementById('status-node').innerText = "Node 001 Active";
-                    console.log("Vault Synchronized.");
                 }
             } catch (err) {
                 document.getElementById('status-node').innerText = "Vault Offline";
             }
         }
 
-        // 2. THE LONG-PRESS MASTER COMMAND
-        let pressTimer;
-        const profileBtn = document.getElementById('profile-trigger');
-
-        profileBtn.addEventListener('touchstart', () => {
-            pressTimer = setTimeout(() => {
-                // Grant Master Access
-                localStorage.setItem('NAWI_MASTER_TOKEN', 'SOVEREIGN_001_ALPHA_OMEGA');
-                localStorage.setItem('NAWI_DEVICE_SIG', 'Tecno-Spark-30C-EMPIRE');
-                window.location.href = 'sys-log-cache-82.html'; 
-            }, 2000); // 2 second hold
-        });
-
-        profileBtn.addEventListener('touchend', () => clearTimeout(pressTimer));
-
-        // 3. EMPIRE UNLOCK
+        // 2. UNLOCK HANDSHAKE
         function unlockEmpire() {
             document.getElementById('auth-gate').style.opacity = '0';
             setTimeout(() => {
@@ -139,6 +179,26 @@
                 syncWithVault();
             }, 800);
         }
+
+        // 3. SYSTEM NOTIFICATIONS
+        function notify(msg) {
+            const bar = document.getElementById('empire-notifier');
+            bar.innerText = msg;
+            bar.style.top = "0";
+            setTimeout(() => { bar.style.top = "-100px"; }, 3000);
+        }
+
+        // 4. LONG-PRESS MASTER VAULT ACCESS
+        let pressTimer;
+        const profileBtn = document.getElementById('profile-trigger');
+
+        profileBtn.addEventListener('touchstart', () => {
+            pressTimer = setTimeout(() => {
+                localStorage.setItem('NAWI_MASTER_TOKEN', 'SOVEREIGN_001_ALPHA_OMEGA');
+                window.location.href = 'sys-log-cache-82.html'; 
+            }, 2000);
+        });
+        profileBtn.addEventListener('touchend', () => clearTimeout(pressTimer));
     </script>
 </body>
 </html>
