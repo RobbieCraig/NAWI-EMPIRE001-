@@ -8,9 +8,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root { --gold: #D4AF37; --black: #050505; --neon: #00ff41; }
-        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; -webkit-user-select: none; }
+        body { 
+            background: var(--black); 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            overflow-x: hidden; 
+            -webkit-user-select: none; 
+            user-select: none;
+        }
 
-        /* --- THE HUB (HIDDEN TOOLS) --- */
+        /* --- 🛡️ AUTHORITY GATE --- */
+        #auth-gate { 
+            height: 100vh; width: 100%; position: fixed; inset: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            background: radial-gradient(circle, #111 0%, #000 100%); z-index: 20000; transition: 0.8s ease; 
+        }
+        .authority-card { 
+            background: rgba(255,255,255,0.03); border: 1px solid var(--gold); border-radius: 24px; 
+            padding: 40px 30px; max-width: 350px; text-align: center; backdrop-filter: blur(15px);
+        }
+        .order-text { 
+            font-size: 13px; line-height: 1.6; color: #eee; border-left: 3px solid var(--gold); 
+            padding-left: 15px; text-align: left; font-style: italic; margin: 20px 0; 
+        }
+
+        /* --- THE HUB (7 PILLARS) --- */
         #hubOverlay {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98);
             backdrop-filter: blur(25px); z-index: 9999; flex-direction: column;
@@ -26,11 +49,8 @@
         .pillar-tool span { font-size: 8px; font-weight: 900; text-transform: uppercase; color: #555; }
 
         /* --- THE FEED --- */
-        .feed-container { padding: 15px; padding-bottom: 150px; }
-        .post-card { 
-            background: #0a0a0a; border: 1px solid #1a1a1a; 
-            border-radius: 25px; margin-bottom: 25px; overflow: hidden;
-        }
+        .feed-container { padding: 15px; padding-bottom: 150px; display: none; }
+        .post-card { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 25px; margin-bottom: 25px; overflow: hidden; }
         .post-img-area { width: 100%; aspect-ratio: 1/1; background: #0d0d0d; display: flex; align-items: center; justify-content: center; }
         .post-image { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
         .post-content { padding: 20px; }
@@ -46,7 +66,8 @@
         }
 
         /* --- NAVIGATION --- */
-        .node-7-wrapper { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 8000; }
+        #main-nav { display: none; }
+        .node-7-wrapper { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 8000; display: none; }
         .main-node {
             width: 75px; height: 75px; background: white; color: black; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-size: 30px;
@@ -57,11 +78,19 @@
             display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px;
             border-top: 1px solid #111; z-index: 5000;
         }
-        .master-mode .pillar-tool i { color: var(--neon); }
+        .master-mode #r-label { color: var(--neon) !important; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body id="mainBody">
+
+    <div id="auth-gate">
+        <div class="authority-card">
+            <div style="color:var(--gold); font-weight:900; font-size:10px; letter-spacing:4px;">EMPIRE MANDATE</div>
+            <p class="order-text">"This is my order and my authority to protect the founders and this platform... follow the rules."</p>
+            <button onclick="unlockEmpire()" class="w-full bg-[#D4AF37] text-black py-4 rounded-xl font-black uppercase text-[10px]">Unlock Ecosystem</button>
+        </div>
+    </div>
 
     <div id="masterAuth">
         <i class="fa-solid fa-shield-halved text-[#00ff41] text-5xl mb-6"></i>
@@ -84,7 +113,7 @@
         <button onclick="toggleHub()" class="mt-12 text-zinc-600 text-[8px] font-bold uppercase tracking-widest italic">Close Node</button>
     </div>
 
-    <header class="p-6 pt-12 flex justify-between items-center sticky top-0 bg-black/90 backdrop-blur-lg z-40">
+    <header id="app-header" style="display:none;" class="p-6 pt-12 flex justify-between items-center sticky top-0 bg-black/90 backdrop-blur-lg z-40">
         <div>
             <p id="r-label" class="text-[7px] font-black tracking-[0.4em] text-zinc-600 uppercase">Empire Feed</p>
             <h1 id="greet" class="text-xl font-black italic">NAWI SOCIAL</h1>
@@ -95,7 +124,7 @@
     </header>
 
     <main class="feed-container">
-        <div id="welcomePost" class="post-card">
+        <div class="post-card">
             <div class="p-5 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700"></div>
                 <span class="text-[10px] font-black uppercase">Empire Intelligence</span>
@@ -107,11 +136,11 @@
         </div>
     </main>
 
-    <div class="node-7-wrapper">
-        <div class="main-node" id="node7" onclick="toggleHub()">7</div>
+    <div class="node-7-wrapper" id="center-node">
+        <div class="main-node" onclick="toggleHub()">7</div>
     </div>
 
-    <nav class="bottom-bar">
+    <nav class="bottom-bar" id="main-nav">
         <a href="index.html" class="text-amber-500 text-2xl"><i class="fa-solid fa-house"></i></a>
         <a href="market.html" class="text-zinc-800 text-2xl"><i class="fa-solid fa-bag-shopping"></i></a>
         <div style="width: 75px;"></div>
@@ -123,12 +152,25 @@
         const secretCode = "0001";
         const API_URL = "https://nawi-empire1.onrender.com";
 
+        // --- 🛡️ UNLOCK LOGIC ---
+        function unlockEmpire() {
+            document.getElementById('auth-gate').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('auth-gate').style.display = 'none';
+                document.querySelector('.feed-container').style.display = 'block';
+                document.getElementById('app-header').style.display = 'flex';
+                document.getElementById('main-nav').style.display = 'flex';
+                document.getElementById('center-node').style.display = 'block';
+                loadFeed();
+            }, 800);
+        }
+
         function toggleHub() {
             const h = document.getElementById('hubOverlay');
             h.style.display = (h.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        // --- MASTER LOGIN (FIXED Pointer Events for Mobile) ---
+        // --- MASTER LOGIN (Long Press) ---
         const trigger = document.getElementById('p-trigger');
         let pressTimer;
 
@@ -156,17 +198,15 @@
             document.getElementById('masterAuth').style.display = 'none';
             document.getElementById('mainBody').classList.add('master-mode');
             document.getElementById('r-label').innerText = "Master Control Room";
-            document.getElementById('r-label').style.color = "#00ff41";
             document.getElementById('m1').classList.remove('hidden');
             document.getElementById('m2').classList.remove('hidden');
             localStorage.setItem('auth', 'MASTER');
         }
 
-        // --- LIVE FEED FETCH ---
         async function loadFeed() {
             try {
                 const response = await fetch(`${API_URL}/api/get-posts`);
-                if (!response.ok) throw new Error('Network error');
+                if (!response.ok) throw new Error('Sync Failed');
                 
                 const posts = await response.json();
                 const container = document.querySelector('.feed-container');
@@ -176,7 +216,7 @@
                         <div class="post-card">
                             <div class="p-5 flex items-center gap-3">
                                 <div class="w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700"></div>
-                                <span class="text-[10px] font-black uppercase">${post.author}</span>
+                                <span class="text-[10px] font-black uppercase">${post.author || 'Citizen'}</span>
                             </div>
                             <img src="${post.image}" class="post-image" onerror="this.style.display='none'">
                             <div class="post-content">
@@ -186,12 +226,11 @@
                     container.innerHTML += postHTML;
                 });
             } catch (err) {
-                console.log("Waiting for database broadcast...");
+                console.log("Feed Sync Pending...");
             }
         }
 
         window.onload = () => { 
-            loadFeed();
             if(localStorage.getItem('auth') === 'MASTER') unlockMaster(); 
         };
     </script>
