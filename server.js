@@ -20,12 +20,12 @@ const citizenSchema = new mongoose.Schema({
     pfpUrl: { type: String, default: "/assets/default-pfp.png" },
     posts: [{
         imageUrl: String,
-        views: { type: Number, default: 0 },
-        likes: { type: Number, default: 0 },
-        timestamp: { type: Date, default: Date.now }
+        views: { type: Number,default: 0 },
+        likes: { type: Number,default: 0 },
+        timestamp: { type: Date,default: Date.now }
     }],
-    walletBalance: { type: Number, default: 0 },
-    ruleViolations: { type: Number, default: 0 }
+    walletBalance: { type: Number,default: 0 },
+    ruleViolations: { type: Number,default: 0 }
 });
 
 const Citizen = mongoose.model('Citizen', citizenSchema);
