@@ -1,6 +1,7 @@
 /* NAWI-EMPIRE MASTER STYLESHEET 
    Theme: Luxury Professional / Dark Mode
    Authority: 7 Pillars Control
+   Updated: 2026 Sovereign Edition
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
@@ -9,6 +10,7 @@
     --gold: #D4AF37;
     --gold-light: #FDFC97;
     --black: #050505;
+    --neon: #00ff41; /* Master Mode Identifier */
     --card-bg: #111111;
     --glass: rgba(255, 255, 255, 0.03);
     --border: rgba(212, 175, 55, 0.2);
@@ -31,16 +33,16 @@ body {
     line-height: 1.6;
 }
 
-/* --- PROFESSIONAL REEL FEED --- */
+/* --- 1. THE REEL FEED (CITIZEN VIEW) --- */
 .feed-wrapper { 
     width: 100%; 
     height: 100vh; 
     overflow-y: scroll; 
     scroll-snap-type: y mandatory; 
-    scrollbar-width: none; /* Hide scrollbar Firefox */
+    scrollbar-width: none; 
 }
 
-.feed-wrapper::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+.feed-wrapper::-webkit-scrollbar { display: none; }
 
 .content-card { 
     height: 100vh; 
@@ -53,7 +55,6 @@ body {
     justify-content: center; 
 }
 
-/* Subtle Overlay for Readability */
 .content-overlay { 
     position: absolute; 
     bottom: 90px; 
@@ -70,7 +71,6 @@ body {
     margin-bottom: 5px;
 }
 
-/* Side Interaction Panel */
 .side-actions { 
     position: absolute; 
     right: 15px; 
@@ -81,26 +81,11 @@ body {
     align-items: center; 
 }
 
-.side-actions div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
+.side-actions div { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.side-actions i { font-size: 26px; color: white; transition: 0.3s; }
+.side-actions span { font-size: 11px; font-weight: 700; color: white; }
 
-.side-actions i { 
-    font-size: 26px; 
-    color: white; 
-    transition: 0.3s;
-}
-
-.side-actions span {
-    font-size: 11px;
-    font-weight: 700;
-    color: white;
-}
-
-/* --- LUXURY NAVIGATION --- */
+/* --- 2. THE NAVIGATION HUB --- */
 .bottom-nav { 
     position: fixed; 
     bottom: 0; 
@@ -128,10 +113,8 @@ body {
 
 .nav-btn i { font-size: 20px; }
 .nav-btn p { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-
 .nav-btn.active { color: var(--gold); }
 
-/* The Action Hub Button */
 .plus-btn { 
     width: 50px; 
     height: 50px; 
@@ -146,7 +129,51 @@ body {
     border: 4px solid var(--black);
 }
 
-/* --- THE 7 PILLARS DRAWER --- */
+/* --- 3. THE IMPERIAL MASTER SECTION (SOVEREIGN VIEW) --- */
+
+/* The Secret Trigger */
+#masterTrigger {
+    -webkit-touch-callout: none !important; /* Disables default "save image" menu on iOS */
+    -webkit-user-select: none !important;    /* Disables text selection */
+    user-select: none !important;
+    touch-action: none;                     /* Stops scrolling during long press */
+    cursor: pointer;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    border: 2px solid var(--gold);
+}
+
+#masterTrigger:active {
+    transform: scale(0.95);
+    border-color: #ffffff;
+}
+
+/* Master Mode UI States */
+.master-mode-active {
+    background: radial-gradient(circle at top, #111 0%, #000 100%) !important;
+    border: 1px solid var(--neon) !important;
+}
+
+#masterAuth {
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    background-color: rgba(0, 0, 0, 0.85);
+    display: none; /* Controlled by JS */
+    z-index: 9999;
+}
+
+/* Imperial Status Glow */
+.status-online {
+    box-shadow: 0 0 10px var(--neon);
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0% { opacity: 1; box-shadow: 0 0 5px var(--neon); }
+    50% { opacity: 0.7; box-shadow: 0 0 15px var(--neon); }
+    100% { opacity: 1; box-shadow: 0 0 5px var(--neon); }
+}
+
+/* --- 4. THE 7 PILLARS DRAWER & COMPONENTS --- */
 .pillars-drawer { 
     position: fixed; 
     top: 0; 
