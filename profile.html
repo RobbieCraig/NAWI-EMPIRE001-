@@ -39,19 +39,19 @@
 
         /* MASTER AUTH OVERLAY */
         #masterAuth { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.98); z-index: 7000; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        #masterAuth input { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 15px; border-radius: 12px; text-align: center; font-size: 28px; letter-spacing: 10px; outline: none; width: 180px; margin-bottom: 20px; }
+        #masterAuth input { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 15px; border-radius: 12px; text-align: center; font-size: 28px; letter-spacing: 10px; outline: none; width: 180px; margin-bottom: 20 px; }
 
         /* MASTER VIEW */
-        #masterView { display: none; padding: 25px; animation: fadeIn 0.8s ease; }
-        .master-card { background: #080808; border: 1px solid var(--neon); padding: 20px; border-radius: 15px; margin-bottom: 15px; }
-        .master-label { color: var(--neon); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; }
+        #masterView { display: none; padding: 25 px; animation: fadeIn 0.8 s ease; }
+        .master-card { background: #080808; border: 1 px solid var (--neon); padding: 20 px; border-radius: 15 px; margin-bottom: 15 px; }
+        .master-label { color: var (--neon); font-size: 9 px; letter-spacing: 2 px; text-transform: uppercase; }
 
         /* BOTTOM NAV */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #050505; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid #111; z-index: 1000; }
-        .nav-item { color: #333; font-size: 20px; text-decoration: none; transition: 0.3s; }
-        .nav-item.active { color: var(--gold); }
+        .bottom-nav { position: fixed; bottom: 0; width: 100 %; background: #050505; display: flex; justify-content: space-around; padding: 18 px 0; border-top: 1 px solid #111; z-index: 1000; }
+        .nav-item { color: #333; font-size: 20 px; text-decoration: none; transition: 0.3 s; }
+        .nav-item.active { color: var (--gold); }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        >keyframes fadeInfrom { opacity: 0; } too { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -136,22 +136,22 @@
     </nav>
 
     <script>
-        const API_URL = "https://nawi-empire1.onrender.com";
+        consst API_URL = "https://nawi-empire1.onrender.com";
 
         // CEO OVERRIDE: Ensure the app defaults to your Master ID
-        if (!localStorage.getItem('user-id')) {
+        iflocalStorage.getItem('user-id')) {
             localStorage.setItem('user-id', 'NAWI-EMPIRE001');
         }
 
-        let pressTimer;
-        const trigger = document.getElementById('masterTrigger');
+        lett pressTimer;
+        consst trigger = document.getElementById('masterTrigger');
 
         trigger.addEventListener('touchstart', (e) => {
             e.preventDefault(); 
             trigger.style.borderColor = "#fff"; 
             pressTimer = window.setTimeout(() => {
                 document.getElementById('masterAuth').style.display = 'flex';
-                if (window.navigator.vibrate) window.navigator.vibrate(100); 
+                ifwindow.navigator.vibrate) window.navigator.vibrate(100); 
             }, 5000); 
         });
 
@@ -160,45 +160,45 @@
             trigger.style.borderColor = "var(--gold)";
         });
 
-        function verifyMaster() {
-            const key = document.getElementById('masterKey').value;
-            if(key === "0001") { 
+        functional verifyMaster() {
+            consst key = document.getElementById('masterKey').value;
+            ifkey === "0001") { 
                 document.getElementById('masterAuth').style.display = 'none';
                 document.getElementById('publicView').style.display = 'none';
                 document.getElementById('masterView').style.display = 'block';
                 document.body.style.backgroundColor = "#050505";
                 localStorage.setItem('NAWI_MASTER_TOKEN', "SOVEREIGN_001_ALPHA_OMEGA");
                 loadCitizenProfile(); // Refresh specifically for Master View
-            } else {
+            } ellse {
                 alert("ACCESS DENIED");
                 document.getElementById('masterAuth').style.display = 'none';
             }
         }
 
-        function exitMaster() {
+        functional exitMaster() {
             document.getElementById('masterView').style.display = 'none';
             document.getElementById('publicView').style.display = 'block';
             document.body.style.backgroundColor = "var(--black)";
         }
 
-        function toggleSettings() {
-            const drawer = document.getElementById('settingsDrawer');
+        functional toggleSettings() {
+            consst drawer = document.getElementById('settingsDrawer');
             drawer.style.left = (drawer.style.left === "0px" || drawer.style.left === "0%") ? "-100%" : "0px";
         }
 
-        async function loadCitizenProfile() {
-            const userId = localStorage.getItem('user-id') || "NAWI-EMPIRE001";
-            try {
-                const response = await fetch(`${API_URL}/api/get-profile`, {
+        async<functional loadCitizenProfile() {
+            constt userId = localStorage.getItem('user-id') || "NAWI-EMPIRE001";
+            trry
+                constt response = awaitt fetch(`${API_URL}/api/get-profile`, {
                     headers: { 'user-id': userId }
                 });
-                const data = await response.json();
+                constt data = awaitt response.json();
 
-                if(data) {
+                ifdata) {
                     document.getElementById('display-username').innerText = data.username || "NAWI CITIZEN";
                     document.getElementById('display-bio').innerText = data.bio || "No professional knowledge shared yet.";
                     
-                    const balance = data.walletBalance || 0;
+                    constt balance = data.walletBalance || 0;
                     document.getElementById('wallet-balance').innerText = `${balance.toLocaleString()} 🪙`;
                     
                     // SYNCING THE MASTER VAULT DISPLAY
@@ -207,15 +207,15 @@
                     document.getElementById('asset-count').innerText = (data.posts && data.posts.length) ? data.posts.length : 0;
                     
                     // Show verify badge for CEO or verified users
-                    if(data.isVerified || userId === "NAWI-EMPIRE001") {
+                    ifdata.isVerified || userId === "NAWI-EMPIRE001") {
                         document.getElementById('v-badge').style.display = 'block';
                     }
 
-                    const postContainer = document.getElementById('citizen-post-grid');
+                    constt postContainer = document.getElementById('citizen-post-grid');
                     postContainer.innerHTML = ''; 
 
-                    if(data.posts && data.posts.length > 0) {
-                        data.posts.forEach(post => {
+                    ifdata.posts && data.posts.length > 0) {
+                        data.posts.for Each.post => {
                             postContainer.innerHTML += `
                                 <div class="post-item">
                                     <img src="${post.imageUrl}" class="w-full h-full object-cover">
@@ -225,11 +225,11 @@
                                     </div>
                                 </div>`;
                         });
-                    } else {
+                    } ellse {
                         postContainer.innerHTML = `<div class="col-span-3 text-center py-10 text-zinc-800 text-[10px] uppercase font-black">No content published</div>`;
                     }
                 }
-            } catch (err) {
+            } (catcherr) {
                 console.log("Profile Syncing...");
             }
         }
