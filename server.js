@@ -1,46 +1,12 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const { ObjectId } = require('mongodb');
-
-// 👑 1. IMPORT MODELS & DB CONNECTION
-const { mongoose, KitchenMeal, pushToGlobalMarket } = require('./db-connect');
+const multer = require('multer');
 
 const app = express();
-const db = mongoose.connection;
 
-// --- ☣️ GLOBAL SYSTEM STATE ---
-let isSystemLocked = false; 
-
-// --- 👤 2. IMPERIAL MODELS & SCHEMAS ---
-
-// Social Feed Post Schema
-const postSchema = new mongoose.Schema({
-    author: { type: String, default: "Citizen" },
-    content: String,
-    image: String, 
-    timestamp: { type: Date, default: Date.now }
-});
-const Post = mongoose.model('Post', postSchema);
-
-// Citizen Profile Schema
-const citizenSchema = new mongoose.Schema({
-    userId: { type: String, required: true, unique: true },
-    username: { type: String, default: "Authenticated Citizen" },
-    bio: { type: String, default: "No professional knowledge shared yet." },
-    pfpUrl: { type: String, default: "/assets/default-pfp.png" },
-    posts: [{
-        imageUrl: String,
-        views: { type: Number, default: 0 },
-        likes: { type: Number, default: 0 },
-        timestamp: { type: Date, default: Date.now }
-    }],
-    walletBalance: { type: Number, default: 0 },
-    ruleViolations: { type: Number, default: 0 }
-});
-const Citizen = mongoose.model('Citizen', citizenSchema);
-
-// --- 🛡️ 3. MIDDLEWARE STACK ---
+// --- ⚙️ 1. MIDDLEWARE CONFIGURATION ---
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST'],
@@ -49,7 +15,71 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/')));
 
-// --- 🛡️ THE GATEKEEPER (Security & Lockdown) ---
+// Multer for HD Content Handling
+const storage = multer.memoryStorage();
+const upload = multer({ limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB Limit
+
+// --- ☣️ 2. GLOBAL SYSTEM STATE ---
+let isSystemLocked = false; 
+
+// --- 🏛️ 3. DATABASE SCHEMAS ---
+
+// User/Citizen Schema
+const userSchema = new mongoose.Schema({
+    userId: { type: String, required: true, unique: true },
+    username: { type: String, default: "Authenticated Citizen" },
+    email: String,
+    password: { type: String, select: false },
+    deviceId: String,
+    bio: { type: String, default: "No professional knowledge shared yet." },
+    pfpUrl: { type: String, default: "/assets/default-pfp.png" },
+    empireCoins: { type: Number, default: 0 },
+    totalEarningsUSD: { type: Number, default: 0 },
+    level: { type: Number, default: 0 },
+    rank: { type: String, default: "Citizen" },
+    ruleViolations: { type: Number, default: 0 },
+    pillarsManaged: [String],
+    activityLog: [{ action: String, timestamp: { type: Date, default: Date.now } }]
+});
+const User = mongoose.model('User', userSchema);
+
+// Content/Post Schema
+const postSchema = new mongoose.Schema({
+    authorName: String,
+    authorId: String,
+    mediaUrl: String,
+    description: String,
+    type: { type: String, enum: ['graphic', 'video', 'lifestyle', 'audio'], default: 'lifestyle' },
+    priceInCoins: { type: Number, default: 0 },
+    isVerified: { type: Boolean, default: false },
+    isMasterPost: { type: Boolean, default: false },
+    likes: { type: Number, default: 0 },
+    status: { type: String, default: 'active' },
+    createdAt: { type: Date, default: Date.now }
+});
+const Post = mongoose.model('Post', postSchema);
+
+// Imperial Message Schema
+const messageSchema = new mongoose.Schema({
+    recipientId: String,
+    sender: String,
+    text: String,
+    type: { type: String, default: "P2P ALERT" },
+    icon: { type: String, default: "fa-solid fa-bell" },
+    timestamp: { type: Date, default: Date.now }
+});
+const Message = mongoose.model('Message', messageSchema);
+
+// Kitchen/Market Schema
+const kitchenSchema = new mongoose.Schema({
+    itemName: String,
+    price: Number,
+    category: String,
+    image: String
+});
+const KitchenMeal = mongoose.model('KitchenMeal', kitchenSchema);
+
+// --- 🛡️ 4. THE GATEKEEPER (Security Middleware) ---
 app.use((req, res, next) => {
     const userId = req.headers['user-id'];
     if (isSystemLocked && userId !== "NAWI-EMPIRE001") {
@@ -60,123 +90,176 @@ app.use((req, res, next) => {
     next();
 });
 
-const authorizeFounder = (req, res, next) => {
-    if (req.headers.authorization === "FOUNDER_001") {
-        next();
-    } else {
-        res.status(403).json({ success: false, message: "Empire Authority Required." });
-    }
-};
-
 const checkLoyalty = async (req, res, next) => {
     const userId = req.headers['user-id'];
-    const citizen = await Citizen.findOne({ userId: userId });
-    if (citizen && citizen.ruleViolations > 0) {
+    const user = await User.findOne({ userId });
+    if (user && user.ruleViolations > 0) {
         return res.status(403).json({ message: "ACCESS DENIED: Loyalty Protocol Violated." });
     }
     next();
 };
 
-// --- 🛰️ 4. SOCIAL FEED ROUTES ---
-
-// GET: Fetch posts for app-grid.html
-app.get('/api/get-posts', async (req, res) => {
-    try {
-        const posts = await Post.find().sort({ timestamp: -1 }).limit(20);
-        res.status(200).json(posts);
-    } catch (err) {
-        res.status(500).json({ error: "Failed to fetch posts" });
-    }
-});
-
-// POST: Create a post from create-post.html
-app.post('/api/upload-post', async (req, res) => {
-    try {
-        const newPost = new Post({
-            author: req.body.author,
-            content: req.body.content,
-            image: req.body.image
-        });
-        await newPost.save();
-        res.status(201).json({ success: true, message: "Post Published to Empire!" });
-    } catch (err) {
-        res.status(500).json({ error: "Upload Failed" });
-    }
-});
-
-// --- 👤 5. IDENTITY & REGISTRATION ---
+// --- 👤 5. IDENTITY & AUTHENTICATION ---
 app.post('/api/register', async (req, res) => {
     const { email, password, deviceId } = req.body;
     try {
-        const existingDevice = await db.collection('users').findOne({ deviceId });
+        const existingDevice = await User.findOne({ deviceId });
         if (existingDevice) {
             return res.status(403).json({ success: false, message: "⚠️ SYSTEM ALERT: One Node per Human allowed." });
         }
-        const result = await db.collection('users').insertOne({
-            email, password, deviceId, balance: 0, violationCount: 0, 
-            isVerified: false, status: "PENDING_HUMAN_CHECK", createdAt: new Date()
+        const newUser = new User({ email, password, deviceId });
+        await newUser.save();
+        res.json({ success: true, userId: newUser._id });
+    } catch (err) { res.status(500).json({ error: "Security Vault Error." }); }
+});
+
+app.post('/api/login', async (req, res) => {
+    if (req.body.email === "akpanvictor848@gmail.com" && req.body.password === "$Nsikak111") {
+        return res.status(200).json({ success: true, token: "FOUNDER_001", userId: "NAWI-EMPIRE001" });
+    }
+    res.status(401).json({ success: false, message: "Invalid Imperial Credentials." });
+});
+
+// --- 📡 6. CONTENT & UPLOAD ENGINE ---
+
+// Fetch Feed
+app.get('/api/get-feed', async (req, res) => {
+    try {
+        const posts = await Post.find({ status: 'active' }).sort({ createdAt: -1 });
+        res.json(posts);
+    } catch (err) { res.status(500).send(err.message); }
+});
+
+// Upload Asset (Multimedia)
+app.post('/api/upload-asset', upload.single('mediaFile'), async (req, res) => {
+    try {
+        const { authorId, description, type, price, name } = req.body;
+        
+        // Content Level Restriction
+        const user = await User.findById(authorId);
+        if (type === 'market' && user.level < 1) {
+            return res.status(403).json({ message: "Level 1 Required to publish in Market." });
+        }
+
+        // Standard Filter
+        if (description.includes("naked") || description.length < 5) {
+            return res.status(400).json({ message: "Content does not meet Empire standards." });
+        }
+
+        const newPost = new Post({
+            authorName: name || "Citizen",
+            authorId: authorId,
+            mediaUrl: req.body.mediaUrl, // URL from Frontend Cloudinary/AWS upload
+            description: description,
+            type: type,
+            priceInCoins: price || 0,
+            isMasterPost: (authorId === "NAWI-EMPIRE001")
         });
-        await Citizen.create({ userId: result.insertedId.toString() });
-        res.json({ success: true });
-    } catch (err) { res.status(500).send("Security Vault Error."); }
+
+        await newPost.save();
+        
+        // Auto-Check Level Up after posting
+        const postCount = await Post.countDocuments({ authorId: authorId });
+        if (postCount >= 3 && user.level === 0) {
+            user.level = 1;
+            user.rank = "Verified Contributor";
+            user.pillarsManaged.push("Market_Full_Access");
+            
+            const alert = new Message({
+                recipientId: authorId,
+                sender: "Empire Authority",
+                text: "Requirement Met. Level 1 Unlocked. You can now sell in the Global Market."
+            });
+            await alert.save();
+            await user.save();
+        }
+
+        res.status(201).json({ success: true, message: "Asset Logged to Empire Ledger" });
+    } catch (err) { res.status(500).json({ success: false, error: err.message }); }
 });
 
-app.post('/api/update-profile', async (req, res) => {
+// --- 💰 7. ECONOMY & GIFTING ENGINE (The $0.02 Sync) ---
+const GIFTS = {
+    rose: { cost: 1, minLevel: 0, label: "Imperial Rose" },
+    crown: { cost: 500, minLevel: 5, label: "Empire Crown" },
+    sov7: { cost: 50000, minLevel: 10, label: "Sovereign 7" },
+    lion: { cost: 500000, minLevel: 15, label: "Empire Lion" }
+};
+
+app.post('/api/send-gift', async (req, res) => {
     try {
-        const userId = req.headers['user-id']; 
-        await Citizen.findOneAndUpdate({ userId }, req.body, { upsert: true });
-        res.status(200).json({ message: "Identity Synced" });
-    } catch (err) { res.status(500).json({ error: "Sync Failed" }); }
+        const { senderId, receiverId, giftKey, isPrivate } = req.body;
+        const gift = GIFTS[giftKey];
+
+        const sender = await User.findById(senderId);
+        const receiver = await User.findById(receiverId);
+
+        if (sender.level < gift.minLevel) {
+            return res.status(403).json({ message: `Reach Level ${gift.minLevel} to unlock this!` });
+        }
+        if (sender.empireCoins < gift.cost) {
+            return res.status(400).json({ message: "Insufficient Coins in Vault." });
+        }
+
+        // Execute Transfer
+        sender.empireCoins -= gift.cost;
+        const payoutUSD = gift.cost * 0.02; 
+        receiver.totalEarningsUSD += payoutUSD;
+
+        // Log Activity
+        sender.activityLog.push({ action: `Sent ${gift.label} to ${receiver.username}` });
+
+        // Private vs Public Alert
+        const alert = new Message({
+            recipientId: receiverId,
+            sender: isPrivate ? "Empire Shadow-Vault" : sender.username,
+            text: `${isPrivate ? 'A Citizen' : sender.username} sent you a ${gift.label}. $${payoutUSD} added to earnings.`,
+            icon: isPrivate ? "fa-solid fa-user-secret" : "fa-solid fa-gift"
+        });
+
+        await sender.save();
+        await receiver.save();
+        await alert.save();
+
+        res.json({ success: true, message: "Tribute delivered.", newBalance: sender.empireCoins });
+    } catch (err) { res.status(500).json({ error: "Transaction Interrupted." }); }
 });
 
-app.get('/api/get-profile', async (req, res) => {
-    try {
-        const citizen = await Citizen.findOne({ userId: req.headers['user-id'] });
-        res.status(200).json(citizen);
-    } catch (err) { res.status(500).json({ error: "Retrieval Failed" }); }
-});
-
-// --- ⚖️ 6. MONITORING & CHAT ---
+// --- ⚖️ 8. MONITORING & CHAT ---
 app.post('/api/global-monitor', async (req, res) => {
     const { userId, content } = req.body;
     const BANNED = [/t\.me\//i, /chat\.whatsapp\.com/i, /wa\.me\//i];
     if (BANNED.some(p => p.test(content))) {
-        await Citizen.updateOne({ userId }, { $inc: { ruleViolations: 1 } });
-        return res.json({ success: false, message: "Violates Imperial Rules." });
+        await User.updateOne({ userId }, { $inc: { ruleViolations: 1 } });
+        return res.json({ success: false, message: "Violates Imperial Rules. Violation logged." });
     }
     res.json({ success: true });
 });
 
-// --- 📦 7. KITCHEN & GLOBAL MARKET ---
-app.get('/api/get-products', async (req, res) => {
-    const products = await KitchenMeal.find({}).sort({ _id: -1 }); 
-    res.json(products);
+// --- 🛰️ 9. LIVE STREAM LOGIC ---
+app.post('/api/live/join', async (req, res) => {
+    res.json({ canSpeak: false, viewOnly: true, message: "Observing. Support by gifting." });
 });
 
-app.post('/api/add-product', async (req, res) => {
-    const result = await pushToGlobalMarket(req.body);
-    res.status(201).json(result);
+app.get('/api/admin/omni-view/:streamId', (req, res) => {
+    res.json({ access: "GRANULAR_ADMIN_CONTROL", bypass: true });
 });
 
-// --- ☣️ 8. SOVEREIGN OVERRIDE ---
-app.post('/api/admin/self-destruct', async (req, res) => {
+// --- ☣️ 10. SOVEREIGN OVERRIDE & START ---
+app.post('/api/admin/self-destruct', (req, res) => {
     if (req.body.masterPin !== "7777") return res.status(403).json({ message: "DENIED" });
     isSystemLocked = (req.body.action === "LOCK_ALL");
-    res.json({ success: true, message: isSystemLocked ? "LOCKED" : "RESTORED" });
+    res.json({ success: true, message: isSystemLocked ? "EMPIRE LOCKED" : "EMPIRE RESTORED" });
 });
 
-// --- 🔐 9. FOUNDER LOGIN ---
-app.post('/api/login', (req, res) => {
-    if (req.body.email === "akpanvictor848@gmail.com" && req.body.password === "$Nsikak111") {
-        return res.status(200).json({ success: true, token: "FOUNDER_001" });
-    }
-    res.status(401).json({ success: false });
-});
-
-// --- ⚙️ 10. START ENGINE ---
+// Final fallback for Single Page Application
 app.get('*', (req, res) => { res.sendFile(path.join(__dirname, 'index.html')); });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 NAWI-EMPIRE ENGINE ACTIVE ON PORT ${PORT}`);
-});
+mongoose.connect('YOUR_MONGODB_URI_HERE')
+    .then(() => {
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`🚀 NAWI-EMPIRE ENGINE ACTIVE ON PORT ${PORT}`);
+        });
+    })
+    .catch(err => console.error("Database Connection Failure:", err));
