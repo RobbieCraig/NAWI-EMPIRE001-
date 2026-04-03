@@ -4,42 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NAWI LIVE STUDIO | ACTIVE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
     <style>
         :root { --gold: #D4AF37; --red: #ff0033; --glass: rgba(0,0,0,0.6); }
-        body, html { margin: 0; padding: 0; background: #000; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; }
-        #camera { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 1; }
+        body, html { margin: 0; padding: 0; background: #000; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; color: white; }
+        
+        /* --- 🎥 VIDEO ENGINE --- */
+        #camera-container { width: 100%; height: 100%; position: absolute; inset: 0; z-index: 1; }
+        #camera { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* --- 🎞️ ANIMATION LAYER --- */
+        #gift-display-area { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
         
         .studio-overlay { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; pointer-events: none; }
         .interactive { pointer-events: auto; }
 
-        /* COIN & GIFT HEADER */
-        .live-header { display: flex; justify-content: space-between; align-items: center; }
-        .coin-box { background: var(--glass); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-weight: bold; display: flex; align-items: center; gap: 8px; }
-
-        /* ACTIVE SIDE TOOLS */
-        .side-tools { position: absolute; right: 20px; top: 120px; display: flex; flex-direction: column; gap: 25px; }
-        .tool-btn { background: var(--glass); width: 45px; height: 45px; border-radius: 50%; border: 1px solid #fff; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; }
+        /* HEADER & TOOLS */
+        .coin-box { background: var(--glass); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-weight: bold; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px); }
+        .tool-btn { background: var(--glass); width: 45px; height: 45px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s; }
         .tool-btn:active { transform: scale(0.9); border-color: var(--gold); }
 
-        /* GIFT BAR SYSTEM (WORKING) */
-        .gift-bar { background: linear-gradient(transparent, rgba(0,0,0,0.9)); padding: 20px; display: flex; gap: 15px; overflow-x: auto; align-items: center; }
-        .gift-item { min-width: 60px; text-align: center; cursor: pointer; }
-        .gift-icon { width: 50px; height: 50px; background: var(--glass); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--gold); font-size: 20px; margin-bottom: 5px; }
-        .gift-price { font-size: 10px; color: #fff; font-weight: bold; }
+        /* --- ⚔️ BATTLE BAR --- */
+        .battle-container { position: absolute; top: 78vh; width: 100%; left: 0; padding: 0 20px; z-index: 50; }
+        .progress-track { width: 100%; height: 8px; background: #222; border-radius: 10px; overflow: hidden; border: 1px solid #333; display: flex; }
+        #team-a { background: var(--gold); width: 50%; transition: 0.5s ease-out; }
+        #team-b { background: #007bff; width: 50%; transition: 0.5s ease-out; }
 
-        /* BROADCAST ACTION */
-        .broadcast-footer { text-align: center; padding: 20px; }
-        .go-live-btn { width: 220px; height: 55px; border-radius: 30px; border: none; background: var(--red); color: white; font-weight: bold; font-size: 18px; box-shadow: 0 0 20px rgba(255,0,51,0.5); }
-        .go-live-btn:disabled { background: #333; box-shadow: none; color: #777; }
+        /* --- 🎁 GIFT DRAWER --- */
+        .gift-bar { background: linear-gradient(transparent, rgba(0,0,0,0.95)); padding: 20px; display: flex; gap: 20px; overflow-x: auto; align-items: center; scrollbar-width: none; }
+        .gift-item { min-width: 65px; text-align: center; cursor: pointer; }
+        .gift-icon { width: 55px; height: 55px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--gold); font-size: 24px; margin-bottom: 5px; box-shadow: 0 0 15px rgba(212,175,55,0.2); }
+        .gift-price { font-size: 9px; color: #aaa; font-weight: 900; text-transform: uppercase; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
-    <video id="camera" autoplay playsinline muted></video>
+    <div id="camera-container">
+        <video id="camera" autoplay playsinline muted></video>
+        <span class="absolute top-24 left-5 bg-black/50 px-3 py-1 rounded-full text-[10px] text-amber-500 font-bold border border-amber-500/30 z-20">
+            <i class="fa-solid fa-7"></i> MASTER NODE
+        </span>
+    </div>
+
+    <div id="gift-display-area"></div>
 
     <div class="studio-overlay">
-        <div class="live-header interactive">
+        <div class="flex justify-between items-center interactive">
             <div class="coin-box">
                 <i class="fa-solid fa-coins"></i>
                 <span id="earnings">0.00</span>
@@ -47,87 +64,129 @@
             <div class="tool-btn" onclick="location.href='index.html'"><i class="fa-solid fa-xmark"></i></div>
         </div>
 
-        <div class="side-tools interactive">
+        <div class="absolute right-5 top-28 flex flex-col gap-6 interactive">
             <div class="tool-btn" onclick="flipCam()"><i class="fa-solid fa-camera-rotate"></i></div>
             <div class="tool-btn" onclick="toggleFilter()"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
             <div class="tool-btn" onclick="openMusic()"><i class="fa-solid fa-music"></i></div>
         </div>
 
-        <div class="interactive">
+        <div class="battle-container">
+            <div class="flex justify-between text-[9px] font-black uppercase mb-1 px-1">
+                <span class="text-amber-500">Empire A</span>
+                <span class="text-blue-500">Challenger B</span>
+            </div>
+            <div class="progress-track">
+                <div id="team-a"></div>
+                <div id="team-b"></div>
+            </div>
+        </div>
+
+        <div class="interactive mt-auto">
             <div class="gift-bar">
-                <div class="gift-item" onclick="sendGift('Rose', 10)">
+                <div class="gift-item" onclick="sendGift('rose', 10)">
                     <div class="gift-icon">🌹</div>
-                    <div class="gift-price">10 Coins</div>
+                    <div class="gift-price">10 C</div>
                 </div>
-                <div class="gift-item" onclick="sendGift('Crown', 10)">
-                    <div class="gift-icon" style="color:gold">👑</div>
-                    <div class="gift-price">100 Coins</div>
+                <div class="gift-item" onclick="sendGift('coin', 100)">
+                    <div class="gift-icon">🪙</div>
+                    <div class="gift-price">100 C</div>
                 </div>
-                <div class="gift-item" onclick="sendGift('coin', 20)">
-                    <div class="gift-icon" style="color:cyan">💎</div>
-                    <div class="gift-price">500 Coins</div>
-                </div>
-                <div class="gift-item" onclick="sendGift('Lion', 10)">
-                    <div class="gift-icon" style="color:orange">🦁</div>
-                    <div class="gift-price">1k Coins</div>
+                <div class="gift-item" onclick="sendGift('lion', 1000)">
+                    <div class="gift-icon">🦁</div>
+                    <div class="gift-price">1k C</div>
                 </div>
             </div>
 
-            <div class="broadcast-footer">
-                <p id="lock-msg" style="color:white; font-size:12px; margin-bottom:15px; font-weight:bold;">LOCKED: 500 FOLLOWERS REQUIRED</p>
-                <button id="live-btn" class="go-live-btn" disabled onclick="startBroadcasting()">GO LIVE</button>
+            <div class="p-6 text-center">
+                <p id="lock-msg" class="text-[10px] font-bold text-zinc-500 mb-4 uppercase tracking-[0.2em]">Follower Lock: 500 Required</p>
+                <button id="live-btn" class="w-full bg-red-600 h-14 rounded-2xl font-black text-sm uppercase tracking-widest disabled:bg-zinc-800 disabled:text-zinc-600 shadow-lg" disabled onclick="startBroadcasting()">Go Live</button>
             </div>
         </div>
     </div>
 
     <script>
         let totalCoins = 0;
-        let stream;
+        let teamAScore = 50; // Starting at 50%
+
+        // GIFT DATABASE
+        const EMPIRE_GIFTS = {
+            coin: { name: "Sovereign 7", icon: "🪙", color: "#D4AF37" },
+            rose: { name: "Imperial Rose", icon: "🌹", color: "#C0C0C0" },
+            lion: { name: "Empire Lion", icon: "🦁", color: "#D4AF37" }
+        };
 
         // START CAMERA
         async function init() {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 document.getElementById('camera').srcObject = stream;
                 
-                // CHECK FOLLOWER LOCK (Order: 500)
-                const followers = 0; // Linked to NAWI-EMPIRE Database
-                if(followers >= 500) {
-                    document.getElementById('live-btn').disabled = false;
+                // SIMULATED FOLLOWER CHECK
+                const followerCount = 600; // This will link to your DB later
+                if(followerCount >= 500) {
+                    const btn = document.getElementById('live-btn');
+                    btn.disabled = false;
                     document.getElementById('lock-msg').innerText = "SYSTEMS READY";
-                    document.getElementById('lock-msg').style.color = "lime";
+                    document.getElementById('lock-msg').classList.replace('text-zinc-500', 'text-green-500');
                 }
-            } catch(e) { alert("Enable Camera to Live Stream"); }
+            } catch(e) { console.log("Camera access denied."); }
         }
 
-        // ACTIVE GIFT SYSTEM
-        function sendGift(name, price) {
+        // --- 🎁 MASTER GIFT LOGIC ---
+        function sendGift(giftKey, price) {
+            // 1. Update Earnings
             totalCoins += price;
-            document.getElementById('earnings').innerText = totalCoins.toFixed(2);
-            // Visual feedback
-            const notify = document.createElement('div');
-            notify.style.cssText = "position:absolute; bottom:150px; left:20px; color:gold; font-weight:bold; animation: fadeUp 2s forwards;";
-            notify.innerHTML = "🎁 Sent " + name + " (+" + price + ")";
-            document.body.appendChild(notify);
-            setTimeout(() => notify.remove(), 2000);
+            document.getElementById('earnings').innerText = totalCoins.toLocaleString();
+
+            // 2. Trigger Tribute Animation
+            const gift = EMPIRE_GIFTS[giftKey];
+            triggerGiftAnimation(gift, "Citizen_" + Math.floor(Math.random() * 999));
+
+            // 3. Update Battle Bar (Team A grows on gifts)
+            teamAScore = Math.min(teamAScore + 5, 95);
+            updateBattleBar();
         }
 
-        function flipCam() { alert("Camera Flipped"); }
-        function toggleFilter() { alert("Beautify Filter Active"); }
-        function openMusic() { alert("Opening Music Library..."); }
+        function triggerGiftAnimation(gift, senderName) {
+            const area = document.getElementById('gift-display-area');
+            const giftEl = document.createElement('div');
+            
+            giftEl.style.cssText = "position:absolute; top:25%; right:20px; animation: slideIn 0.5s ease-out; z-index:1000;";
+            giftEl.innerHTML = `
+                <div style="background: rgba(0,0,0,0.85); border: 1.5px solid ${gift.color}; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 15px; backdrop-filter: blur(10px);">
+                    <span style="font-size: 35px;">${gift.icon}</span>
+                    <div>
+                        <p style="color: white; font-size: 10px; font-weight: 900; margin: 0; text-transform:uppercase;">${senderName}</p>
+                        <p style="color: ${gift.color}; font-size: 8px; font-weight: 900; margin: 0; text-transform:uppercase;">Sent ${gift.name}</p>
+                    </div>
+                </div>
+            `;
+
+            area.appendChild(giftEl);
+            setTimeout(() => {
+                giftEl.style.opacity = "0";
+                giftEl.style.transition = "1s";
+                setTimeout(() => giftEl.remove(), 1000);
+            }, 3000);
+        }
+
+        function updateBattleBar() {
+            document.getElementById('team-a').style.width = teamAScore + "%";
+            document.getElementById('team-b').style.width = (100 - teamAScore) + "%";
+        }
+
+        // TOOL ACTIONS
+        function flipCam() { alert("Swapping Camera Nodes..."); }
+        function toggleFilter() { alert("Beautify Node Active"); }
+        function openMusic() { alert("Syncing Empire Audio..."); }
 
         function startBroadcasting() {
-            alert("7 pillars: Broadcaster is now LIVE to followers.");
+            document.getElementById('live-btn').innerText = "STREAMING LIVE";
+            document.getElementById('live-btn').classList.replace('bg-red-600', 'bg-green-600');
+            alert("NAWI EMPIRE: You are now broadcasting to the 7 Pillars.");
         }
 
         window.onload = init;
     </script>
-
-    <style>
-        @keyframes fadeUp {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-100px); }
-        }
-    </style>
 </body>
 </html>
