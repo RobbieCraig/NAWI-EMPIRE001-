@@ -3,70 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI EMPIRE | Social Hub</title>
+    <title>NAWI EMPIRE | Sovereign Ecosystem</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --neon: #00ff41; }
-        body { 
-            background: var(--black); 
-            color: white; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            overflow-x: hidden; 
-            -webkit-user-select: none; 
-            user-select: none;
-        }
+        :root { --gold: #D4AF37; --black: #050505; --neon: #00ff41; --glass: rgba(255, 255, 255, 0.05); }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; -webkit-user-select: none; user-select: none; }
 
-        /* --- 🛡️ 1. AUTHORITY GATE --- */
-        #auth-gate { 
+        /* --- 🛡️ 1. AUTHORITY GATE & OATH --- */
+        #auth-gate, .oath-overlay, .glass-overlay { 
             height: 100vh; width: 100%; position: fixed; inset: 0;
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             background: radial-gradient(circle, #111 0%, #000 100%); z-index: 20000; transition: 0.8s ease; 
         }
-        .authority-card { 
-            background: rgba(255,255,255,0.03); border: 1px solid var(--gold); border-radius: 24px; 
-            padding: 40px 30px; max-width: 350px; text-align: center; backdrop-filter: blur(15px);
+        .authority-card, .oath-scroll-box, .luxury-popup { 
+            background: rgba(15,15,15,0.95); border: 1px solid var(--gold); border-radius: 24px; 
+            padding: 30px; max-width: 400px; text-align: center; backdrop-filter: blur(15px);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
         }
-        .order-text { 
-            font-size: 11px; line-height: 1.6; color: #eee; border-left: 3px solid var(--gold); 
-            padding-left: 15px; text-align: left; font-style: italic; margin: 20px 0; 
-        }
+        .order-text { font-size: 11px; line-height: 1.6; color: #eee; border-left: 3px solid var(--gold); padding-left: 15px; text-align: left; font-style: italic; margin: 20px 0; }
 
-        /* --- 🖼️ 2. THE 3-WAY PORTAL --- */
-        #live-portal-overlay { 
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(20px); z-index: 9999; flex-direction: column;
-            align-items: center; justify-content: center; padding: 24px;
+        /* --- 🏛️ 2. THE 7 PILLARS SIDEBAR --- */
+        .empire-sidebar {
+            position: fixed; left: 0; top: 0; height: 100vh; width: 60px;
+            background: var(--black); border-right: 1px solid var(--gold);
+            display: none; flex-direction: column; transition: width 0.4s; z-index: 9999; overflow: hidden;
         }
+        .empire-sidebar:hover { width: 180px; }
+        .nav-item { display: flex; align-items: center; padding: 15px 20px; text-decoration: none; color: #888; transition: 0.3s; white-space: nowrap; }
+        .nav-item .icon { font-size: 1.4rem; margin-right: 20px; min-width: 24px; }
+        .nav-item .label { opacity: 0; font-size: 0.8rem; font-weight: bold; transition: 0.3s; }
+        .empire-sidebar:hover .label { opacity: 1; }
+        .nav-item:hover, .nav-item.active { color: var(--gold); background: var(--glass); }
 
-        /* --- 📱 3. IMPERIAL ALERTS --- */
-        #imperial-alert {
-            display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; background: rgba(0,0,0,0.98); border: 1px solid var(--gold);
-            border-radius: 15px; padding: 15px; z-index: 10000; box-shadow: 0 10px 40px rgba(0,0,0,1);
-        }
+        /* --- 🍳 3. KITCHEN LIVE & DASHBOARD --- */
+        #kitchen-live-module { display: none; padding: 20px; padding-left: 80px; }
+        .stream-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .video-card { background: #1a1a1a; border: 1px solid var(--glass); border-radius: 12px; position: relative; height: 150px; overflow: hidden; }
+        .self-view { border: 1px solid var(--gold); }
+        video { width: 100%; height: 100%; object-fit: cover; }
 
-        .feed-container { padding: 15px; padding-bottom: 150px; display: none; }
-        .post-card { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 30px; margin-bottom: 25px; overflow: hidden; transition: 0.3s; }
+        /* --- 📱 4. FEED & NAVIGATION --- */
+        .feed-container { padding: 15px; padding-left: 80px; padding-bottom: 150px; display: none; }
+        .post-card { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 30px; margin-bottom: 25px; overflow: hidden; }
+        .node-7-trigger { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 70px; height: 70px; background: white; color: black; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; border: 6px solid var(--black); z-index: 8000; box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); }
 
-        /* --- NAVIGATION FIX --- */
-        .node-7-trigger {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            width: 70px; height: 70px; background: white; color: black; border-radius: 50%;
-            display: none; align-items: center; justify-content: center; font-size: 28px;
-            font-weight: 900; border: 6px solid var(--black); z-index: 8000;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); cursor: pointer;
-        }
-        .bottom-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 85px; background: #050505;
-            display: none; justify-content: space-around; align-items: center;
-            border-top: 1px solid #111; z-index: 5000;
-        }
+        /* --- 🎁 GIFTING DOCK --- */
+        .gifting-dock { background: var(--glass); border-top: 1px solid var(--gold); padding: 15px; margin-top: 20px; border-radius: 15px; display: flex; justify-content: space-around; }
+        .gift-btn { background: #1a1a1a; border: 1px solid var(--gold); border-radius: 10px; padding: 10px; width: 60px; text-align: center; }
 
-        /* MASTER MODE COLORS */
+        /* MASTER MODE */
         .master-mode #r-label { color: var(--neon) !important; text-shadow: 0 0 10px var(--neon); }
     </style>
 </head>
@@ -76,94 +64,110 @@
         <div class="authority-card">
             <div style="color:var(--gold); font-weight:900; font-size:9px; letter-spacing:4px;">EMPIRE MANDATE</div>
             <p class="order-text">"This is my order and my authority to protect the founders and this platform... follow the rules."</p>
-            <button onclick="unlockEmpire()" class="w-full bg-[#D4AF37] text-black py-4 rounded-xl font-black uppercase text-[10px] tracking-widest">Unlock Ecosystem</button>
+            <button onclick="showOath()" class="w-full bg-[#D4AF37] text-black py-4 rounded-xl font-black uppercase text-[10px]">Unlock Ecosystem</button>
         </div>
     </div>
 
-    <div id="imperial-alert">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 border border-[#D4AF37] rounded flex items-center justify-center font-black text-[#D4AF37]">7</div>
-            <div>
-                <h5 class="text-[#D4AF37] text-[10px] font-black uppercase">Imperial Update</h5>
-                <p id="alert-text" class="text-white text-[10px]"></p>
+    <div id="oathContainer" class="oath-overlay" style="display:none;">
+        <div class="oath-scroll-box">
+            <h2 style="color:var(--gold); font-family:'Cinzel';">THE FOUNDER'S OATH</h2>
+            <div id="oathText" style="height:150px; overflow-y:scroll; font-size:10px; padding:15px; text-align:left;" onscroll="checkScroll(this)">
+                <p>I. Integrity: I shall trade with honor.</p>
+                <p>II. Authority: I acknowledge NAWI-EMPIRE001.</p>
+                <p>III. Rules: The pillars are my shield.</p>
+                <p>IV. Legacy: I build for the Empire.</p>
+            </div>
+            <button id="acceptBtn" disabled onclick="unlockEmpire()" class="w-full bg-zinc-800 text-zinc-500 py-3 rounded mt-4">I ACCEPT THE OATH</button>
+        </div>
+    </div>
+
+    <nav class="empire-sidebar" id="mainSidebar">
+        <div class="sidebar-header"><div class="mini-seal">001</div></div>
+        <div class="nav-links">
+            <a href="#" class="nav-item" onclick="showModule('feed')"><span class="icon">📱</span><span class="label">FEED</span></a>
+            <a href="#" class="nav-item" onclick="showModule('kitchen')"><span class="icon">🍳</span><span class="label">KITCHEN</span></a>
+            <a href="#" class="nav-item"><span class="icon">🎵</span><span class="label">PROMOTION</span></a>
+            <a href="#" class="nav-item"><span class="icon">🎬</span><span class="label">ADS</span></a>
+            <a href="#" class="nav-item"><span class="icon">🎮</span><span class="label">GAMING</span></a>
+            <a href="#" class="nav-item"><span class="icon">👕</span><span class="label">APPAREL</span></a>
+            <a href="inbox.html" class="nav-item"><span class="icon">🛡️</span><span class="label">INBOX</span></a>
+        </div>
+    </nav>
+
+    <main id="kitchen-live-module">
+        <h2 class="text-amber-500 font-black italic">KITCHEN LIVE & MARKET</h2>
+        <div class="stream-grid">
+            <div class="video-card self-view">
+                <video id="localVideo" autoplay muted playsinline></video>
+                <div class="user-label">YOU (FOUNDER)</div>
+            </div>
+            <div class="video-card peer-view">
+                <div class="flex items-center justify-center h-full text-zinc-700">Waiting for Peer...</div>
+                <div class="user-label">CITIZEN_SUCCESS</div>
             </div>
         </div>
-    </div>
-
-    <div id="live-portal-overlay">
-        <h2 class="text-amber-500 font-black italic tracking-tighter mb-10">SELECT DESTINATION</h2>
-        <div class="grid grid-cols-1 gap-6 w-full max-w-xs">
-            <button onclick="location.href='studio.html'" class="relative bg-zinc-900 p-6 rounded-[30px] border border-zinc-800 text-left">
-                <p class="text-[8px] text-zinc-500 uppercase font-black mb-1">Pillar 4</p>
-                <h3 class="text-sm font-black uppercase">Live Studio</h3>
-                <span class="absolute top-4 right-4 w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
-            </button>
-            <button onclick="location.href='games.html'" class="bg-zinc-900 p-6 rounded-[30px] border border-zinc-800 text-left">
-                <p class="text-[8px] text-zinc-500 uppercase font-black mb-1">Pillar 5</p>
-                <h3 class="text-sm font-black uppercase">Gaming Arena</h3>
-            </button>
-            <button onclick="location.href='kitchen.html'" class="bg-zinc-900 p-6 rounded-[30px] border border-zinc-800 text-left">
-                <p class="text-[8px] text-zinc-500 uppercase font-black mb-1">Pillar 3</p>
-                <h3 class="text-sm font-black uppercase">Kitchen Live</h3>
-            </button>
+        <div class="gifting-dock">
+            <button class="gift-btn" onclick="sendGift('Rose', 10)">🌹<br><small>10</small></button>
+            <button class="gift-btn" onclick="sendGift('Crown', 50)">👑<br><small>50</small></button>
+            <button class="gift-btn" onclick="sendGift('Lion', 100)">🦁<br><small>100</small></button>
         </div>
-        <button onclick="closePortal()" class="mt-12 text-zinc-600 text-[10px] font-black uppercase">Return to Feed</button>
-    </div>
+    </main>
 
-    <header id="app-header" style="display:none;" class="p-6 pt-12 flex justify-between items-center sticky top-0 bg-black/95 z-40">
+    <header id="app-header" style="display:none;" class="p-6 pt-12 flex justify-between items-center sticky top-0 bg-black/95 z-40 ml-12">
         <div>
             <p id="r-label" class="text-[7px] font-black tracking-[0.4em] text-zinc-600 uppercase">Empire Feed</p>
             <h1 class="text-xl font-black italic">NAWI SOCIAL</h1>
         </div>
-        <div class="flex gap-4">
-            <i class="fa-solid fa-plus text-zinc-400 text-xl" onclick="location.href='create-post.html'"></i>
-            <div class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                <i class="fa-solid fa-bell text-amber-500 text-xs"></i>
-            </div>
-        </div>
+        <i class="fa-solid fa-bell text-amber-500" id="p-trigger"></i>
     </header>
 
     <main class="feed-container" id="empire-feed">
         <div id="feed-loader" class="text-center py-10">
             <i class="fa-solid fa-7 fa-spin text-amber-500 text-2xl"></i>
-            <p class="text-[8px] text-zinc-600 mt-2 uppercase tracking-widest">Accessing Ledger...</p>
+            <p class="text-[8px] text-zinc-600 mt-2 uppercase">Accessing Ledger...</p>
         </div>
     </main>
 
-    <div class="node-7-trigger animate-pulse" id="center-node" onclick="openPortal()">7</div>
-
-    <nav class="bottom-bar" id="main-nav">
-        <a href="index.html" class="text-amber-500 text-2xl"><i class="fa-solid fa-house"></i></a>
-        <a href="market.html" class="text-zinc-600 text-2xl"><i class="fa-solid fa-bag-shopping"></i></a>
-        <div style="width: 75px;"></div>
-        <a href="inbox.html" class="text-zinc-600 text-2xl"><i class="fa-solid fa-message"></i></a>
-        <a href="profile.html" class="text-zinc-600 text-2xl" id="p-trigger"><i class="fa-solid fa-circle-user"></i></a>
-    </nav>
+    <div class="node-7-trigger" id="center-node" onclick="openPortal()">7</div>
 
     <script>
-        // FIXED: Using relative paths so the connection works regardless of host
-        const API_URL = ""; 
-
-        function unlockEmpire() {
-            document.getElementById('auth-gate').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('auth-gate').style.display = 'none';
-                document.getElementById('app-header').style.display = 'flex';
-                document.getElementById('empire-feed').style.display = 'block';
-                document.getElementById('main-nav').style.display = 'flex';
-                document.getElementById('center-node').style.display = 'flex';
-                loadHomeFeed();
-            }, 800);
+        function showOath() {
+            document.getElementById('auth-gate').style.display = 'none';
+            document.getElementById('oathContainer').style.display = 'flex';
         }
 
-        function openPortal() { document.getElementById('live-portal-overlay').style.display = 'flex'; }
-        function closePortal() { document.getElementById('live-portal-overlay').style.display = 'none'; }
+        function checkScroll(el) {
+            if (el.scrollHeight - el.scrollTop <= el.clientHeight + 1) {
+                const btn = document.getElementById('acceptBtn');
+                btn.disabled = false;
+                btn.style.background = '#D4AF37';
+                btn.style.color = 'black';
+            }
+        }
 
-        function showEmpireAlert(text) {
-            const box = document.getElementById('imperial-alert');
-            document.getElementById('alert-text').innerText = text;
-            box.style.display = 'block';
-            setTimeout(() => { box.style.display = 'none'; }, 5000);
+        function unlockEmpire() {
+            document.getElementById('oathContainer').style.display = 'none';
+            document.getElementById('mainSidebar').style.display = 'flex';
+            document.getElementById('app-header').style.display = 'flex';
+            document.getElementById('empire-feed').style.display = 'block';
+            document.getElementById('center-node').style.display = 'flex';
+            startCamera();
+        }
+
+        function showModule(module) {
+            document.getElementById('empire-feed').style.display = (module === 'feed') ? 'block' : 'none';
+            document.getElementById('kitchen-live-module').style.display = (module === 'kitchen') ? 'block' : 'none';
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('localVideo').srcObject = stream;
+            } catch (err) { console.log("Camera Bridge Offline"); }
+        }
+
+        function sendGift(name, price) {
+            alert(`Sovereign Support: ${name} sent for ${price} Coins`);
         }
 
         // 🕵️ MASTER LOGIN (0001)
@@ -175,48 +179,10 @@
                 if(pass === "0001") {
                     document.getElementById('mainBody').classList.add('master-mode');
                     document.getElementById('r-label').innerText = "SYSTEM CONTROL ROOM";
-                    showEmpireAlert("Master Authenticated.");
                 }
             }, 3000);
         });
         trigger.addEventListener('pointerup', () => clearTimeout(pressTimer));
-
-        // 📥 FIXED FEED FETCH
-        async function loadHomeFeed() {
-            try {
-                // Connection Bridge Corrected: /api/get-feed
-                const response = await fetch(`${API_URL}/api/get-feed`);
-                const posts = await response.json();
-                const feed = document.getElementById('empire-feed');
-                if(document.getElementById('feed-loader')) document.getElementById('feed-loader').remove();
-
-                posts.forEach(post => {
-                    const postHTML = `
-                        <div class="post-card border-b border-zinc-900 pb-6 mb-6">
-                            <div class="p-5 flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-zinc-800 border border-amber-500/10"></div>
-                                <div>
-                                    <p class="text-[8px] font-black uppercase text-amber-500">${post.isMasterPost ? 'FOUNDER NODE' : 'CITIZEN'}</p>
-                                    <h3 class="text-xs font-bold text-white">${post.authorName || 'Citizen'}</h3>
-                                </div>
-                            </div>
-                            <div class="px-2">
-                                <img src="${post.mediaUrl}" class="w-full object-cover aspect-square rounded-[25px] border border-zinc-900" onerror="this.src='https://via.placeholder.com/400?text=Asset+Loading...'">
-                            </div>
-                            <div class="p-5">
-                                <p class="text-[11px] text-zinc-400 mb-4">${post.description}</p>
-                                <div class="flex justify-between items-center">
-                                    <button class="text-amber-500 font-black text-[9px] uppercase border border-amber-500/20 px-6 py-2 rounded-full bg-amber-500/5">Support 7</button>
-                                    <span class="text-white font-bold text-xs">${post.priceInCoins || 0} 🪙</span>
-                                </div>
-                            </div>
-                        </div>`;
-                    feed.insertAdjacentHTML('beforeend', postHTML);
-                });
-            } catch (err) {
-                document.getElementById('feed-loader').innerHTML = '<p class="text-[8px] text-zinc-600 uppercase">SYNCING WITH LEDGER...</p>';
-            }
-        }
     </script>
 </body>
 </html>
