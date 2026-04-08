@@ -28,6 +28,7 @@ let isSystemLocked = false;
 
 // --- 🏛️ 3. DATABASE SCHEMAS & MODELS ---
 
+// User Schema with Pillar Management
 const userSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     username: { type: String, default: "Authenticated Citizen" },
@@ -43,11 +44,12 @@ const userSchema = new mongoose.Schema({
     isVerifiedCitizen: { type: Boolean, default: false }, 
     mandateAcceptedAt: Date, 
     ruleViolations: { type: Number, default: 0 },
-    pillarsManaged: [String],
+    pillarsManaged: [String], // Tracking Pillar Authority
     activityLog: [{ action: String, timestamp: { type: Date, default: Date.now } }]
 });
 const User = mongoose.model('User', userSchema);
 
+// Post Schema
 const postSchema = new mongoose.Schema({
     authorName: String,
     authorId: String,
@@ -63,28 +65,33 @@ const postSchema = new mongoose.Schema({
 });
 const Post = mongoose.model('Post', postSchema);
 
-// --- 🛡️ 4. SECURITY GATEKEEPER (OPTIMIZED) ---
+// Imperial Message Schema (Missing Structure Restored)
+const messageSchema = new mongoose.Schema({
+    recipientId: String,
+    sender: String,
+    text: String,
+    type: { type: String, default: "P2P ALERT" },
+    icon: { type: String, default: "fa-solid fa-bell" },
+    timestamp: { type: Date, default: Date.now }
+});
+const Message = mongoose.model('Message', messageSchema);
+
+// --- 🛡️ 4. SECURITY GATEKEEPER ---
 app.use(async (req, res, next) => {
     const userId = req.headers['user-id'];
     
-    // CEO BYPASS: NAWI-EMPIRE001 is never restricted
     if (userId === "NAWI-EMPIRE001") return next();
 
-    // 1. Global System Lock Check
     if (isSystemLocked) {
         return res.status(503).json({ message: "SYSTEM UNDER MAINTENANCE." });
     }
 
-    // 2. Verified Path Logic
-    const publicPaths = ['/api/login', '/api/register', '/api/verify-mandate'];
+    const publicPaths = ['/api/login', '/api/register', '/api/verify-mandate', '/api/bot/inquiry'];
     if (!publicPaths.includes(req.path) && userId) {
         try {
             const user = await User.findOne({ userId });
             if (user && !user.isVerifiedCitizen) {
-                return res.status(403).json({ 
-                    message: "MANDATE NOT ACCEPTED", 
-                    requireVerification: true 
-                });
+                return res.status(403).json({ message: "MANDATE NOT ACCEPTED", requireVerification: true });
             }
         } catch (err) {
             return res.status(500).json({ message: "Security Check Failure." });
@@ -93,55 +100,71 @@ app.use(async (req, res, next) => {
     next();
 });
 
-// --- 👤 5. IDENTITY & VERIFICATION ---
+// --- 👤 5. IDENTITY & DEEP INQUIRY BOT (Missing Structure Restored) ---
 
-// MANDATE VERIFICATION TOOL
+app.post('/api/bot/inquiry', (req, res) => {
+    const { userInput } = req.body;
+    const input = userInput.toLowerCase();
+
+    if (input.includes("what is") || input.includes("about")) {
+        return res.json({ response: "NAWI-EMPIRE is a Sovereign Ecosystem built to protect Founders. We value integrity over profit and operate under the Seven Pillars." });
+    }
+
+    if (input.includes("who is the owner") || input.includes("who is the ceo")) {
+        return res.json({ response: "The Architect's identity is hidden within the shadows of the Seven Pillars. Type 'REVEAL 001' if you are prepared for the truth." });
+    }
+
+    if (input === "reveal 001") {
+        return res.json({ response: "Leadership Confirmed: NAWI-EMPIRE001. Social Identity: 7 Pillars. General Name: NAWI-EMPIRE. You have looked deeper; now you must build stronger." });
+    }
+
+    res.json({ response: "The Empire is listening. Your query has been logged to the Seven Pillars." });
+});
+
 app.post('/api/verify-mandate', async (req, res) => {
     const { userId } = req.body;
     try {
         const user = await User.findOneAndUpdate(
             { userId: userId },
             { 
-                $set: { 
-                    rank: "Verified Citizen", 
-                    isVerifiedCitizen: true, 
-                    mandateAcceptedAt: new Date() 
-                }, 
+                $set: { rank: "Verified Citizen", isVerifiedCitizen: true, mandateAcceptedAt: new Date() }, 
                 $push: { activityLog: { action: "ACCEPTED_MANDATE" } } 
             },
             { new: true }
         );
-        if (!user) return res.status(404).json({ success: false, message: "Citizen not found." });
         res.json({ success: true, message: "Citizenship confirmed in Empire Ledger." });
-    } catch (err) {
-        res.status(500).json({ success: false, error: "Ledger Update Failed." });
-    }
-});
-
-// Authentication
-app.post('/api/register', async (req, res) => {
-    const { email, password, deviceId } = req.body;
-    try {
-        const existingDevice = await User.findOne({ deviceId });
-        if (existingDevice) return res.status(403).json({ message: "One Node per Human allowed." });
-        
-        const newUser = new User({ email, password, deviceId, userId: new mongoose.Types.ObjectId().toString() });
-        await newUser.save();
-        res.json({ success: true, userId: newUser.userId });
-    } catch (err) { res.status(500).json({ error: "Vault Error." }); }
+    } catch (err) { res.status(500).json({ success: false }); }
 });
 
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
-    // Founder Login
     if (email === "akpanvictor848@gmail.com" && password === "$Nsikak111") {
         return res.status(200).json({ success: true, userId: "NAWI-EMPIRE001", rank: "FOUNDER" });
     }
-    // Logic for regular citizens can go here
     res.status(401).json({ success: false, message: "Invalid Credentials." });
 });
 
-// --- 📡 6. CONTENT & ECONOMY ---
+// --- 📡 6. PILLAR TOOLS & ECONOMY (Missing Structure Restored) ---
+
+const PILLAR_ECONOMY = {
+    rose: { cost: 1, payout: 0.02 },
+    crown: { cost: 500, payout: 10.00 },
+    lion: { cost: 500000, payout: 10000.00 }
+};
+
+app.post('/api/send-gift', async (req, res) => {
+    const { senderId, receiverId, giftKey } = req.body;
+    const gift = PILLAR_ECONOMY[giftKey];
+    try {
+        const sender = await User.findOne({ userId: senderId });
+        if (sender.empireCoins < gift.cost) return res.status(400).json({ message: "Insufficient Coins." });
+
+        await User.updateOne({ userId: senderId }, { $inc: { empireCoins: -gift.cost } });
+        await User.updateOne({ userId: receiverId }, { $inc: { totalEarningsUSD: gift.payout } });
+
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ error: "Transaction Failed." }); }
+});
 
 app.get('/api/get-feed', async (req, res) => {
     try {
