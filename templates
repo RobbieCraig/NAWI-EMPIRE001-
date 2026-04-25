@@ -1,0 +1,32 @@
+{
+  "_id": "Unique_Citizen_ID",
+  "identity": {
+    "sovereign_name": "Username",
+    "legacy_rank": "Citizen", 
+    "id_verified": false,
+    "joined_date": "2026-04-25"
+  },
+  "metrics": {
+    "follower_count": 0,
+    "following_count": 0,
+    "daily_streak": 0,
+    "activity_score": 0
+  },
+  "eligibility": {
+    "can_go_live": false,
+    "is_monetized": false,
+    "gate_1k_reached": false,
+    "gate_20k_reached": false
+  },
+  "wallet": {
+    "empire_coins": 0,
+    "total_earned_to_date": 0,
+    "pending_conversion": 0.00,
+    "last_mint_date": "2026-04-25"
+  },
+  "security": {
+    "is_banned": false,
+    "scam_alert_flag": 0,
+    "multi_factor_auth": "ENABLED"
+  }
+}
