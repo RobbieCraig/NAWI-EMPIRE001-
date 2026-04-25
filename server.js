@@ -1,6 +1,6 @@
-/* NAWI-EMPIRE MASTER ENGINE v2.5
+/* NAWI-EMPIRE MASTER ENGINE v2.6
    Sovereign Edition 2026
-   Integrated: Infinite Pulse, 24/7 Universal Feed, Surveillance, & Improved Seeding
+   Integrated: Pulse Feed, Surveillance, Inbox Bridge, & Vault Engine
 */
 
 const express = require('express');
@@ -29,7 +29,7 @@ let isSystemLocked = false;
 
 // --- 🏛️ 3. DATABASE SCHEMAS & MODELS ---
 
-// Unified User Schema (Sovereign Structure)
+// Unified User Schema (Matches user-schema.json)
 const userSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     identity: {
@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
-// Universal Post Schema (7 Pillars Engine)
+// Universal Post Schema
 const postSchema = new mongoose.Schema({
     authorName: String,
     authorId: String,
@@ -81,67 +81,47 @@ const postSchema = new mongoose.Schema({
 });
 const Post = mongoose.model('Post', postSchema);
 
-// --- 🛡️ 4. IMPROVED SEEDING & INITIATION ---
+// --- 🛡️ 4. SEEDING & INITIATION ---
 const seedEmpire = async () => {
     try {
         const userCount = await User.countDocuments();
-        console.log(`[SYSTEM] Current Citizen Count: ${userCount}`);
-
         if (userCount === 0) {
             const templatePath = path.join(__dirname, 'templates', 'user-schema.json');
             
             if (fs.existsSync(templatePath)) {
                 const data = fs.readFileSync(templatePath, 'utf8');
                 const template = JSON.parse(data);
-                
-                // Link Template to Founder Credentials
                 template.userId = "NAWI-EMPIRE001";
                 template.email = "akpanvictor848@gmail.com"; 
                 
                 const founder = new User(template);
                 await founder.save();
-                console.log("🏛️ NAWI-EMPIRE001: Genesis Founder Seeded from GitHub Template.");
+                console.log("🏛️ NAWI-EMPIRE001: Genesis Founder Seeded.");
             } else {
-                console.log("⚠️ Template not found at: " + templatePath + ". Using Fallback.");
                 const fallbackFounder = new User({
                     userId: "NAWI-EMPIRE001",
                     email: "akpanvictor848@gmail.com",
-                    identity: { 
-                        sovereign_name: "Architect", 
-                        legacy_rank: "Founder",
-                        id_verified: true 
-                    },
+                    identity: { sovereign_name: "Architect", legacy_rank: "Founder", id_verified: true },
                     metrics: { follower_count: 50000 },
                     wallet: { empire_coins: 1000 }
                 });
                 await fallbackFounder.save();
-                console.log("🛡️ Fallback Founder Created to prevent lockout.");
+                console.log("🛡️ Fallback Founder Created.");
             }
         }
-    } catch (err) { 
-        console.error("❌ Seed Error Details:", err.message); 
-    }
+    } catch (err) { console.error("❌ Seed Error:", err.message); }
 };
 
-// --- 📡 5. THE PULSE API (Universal Feed & Surveillance) ---
+// --- 📡 5. THE PULSE API ---
 
-// 24/7 Universal Busy Feed
 app.get('/api/feed', async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
         const limit = 12;
-        const skip = (page - 1) * limit;
-
-        const feedItems = await Post.aggregate([
-            { $match: { status: 'active' } },
-            { $sample: { size: limit } } 
-        ]);
-
+        const feedItems = await Post.aggregate([{ $match: { status: 'active' } }, { $sample: { size: limit } }]);
         res.json(feedItems);
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Surveillance Logic: Log user dwell time
 app.post('/api/track-engagement', async (req, res) => {
     const { contentId, duration } = req.body;
     try {
@@ -154,52 +134,60 @@ app.post('/api/track-engagement', async (req, res) => {
 
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
-    // Hardcoded Master Admin Entry
     if (email === "akpanvictor848@gmail.com" && password === "$Nsikak111") {
-        return res.status(200).json({ 
-            success: true, 
-            userId: "NAWI-EMPIRE001", 
-            rank: "FOUNDER",
-            message: "Welcome back, Architect."
-        });
+        return res.status(200).json({ success: true, userId: "NAWI-EMPIRE001", rank: "FOUNDER" });
     }
     res.status(401).json({ success: false, message: "Invalid Credentials." });
 });
 
-// --- ⚖️ 7. PILLAR ECONOMY ($0.02 Logic) ---
-const COIN_VAL = 0.02;
+// --- 📥 7. INBOX ENGINE (Fixes "Bridge Connection Interrupted") ---
+app.get('/api/inbox/:userId', async (req, res) => {
+    try {
+        const messages = [{
+            id: "msg_001",
+            sender: "SYSTEM",
+            text: "Welcome to NAWI-EMPIRE. Your Connection Vault is now active.",
+            type: "ANNOUNCEMENT",
+            timestamp: new Date()
+        }];
+        res.json(messages);
+    } catch (err) { res.status(500).json({ error: "Inbox Bridge Failure" }); }
+});
 
+// --- 💰 8. VAULT ENGINE (Fetches Founder Balance) ---
+app.get('/api/vault/balance/:userId', async (req, res) => {
+    try {
+        const user = await User.findOne({ userId: req.params.userId });
+        if (!user) return res.status(404).json({ error: "Citizen not found" });
+        res.json({
+            coins: user.wallet.empire_coins,
+            usd: user.wallet.total_earned_to_date,
+            pending: user.wallet.pending_conversion
+        });
+    } catch (err) { res.status(500).json({ error: "Vault Link Failed" }); }
+});
+
+// --- ⚖️ 9. PILLAR ECONOMY ---
+const COIN_VAL = 0.02;
 app.post('/api/convert-coins', async (req, res) => {
     const { userId, amount } = req.body;
     if (amount < 2500) return res.status(400).json({ message: "Min 2500 Coins required." });
-
     try {
         const user = await User.findOne({ userId });
-        if (!user || user.wallet.empire_coins < amount) {
-            return res.status(400).json({ message: "Insufficient balance." });
-        }
-
+        if (!user || user.wallet.empire_coins < amount) return res.status(400).json({ message: "Insufficient balance." });
         const usdAmount = amount * COIN_VAL;
-        await User.updateOne({ userId }, { 
-            $inc: { 
-                "wallet.empire_coins": -amount, 
-                "wallet.pending_conversion": usdAmount 
-            } 
-        });
+        await User.updateOne({ userId }, { $inc: { "wallet.empire_coins": -amount, "wallet.pending_conversion": usdAmount } });
         res.json({ success: true, usd: usdAmount });
     } catch (err) { res.status(500).json({ error: "Vault error." }); }
 });
 
-// --- ⚙️ 8. ENGINE START ---
+// --- ⚙️ 10. ENGINE START ---
 const URI = "mongodb+srv://NAWI-EMPIRE001:NAWI-EMPIRE001@nawi-empire001.zwidxex.mongodb.net/NAWI_DB?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 10000;
 
 mongoose.connect(URI).then(() => {
-    seedEmpire(); // Execute Advanced Seeding
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`🚀 NAWI-EMPIRE MASTER ENGINE ACTIVE ON PORT ${PORT}`);
-    });
-}).catch(err => console.error("Database Connection Failure:", err));
+    seedEmpire();
+    app.listen(PORT, '0.0.0.0', () => console.log(`🚀 NAWI-EMPIRE ACTIVE ON PORT ${PORT}`));
+}).catch(err => console.error("Database Failure:", err));
 
-// Route to serve your frontend
 app.get('*', (req, res) => { res.sendFile(path.join(__dirname, 'index.html')); });
