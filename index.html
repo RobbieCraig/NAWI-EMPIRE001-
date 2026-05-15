@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NAWI-EMPIRE | Sovereign Ecosystem</title>
     
-    <!-- UI Stack Modules -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
@@ -15,8 +14,8 @@
         
         body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; touch-action: pan-y; }
 
-        /* --- 🛡️ THE SECURITY GATE --- */
-        #auth-gate, .oath-overlay { 
+        /* --- 🛡️ SECURITY GATES (OATH & AUTHORITY) --- */
+        #auth-gate, #oath-gate { 
             height: 100vh; width: 100%; position: fixed; inset: 0;
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             background: radial-gradient(circle, #111 0%, #000 100%); z-index: 20000; 
@@ -27,86 +26,56 @@
             box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
         }
 
-        /* --- 🏛️ EXECUTIVE LAYOUT --- */
+        /* --- 🏛️ EXECUTIVE HEADER --- */
         .alpha-header {
-            height: 70px; background: rgba(5,5,5,0.8); border-bottom: 1px solid #1a1a1a;
+            height: 70px; background: rgba(5,5,5,0.9); border-bottom: 1px solid #1a1a1a;
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 20px; position: fixed; top: 0; width: 100%; z-index: 1000; backdrop-filter: blur(10px);
         }
 
-        .master-grid {
-            display: grid; margin-top: 70px; min-height: calc(100vh - 70px);
-            grid-template-columns: 1fr;
-        }
+        /* --- 📱 CLEAN CONTENT FEED (SOCIAL LAYER) --- */
+        .master-feed { margin-top: 70px; padding-bottom: 100px; }
+        .post-card { border-bottom: 1px solid #111; background: black; margin-bottom: 1px; }
+        .post-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #0a0a0a; }
 
-        @media (min-width: 1024px) {
-            .master-grid { grid-template-columns: 280px 1fr 320px; }
+        /* --- ⚡ THE 7 PILLARS HUB (HIDDEN COMMAND CENTER) --- */
+        #hub-overlay {
+            position: fixed; inset: 0; background: var(--black); z-index: 15000;
+            display: none; flex-direction: column; padding: 20px; overflow-y: auto;
         }
-
-        /* --- 🛠️ SYSTEM WORKSPACE DASHBOARD --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 10px;
-        }
-
-        @media (min-width: 768px) {
-            .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
+        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
         .tool-box {
-            background: var(--matte);
-            border: 1px solid #1a1a1a;
-            border-radius: 20px;
-            height: 140px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-            text-decoration: none;
-            color: white;
+            background: var(--matte); border: 1px solid #1a1a1a; border-radius: 20px;
+            height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; color: white; transition: 0.3s;
         }
-
-        .tool-box:hover {
-            border-color: var(--gold);
-            background: rgba(212, 175, 55, 0.05);
-            transform: scale(1.02);
-        }
-
         .tool-box i { font-size: 28px; color: var(--gold); margin-bottom: 12px; }
-        .tool-box .label { font-weight: 900; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #888; }
-        .tool-box:hover .label { color: white; }
+        .tool-box span { font-weight: 900; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #888; }
+        .tool-box.highlight { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
 
-        .tool-box.highlight { border: 1px solid var(--gold); background: rgba(212, 175, 55, 0.02); }
+        /* --- 🍳 LIVE STREAM HIERARCHY TAGS --- */
+        .elite-tag { background: var(--gold); color: black; font-size: 9px; font-weight: 900; padding: 2px 8px; border-radius: 4px; }
+        .recruit-tag { background: #333; color: white; font-size: 9px; font-weight: 900; padding: 2px 8px; border-radius: 4px; }
 
-        /* --- 🍳 CORE 7 HUB VISUAL COMMAND SHORTCUT --- */
+        /* --- ⚓ INTERFACE CONTROLS --- */
         .node-7-hub {
             position: fixed; bottom: 95px; right: 20px;
-            width: 56px; height: 56px; background: white; color: black;
+            width: 64px; height: 64px; background: white; color: black;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: 900; z-index: 8000;
-            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15); border: 3px solid var(--black);
-            cursor: pointer; text-decoration: none; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .node-7-hub:hover {
-            background: var(--gold);
-            color: black;
-            transform: scale(1.1) rotate(7deg);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+            font-size: 26px; font-weight: 900; z-index: 16000;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); border: 4px solid var(--black);
+            cursor: pointer;
         }
 
-        /* --- ⚓ GLOBAL PERSISTENT NAVIGATION --- */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+            position: fixed; bottom: 0; width: 100%; height: 75px;
             background: #050505; border-top: 1px solid #1a1a1a;
             display: flex; justify-content: space-around; align-items: center; z-index: 9000;
         }
-
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #555; text-decoration: none; }
         .nav-item.active { color: var(--gold); }
-        .nav-item span { font-size: 8px; font-weight: 900; margin-top: 5px; }
+        .nav-item span { font-size: 8px; font-weight: 900; margin-top: 5px; text-transform: uppercase; }
+        
         .master-plus {
             width: 55px; height: 55px; background: var(--gold); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
@@ -115,129 +84,139 @@
         }
     </style>
 </head>
-<body class="pb-28">
+<body>
 
-    <!-- Auth Security Gate -->
     <div id="auth-gate">
         <div class="authority-card">
-            <div class="text-[10px] font-black text-amber-500 tracking-[0.4em] mb-4">MANDATE UNLOCKED</div>
+            <div class="text-[10px] font-black text-amber-500 tracking-[0.4em] mb-4 uppercase">Identity Masked</div>
             <p class="text-sm italic text-zinc-400 border-l-2 border-amber-500 pl-4 my-6 leading-relaxed">
                 "This is my order and my authority to protect the founders and this platform."
             </p>
-            <button onclick="revealOath()" class="w-full bg-amber-500 text-black py-4 rounded-2xl font-black uppercase text-[11px] tracking-widest">Enter Empire</button>
+            <button onclick="revealOath()" class="w-full bg-amber-500 text-black py-4 rounded-2xl font-black uppercase text-[11px] tracking-widest">Acknowledge Authority</button>
         </div>
     </div>
 
-    <!-- Oath Security Gate -->
-    <div id="oath-gate" class="oath-overlay" style="display:none;">
+    <div id="oath-gate" style="display:none;">
         <div class="authority-card">
-            <h2 class="text-xl font-black text-amber-500 font-['Cinzel'] mb-6">CITIZEN OATH</h2>
+            <h2 class="text-xl font-black text-amber-500 font-['Cinzel'] mb-6 uppercase">The 7 Pillars Oath</h2>
             <div id="oath-scroll" class="h-48 overflow-y-auto text-left text-[11px] text-zinc-500 pr-2 border-y border-zinc-900 py-4 mb-6" onscroll="checkOathScroll(this)">
-                <p class="mb-4">1. I shall trade with 100% integrity within the P2P Ledger.</p>
-                <p class="mb-4">2. I acknowledge NAWI-EMPIRE001 as the Master Authority.</p>
-                <p class="mb-4">3. I will protect the creative assets of all Citizens.</p>
-                <div class="text-amber-500 font-bold text-center mt-10">SCROLL TO AUTHORIZE</div>
+                <p class="mb-4 text-white">I, a Citizen of NAWI-EMPIRE, solemnly swear:</p>
+                <p class="mb-4">1. To uphold the P2P Ledger with 100% honesty in every transaction.</p>
+                <p class="mb-4">2. To recognize the hierarchy: Standard streams for growth, Kitchen & Gaming for the Elite Funders.</p>
+                <p class="mb-4">3. To protect the Marketplace and the creative assets of the Empire.</p>
+                <p class="mb-4">4. To follow the rules of the platform above all personal gain.</p>
+                <div class="text-amber-500 font-bold text-center mt-10">SCROLL TO AUTHORIZE ACCESS</div>
             </div>
-            <button id="oath-btn" disabled onclick="unlockEmpire()" class="w-full bg-zinc-900 text-zinc-600 py-4 rounded-2xl font-black uppercase text-[11px]">Authorize Identity</button>
+            <button id="oath-btn" disabled onclick="unlockEmpire()" class="w-full bg-zinc-900 text-zinc-600 py-4 rounded-2xl font-black uppercase text-[11px]">Sign Sovereign Decree</button>
         </div>
     </div>
 
-    <!-- System Header -->
     <header class="alpha-header">
         <div class="logo-section font-black text-amber-500 tracking-[0.3em] text-sm">NAWI-EMPIRE</div>
-        <div class="empire-reserve text-right">
-            <span class="text-[8px] text-zinc-500 block">EMPIRE RESERVE</span>
-            <span class="text-amber-500 font-black">0.00 <i class="fa-solid fa-coins"></i></span>
+        <div class="flex items-center gap-4">
+            <div class="text-right">
+                <span class="text-[7px] text-zinc-500 block uppercase font-bold">Empire Reserve</span>
+                <span class="text-amber-500 font-black text-xs">0.00 <i class="fa-solid fa-coins"></i></span>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-[10px] font-bold">01</div>
         </div>
     </header>
 
-    <!-- Master Workspace Grid -->
-    <div class="master-grid">
-        <main class="p-4">
-            <div class="text-[10px] font-black text-zinc-500 mb-6 tracking-widest uppercase">Citizen Node: Level 0 Recruit</div>
-            
-            <!-- 7 Pillars Operational Grid Modules -->
-            <div class="dashboard-grid">
-                <a href="market.html" class="tool-box">
-                    <i class="fa-solid fa-shop"></i>
-                    <div class="label">Marketplace</div>
-                </a>
-                <a href="ads.html" class="tool-box">
-                    <i class="fa-solid fa-rectangle-ad"></i>
-                    <div class="label">Ads Manager</div>
-                </a>
-                <a href="games.html" class="tool-box">
-                    <i class="fa-solid fa-gamepad"></i>
-                    <div class="label">Game Node</div>
-                </a>
-                <a href="studio.html" class="tool-box">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    <div class="label">Digital Studio</div>
-                </a>
-                <a href="live.html" class="tool-box">
-                    <i class="fa-solid fa-video"></i>
-                    <div class="label">Live Stream</div>
-                </a>
-                <a href="kitchen.html" class="tool-box">
-                    <i class="fa-solid fa-utensils"></i>
-                    <div class="label">Empire Kitchen</div>
-                </a>
-                <a href="stylist.html" class="tool-box">
-                    <i class="fa-solid fa-gem"></i>
-                    <div class="label">Stylist Tool</div>
-                </a>
-                <a href="music.html" class="tool-box highlight">
-                    <i class="fa-solid fa-music"></i>
-                    <div class="label">Music Hub</div>
-                </a>
-                <a href="create-post.html" class="tool-box">
-                    <i class="fa-solid fa-plus"></i>
-                    <div class="label">Create Post</div>
-                </a>
-            </div>
-
-            <!-- Transaction Ledger Workspace -->
-            <div class="mt-12">
-                <div class="text-[10px] font-black text-zinc-600 mb-4 tracking-widest uppercase">Recent P2P Transactions</div>
-                <div class="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800 flex justify-between items-center">
-                    <span class="text-xs text-zinc-500">Scanning Ledger...</span>
-                    <span class="text-[10px] font-bold text-amber-500">SYNCING</span>
+    <main class="master-feed">
+        <div class="post-card">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-zinc-800 border border-amber-500/30 flex items-center justify-center font-bold text-[10px]">7P</div>
+                    <span class="text-[10px] font-black tracking-widest uppercase">Nawi_Empire001</span>
                 </div>
+                <span class="recruit-tag">RECRUIT STREAM</span>
             </div>
-        </main>
+            <img src="https://images.unsplash.com/photo-1635350736475-c8cef4b21906?auto=format&fit=crop&q=80&w=1000" class="post-img">
+            <div class="p-4">
+                <div class="flex gap-4 mb-3 text-lg">
+                    <i class="fa-regular fa-heart hover:text-amber-500"></i>
+                    <i class="fa-regular fa-comment"></i>
+                    <i class="fa-solid fa-share-nodes"></i>
+                </div>
+                <p class="text-xs text-zinc-400 leading-relaxed">
+                    Welcome to Pillar 1. New citizens, use the Recruit Live Stream to build your influence and level up.
+                </p>
+            </div>
+        </div>
+
+        <div class="post-card bg-zinc-950/40">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-amber-500 flex items-center justify-center font-bold text-[10px] text-black">TOP</div>
+                    <span class="text-[10px] font-black tracking-widest uppercase text-amber-500">Master_Funder</span>
+                </div>
+                <span class="elite-tag">ELITE KITCHEN</span>
+            </div>
+            <div class="aspect-video bg-zinc-900 relative flex items-center justify-center overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                <button class="relative z-10 bg-amber-500 text-black px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-tighter">Enter Funder Kitchen</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="hub-overlay">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-amber-500 font-black tracking-[0.3em] text-sm uppercase">7 Pillars Command</h1>
+            <button onclick="toggleHub()" class="text-zinc-500 text-2xl"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800 mb-6">
+            <div class="text-[9px] text-zinc-500 uppercase font-black mb-2">P2P Syncer Status</div>
+            <div class="flex justify-between items-center">
+                <span class="text-xs font-bold">Ledger: Active</span>
+                <span class="text-amber-500 text-[10px] animate-pulse font-bold tracking-widest">SECURE</span>
+            </div>
+        </div>
+
+        <div class="hub-grid">
+            <a href="market.html" class="tool-box"><i class="fa-solid fa-shop"></i><span>Marketplace</span></a>
+            <a href="ads.html" class="tool-box"><i class="fa-solid fa-rectangle-ad"></i><span>Ads Manager</span></a>
+            <a href="games.html" class="tool-box highlight"><i class="fa-solid fa-gamepad"></i><span>Game Node</span></a>
+            <a href="studio.html" class="tool-box"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Digital Studio</span></a>
+            <a href="live.html" class="tool-box"><i class="fa-solid fa-video"></i><span>Standard Live</span></a>
+            <a href="kitchen.html" class="tool-box"><i class="fa-solid fa-utensils"></i><span>Empire Kitchen</span></a>
+            <a href="stylist.html" class="tool-box"><i class="fa-solid fa-gem"></i><span>Sovereign Stylist</span></a>
+            <a href="music.html" class="tool-box highlight"><i class="fa-solid fa-music"></i><span>Music Hub</span></a>
+            <a href="wallet.html" class="tool-box col-span-2 flex-row gap-4 h-[80px]">
+                <i class="fa-solid fa-vault"></i><span>P2P Wallet (Deposit/Withdraw)</span>
+            </a>
+        </div>
     </div>
 
-    <!-- Active 7 Pillars Floating Master Command Shortcut Link -->
-    <a href="seven-pillars.html" class="node-7-hub" title="Open 7 Pillars Command Node">7</a>
+    <div class="node-7-hub" onclick="toggleHub()">7</div>
 
-    <!-- Global Persistent Navigation Dock -->
     <footer class="bottom-nav">
         <a href="index.html" class="nav-item active">
-            <i class="fa-solid fa-house"></i>
-            <span>HOME</span>
+            <i class="fa-solid fa-house-chimney"></i>
+            <span>Home</span>
         </a>
-        <a href="market.html" class="nav-item">
+        <a href="explore.html" class="nav-item">
             <i class="fa-solid fa-compass"></i>
-            <span>EXPLORE</span>
+            <span>Explore</span>
         </a>
-        <a href="create-post.html" class="master-plus">+</a>
+        <a href="create.html" class="master-plus"><i class="fa-solid fa-plus"></i></a>
         <a href="inbox.html" class="nav-item">
-            <i class="fa-solid fa-comment"></i>
-            <span>INBOX</span>
+            <i class="fa-solid fa-message"></i>
+            <span>Inbox</span>
         </a>
         <a href="profile.html" class="nav-item">
-            <i class="fa-solid fa-user"></i>
-            <span>PROFILE</span>
+            <i class="fa-solid fa-user-gear"></i>
+            <span>Sovereign</span>
         </a>
     </footer>
 
-    <!-- Controllers System Logic -->
-    <script src="nawi_empire_v1.js"></script>
     <script>
+        // --- 🛡️ SECURITY CONTROLS ---
         function revealOath() { 
             document.getElementById('auth-gate').style.display = 'none'; 
             document.getElementById('oath-gate').style.display = 'flex'; 
         }
+
         function checkOathScroll(el) { 
             if (el.scrollHeight - el.scrollTop <= el.clientHeight + 20) { 
                 const btn = document.getElementById('oath-btn'); 
@@ -245,10 +224,26 @@
                 btn.className = "w-full bg-amber-500 text-black py-4 rounded-2xl font-black uppercase text-[11px]"; 
             } 
         }
+
         function unlockEmpire() { 
             document.getElementById('oath-gate').style.display = 'none'; 
             localStorage.setItem('nawi_citizen_status', 'verified'); 
         }
+
+        // --- ⚡ INTERFACE CONTROLS ---
+        function toggleHub() {
+            const hub = document.getElementById('hub-overlay');
+            const body = document.body;
+            if (hub.style.display === 'flex') {
+                hub.style.display = 'none';
+                body.style.overflow = 'auto';
+            } else {
+                hub.style.display = 'flex';
+                body.style.overflow = 'hidden';
+            }
+        }
+
+        // --- 🔄 INITIALIZATION ---
         window.onload = () => { 
             if (localStorage.getItem('nawi_citizen_status') === 'verified') { 
                 document.getElementById('auth-gate').style.display = 'none'; 
