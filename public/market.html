@@ -3,65 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI-EMPIRE | Sovereign Marketplace</title>
+    <title>NAWI-OS | The Sovereign Exchange</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Cinzel:wght=700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
     
     <style>
-        :root { 
-            --gold: #D4AF37; 
-            --black: #050505; 
-            --matte: #0D0D0D; 
-            --border: #1a1a1a;
-        }
-        
-        body { 
-            background: var(--black); 
-            color: #E5E5E5; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            padding-bottom: 140px;
-            overflow-x: hidden;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        /* --- 🏛️ EXECUTIVE HEADER --- */
-        .market-header {
-            background: rgba(5,5,5,0.92);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 24px 20px 15px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .search-container {
-            background: #000;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 12px 18px;
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-            transition: 0.3s ease;
-        }
-        
-        .search-container:focus-within {
-            border-color: var(--gold);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
-        }
-
-        /* --- 🏷️ PILLAR CATEGORIES --- */
+        /* Targeted Local Component Overrides for Advanced Layout Alignment */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .pillar-chip {
-            background: var(--matte);
-            border: 1px solid var(--border);
+            background: rgba(14, 14, 18, 0.65);
+            border: 1px solid rgba(218, 223, 230, 0.12);
             padding: 10px 20px;
             border-radius: 50px;
             font-size: 9px;
@@ -69,37 +26,24 @@
             white-space: nowrap;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #666;
+            color: #8a8f98;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .pillar-chip.active {
-            background: var(--gold);
-            color: black;
-            border-color: var(--gold);
+            background: #d4af37;
+            color: #020203;
+            border-color: #d4af37;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
         }
 
-        /* --- 💎 LUXURY ASSET CARDS --- */
-        .asset-grid {
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
-            gap: 20px;
-            padding: 20px;
-        }
-        
-        @media (min-width: 768px) {
-            .asset-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
         .luxury-card {
-            background: linear-gradient(145deg, #121212 0%, #050505 100%);
-            border: 1px solid var(--border);
-            border-radius: 28px;
+            background: linear-gradient(145deg, #0e0e12 0%, #060608 100%);
+            border: 1px solid rgba(218, 223, 230, 0.12);
+            border-radius: 24px;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-        
         .luxury-card:hover {
             border-color: rgba(212, 175, 55, 0.3);
             transform: translateY(-4px);
@@ -108,127 +52,158 @@
 
         .preview-box {
             aspect-ratio: 16/9;
-            background: #000;
+            background: #000000;
             position: relative;
             overflow: hidden;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(218, 223, 230, 0.12);
         }
-        
         .preview-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.4;
-            transition: 0.5s;
+            opacity: 0.5;
+            transition: 0.5s ease;
         }
-        .luxury-card:hover .preview-box img { opacity: 0.8; transform: scale(1.03); }
+        .luxury-card:hover .preview-box img { opacity: 0.85; transform: scale(1.02); }
 
         .merchant-badge {
             position: absolute;
             top: 15px;
             left: 15px;
-            background: rgba(0,0,0,0.9);
-            border: 1px solid var(--gold);
-            color: var(--gold);
+            background: rgba(2,2,3,0.9);
+            border: 1px solid #d4af37;
+            color: #d4af37;
             font-size: 8px;
             font-weight: 900;
             padding: 4px 10px;
             border-radius: 6px;
             backdrop-filter: blur(8px);
             letter-spacing: 1px;
+            text-transform: uppercase;
+            z-index: 5;
         }
 
-        /* --- 📱 NAVIGATION --- */
-        .empire-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: rgba(5,5,5,0.98);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0 30px;
-            z-index: 2000;
-        }
-        .nav-item { color: #444; text-align: center; text-decoration: none; transition: 0.3s; }
-        .nav-item.active { color: var(--gold); }
-        .nav-item i { font-size: 20px; }
-        .nav-item p { font-size: 8px; font-weight: 900; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .master-plus {
-            width: 56px;
-            height: 56px;
-            background: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: black;
-            font-size: 22px;
-            margin-top: -35px;
-            border: 4px solid var(--black);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-        }
-
-        .gold-glow { text-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-
-        /* --- 🛡️ TRUSTLESS ESCROW MODAL --- */
         #escrow-modal {
             position: fixed; 
             inset: 0; 
-            background: rgba(5,5,5,0.95);
+            background: rgba(2,2,3,0.96);
             backdrop-filter: blur(15px); 
             z-index: 10000; 
             display: none;
             align-items: center; 
             justify-content: center;
         }
+
+        .gold-glow { text-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
     </style>
 </head>
 <body>
 
-    <header class="market-header">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-sm font-black text-amber-500 tracking-[0.4em] font-['Cinzel'] gold-glow uppercase">The Marketplace</h1>
-                <p class="text-[7px] text-zinc-600 font-black tracking-[0.2em] uppercase mt-1">Diamondback 231 Hub Node</p>
-            </div>
-            <div class="text-right">
-                <span class="text-[8px] text-zinc-500 block font-bold uppercase">Balance</span>
-                <span class="text-white font-black text-xs" id="display-balance">100.00 <i class="fa-solid fa-coins text-amber-500"></i></span>
-            </div>
-        </div>
+    <div id="nawi-os-viewport">
         
-        <div class="search-container">
-            <i class="fa-solid fa-magnifying-glass text-zinc-700 mr-4 text-xs"></i>
-            <input type="text" id="search-input" placeholder="Search Stylist Tools, Frameworks, Ads Slots..." class="bg-transparent border-none outline-none text-xs w-full text-zinc-300 placeholder:text-zinc-700 font-medium">
-        </div>
-    </header>
+        <aside class="empire-sidebar nawi-glass-panel">
+            <div class="mini-seal">
+                <span class="master-seal">NW</span>
+            </div>
+            
+            <a href="dashboard.html" class="nav-item">
+                <i class="fa-solid fa-chart-line text-xs"></i>
+                <span class="pillar-tag">Console</span>
+            </a>
+            <a href="market.html" class="nav-item active">
+                <i class="fa-solid fa-shop text-xs"></i>
+                <span class="pillar-tag">II. Exchange</span>
+            </a>
+            <a href="live.html" class="nav-item">
+                <i class="fa-solid fa-gamepad text-xs"></i>
+                <span class="pillar-tag">I. Arena</span>
+            </a>
+            <a href="kitchen.html" class="nav-item">
+                <i class="fa-solid fa-utensils text-xs"></i>
+                <span class="pillar-tag">IV. Culinary</span>
+            </a>
+            <a href="studio.html" class="nav-item">
+                <span class="pillar-tag">VI. Forge</span>
+            </a>
+            <a href="music.html" class="nav-item">
+                <i class="fa-solid fa-music text-xs"></i>
+                <span class="pillar-tag">VII. Sonic</span>
+            </a>
+            <a href="ads.html" class="nav-item">
+                <i class="fa-solid fa-rectangle-ad text-xs"></i>
+                <span class="pillar-tag">III. Visibility</span>
+            </a>
+        </aside>
 
-    <div class="flex gap-3 overflow-x-auto px-5 py-6 no-scrollbar">
-        <div class="pillar-chip active" onclick="filterCategory(this, 'all')">All Products</div>
-        <div class="pillar-chip" onclick="filterCategory(this, 'branding')">Diamondback 231</div>
-        <div class="pillar-chip" onclick="filterCategory(this, 'ads')">Ads Program</div>
-        <div class="pillar-chip" onclick="filterCategory(this, 'stylist')">Sovereign Stylist</div>
-    </div>
+        <main id="nawi-main-stage">
+            
+            <div class="nawi-glass-panel p-6 mb-4">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-sm font-black text-amber-500 tracking-[0.4em] font-['Cinzel'] gold-glow uppercase">The Sovereign Exchange</h1>
+                        <p class="text-[7px] text-zinc-500 font-black tracking-[0.2em] uppercase mt-1">NAWI-EMPIRE001 Secure Node Pipeline</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[8px] text-zinc-500 block font-bold uppercase tracking-wider">System Liquidity</span>
+                        <span class="text-white font-black text-xs" id="display-balance">100.00 <i class="fa-solid fa-coins text-amber-500 ml-0.5"></i></span>
+                    </div>
+                </div>
+                
+                <div class="bg-black/60 border border-zinc-800 rounded-xl px-4 py-3 flex align-items-center">
+                    <i class="fa-solid fa-magnifying-glass text-zinc-600 mr-4 self-center text-xs"></i>
+                    <input type="text" id="search-input" placeholder="Search Master Solutions, Stylist Frameworks, Sonic Logs..." class="bg-transparent border-none outline-none text-xs w-full text-zinc-300 placeholder:text-zinc-700 font-medium">
+                </div>
+            </div>
 
-    <main class="asset-grid" id="product-container">
+            <div class="flex gap-3 overflow-x-auto pb-4 mb-2 no-scrollbar px-1">
+                <div class="pillar-chip active" onclick="filterCategory(this, 'all')">All Nodes</div>
+                <div class="pillar-chip" onclick="filterCategory(this, 'forge')">The Forge</div>
+                <div class="pillar-chip" onclick="filterCategory(this, 'visibility')">Visibility Engine</div>
+                <div class="pillar-chip" onclick="filterCategory(this, 'nexus')">Aesthetic Nexus</div>
+                <div class="pillar-chip" onclick="filterCategory(this, 'sonic')">Sonic Ledger</div>
+            </div>
+
+            <div class="feed-container">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="product-container">
+                    </div>
+            </div>
         </main>
 
+        <aside class="interaction-ledger nawi-glass-panel">
+            <h3 style="font-family: 'Cinzel', serif; color: var(--polished-gold); font-size: 1.1rem; margin-bottom: 16px; border-bottom: 1px solid var(--industrial-titanium); padding-bottom: 8px;">P2P Escrow Shield</h3>
+            
+            <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 16px; border: 1px solid var(--industrial-titanium);">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Your Available Balance</div>
+                <div style="font-size: 1.6rem; font-weight: 900; color: #ffffff; margin-top: 4px;" id="ledger-user-balance">100.00 <span style="color: var(--polished-gold); font-size: 1rem;">EC</span></div>
+            </div>
+
+            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 12px;" id="escrow-logs-container">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Active Secure Contracts</div>
+                <p id="no-active-escrow-msg" style="font-size: 0.8rem; color: var(--text-muted); font-style: italic; text-align: center; margin-top: 20px;">No open P2P transactions detected. Core engine locked and monitoring.</p>
+            </div>
+
+            <div style="padding-top: 12px; border-top: 1px solid var(--industrial-titanium); text-align: center;">
+                <span class="auth-text" style="font-size: 0.55rem;">AUTOMATED TRANSACTION VALIDATION HEARTBEAT V1.3</span>
+            </div>
+        </aside>
+
+    </div>
+
     <div id="escrow-modal">
-        <div class="p-8 w-[88%] max-w-[400px] border border-zinc-800 rounded-[32px] text-center bg-black">
+        <div class="p-8 w-[88%] max-w-[400px] border border-zinc-800 rounded-[32px] text-center bg-zinc-950">
             <i class="fa-solid fa-building-columns text-amber-500 text-3xl mb-4 animate-pulse"></i>
             <h3 class="text-white font-black uppercase text-xs tracking-widest mb-2 font-['Cinzel']">Sovereign P2P Escrow</h3>
-            <p class="text-zinc-500 text-[11px] mb-6 leading-relaxed">Securing funds in trustless node ledger via <br><span class="text-white font-bold">DIAMONDBACK 231 CREATIVE SOLUTIONS</span></p>
-            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-900 text-left mb-6">
-                <p class="text-[8px] text-zinc-600 uppercase font-black">Target Asset</p>
+            <p class="text-zinc-500 text-[11px] mb-6 leading-relaxed">Securing funds in trustless node ledger via <br><span class="text-white font-bold tracking-wide">DIAMONDBACK 231 CREATIVE SOLUTIONS</span></p>
+            
+            <div class="bg-black p-4 rounded-xl border border-zinc-900 text-left mb-6">
+                <p class="text-[8px] text-zinc-600 uppercase font-black">Target System Node</p>
                 <p class="text-zinc-200 text-xs font-bold font-mono text-amber-500" id="modal-item-name">-</p>
                 <div class="flex justify-between mt-3 pt-3 border-t border-zinc-900 text-xs">
                     <span class="text-zinc-500">Escrow Value:</span>
-                    <span class="text-white font-black" id="modal-item-price">0.00</span>
+                    <span class="text-white font-black" id="modal-item-price">0.00 Coins</span>
                 </div>
             </div>
+            
             <div class="flex gap-3">
                 <button onclick="closeEscrow()" class="w-1/2 bg-zinc-900 text-zinc-400 py-3 rounded-xl font-bold uppercase text-[10px] tracking-wider">Abort</button>
                 <button onclick="executeFinalTransaction()" class="w-1/2 bg-gradient-to-r from-amber-500 to-amber-600 text-black py-3 rounded-xl font-black uppercase text-[10px] tracking-wider">Authorize</button>
@@ -236,70 +211,53 @@
         </div>
     </div>
 
-    <div class="fixed bottom-[85px] w-full px-5 z-50">
-        <div class="bg-amber-500/5 border border-amber-500/10 rounded-xl py-2 text-center backdrop-blur-md">
-            <p class="text-[8px] text-amber-500/60 font-black tracking-[0.2em] uppercase">
-                Secure Escrow Active | Auth: NAWI-EMPIRE001
-            </p>
-        </div>
-    </div>
-
-    <nav class="empire-nav">
-        <a href="index.html" class="nav-item">
-            <i class="fa-solid fa-house"></i><p>Home</p>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fa-solid fa-compass"></i><p>Grid</p>
-        </a>
-        <div class="master-plus">
-            <i class="fa-solid fa-plus"></i>
-        </div>
-        <a href="market.html" class="nav-item active">
-            <i class="fa-solid fa-shop"></i><p>Market</p>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fa-solid fa-user-gear"></i><p>Identity</p>
-        </a>
-    </nav>
-
     <script>
-        // Real platform catalog array
+        // Formatted 7 Pillars Asset Registry
         const products = [
             {
                 id: "DB-FRAME-231",
                 title: "Technical Luxury UI Framework",
-                category: "branding",
-                merchant: "DIAMONDBACK 231",
+                category: "forge",
+                merchant: "THE DIAMONDBACK FORGE",
                 price: 75.00,
-                desc: "High-end matte black and 24k gold responsive UI vector template framework for custom digital interfaces.",
+                desc: "High-end matte black and 24k gold responsive UI vector template framework for custom asset configurations.",
                 img: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=600"
             },
             {
                 id: "ADS-BANNER-01",
                 title: "Main Stage Marketplace Banner Ad",
-                category: "ads",
-                merchant: "EMPIRE ADS ENGINE",
+                category: "visibility",
+                merchant: "THE VISIBILITY ENGINE",
                 price: 45.00,
-                desc: "Secure programmatic ad space execution for 7 consecutive days on the main ecosystem dashboard.",
+                desc: "Secure programmatic ad space placement execution on the main network interaction dashboard feeds.",
                 img: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=600"
             },
             {
                 id: "STYL-BARB-KIT",
                 title: "Sovereign Stylist Pro Clipper Set",
-                category: "stylist",
-                merchant: "DIAMONDBACK 231",
+                category: "nexus",
+                merchant: "THE AESTHETIC NEXUS",
                 price: 120.00,
-                desc: "Premium precision cordless grooming barbing kit featuring high-carbon diamond steel blades.",
+                desc: "Premium precision cordless transformations kit featuring high-carbon diamond grade steel blades.",
                 img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=600"
             },
             {
                 id: "STYL-APRON-231",
-                title: "Matte Black Industrial Stylist Gown",
-                category: "stylist",
-                merchant: "DIAMONDBACK 231",
+                title: "Matte Black Workspace Uniform",
+                category: "nexus",
+                merchant: "THE AESTHETIC NEXUS",
                 price: 35.00,
-                desc: "Waterproof, chemical-resistant high-end designer barber workspace uniform with specialized tool holster array.",
+                desc: "Waterproof, chemical-resistant corporate styling armor garment with functional modular tool array.",
                 img: "https://images.unsplash.com/photo-1552061073-e38053641372?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: "SONIC-DIST-09",
+                title: "Premium Studio Track Release Block",
+                category: "sonic",
+                merchant: "THE SONIC LEDGER",
+                price: 90.00,
+                desc: "Automated distribution index wrapper package providing micro-yield validation for original digital stems.",
+                img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=600"
             }
         ];
 
@@ -307,7 +265,7 @@
         let selectedItem = null;
         let activeCategory = 'all';
 
-        // Render platform grid elements dynamically
+        // Render system matrix catalog cards smoothly
         function renderProducts(items) {
             const container = document.getElementById('product-container');
             container.innerHTML = "";
@@ -315,7 +273,7 @@
             if(items.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full text-center py-12 text-zinc-600 font-bold text-xs uppercase tracking-widest">
-                        No Assets Found Matching Query
+                        No Assets Found Inside Specified Node
                     </div>`;
                 return;
             }
@@ -333,12 +291,12 @@
                                 <span class="text-[9px] text-zinc-600 font-mono">#${product.id}</span>
                             </div>
                             <p class="text-zinc-500 text-[10px] leading-relaxed mb-6 font-light">${product.desc}</p>
-                            <div class="flex justify-between items-center bg-black/50 p-4 rounded-2xl border border-zinc-900/50">
+                            <div class="flex justify-between items-center bg-black/40 p-4 rounded-2xl border border-zinc-900/50">
                                 <div>
                                     <span class="text-[8px] text-zinc-600 block uppercase font-black mb-1">Asset Value</span>
                                     <span class="text-white font-black text-sm">${product.price.toFixed(2)} <i class="fa-solid fa-coins text-amber-500 ml-1"></i></span>
                                 </div>
-                                <button onclick="openEscrow('${product.title}', ${product.price})" class="bg-white text-black px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500 transition-colors">Acquire</button>
+                                <button onclick="openEscrow('${product.title}', ${product.price}, '${product.id}')" class="bg-white text-black px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500 transition-colors">Acquire</button>
                             </div>
                         </div>
                     </div>
@@ -346,7 +304,7 @@
             });
         }
 
-        // Live Category Filters
+        // Live Operational Category Filters
         function filterCategory(element, cat) {
             document.querySelectorAll('.pillar-chip').forEach(chip => chip.classList.remove('active'));
             element.classList.add('active');
@@ -354,22 +312,17 @@
             executeSearchAndFilter();
         }
 
-        // Integrated Search Engine Setup
-        document.getElementById('search-input').addEventListener('input', function() {
-            executeSearchAndFilter();
-        });
+        // Search Parsing Core Hook
+        document.getElementById('search-input').addEventListener('input', executeSearchAndFilter);
 
         function executeSearchAndFilter() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
-            
             let filtered = products;
             
-            // Apply chip classification first
             if (activeCategory !== 'all') {
                 filtered = filtered.filter(p => p.category === activeCategory);
             }
             
-            // Apply text keyword matching
             if (query !== "") {
                 filtered = filtered.filter(p => 
                     p.title.toLowerCase().includes(query) || 
@@ -381,12 +334,17 @@
             renderProducts(filtered);
         }
 
-        // Sovereign Escrow Control Operations
-        function openEscrow(name, price) {
-            selectedItem = { name, price };
+        // Open Escrow Gateway Handshake
+        function openEscrow(name, price, id) {
+            selectedItem = { name, price, id };
             document.getElementById('modal-item-name').innerText = name;
             document.getElementById('modal-item-price').innerText = price.toFixed(2) + " Coins";
             document.getElementById('escrow-modal').style.display = 'flex';
+            
+            // Dispatch automatic logic validation frame to server engine context if present
+            if (typeof window.nawiSocket !== "undefined") {
+                window.nawiSocket.emit("initializeEscrowContract", { productId: id, cost: price });
+            }
         }
 
         function closeEscrow() {
@@ -396,16 +354,30 @@
         function executeFinalTransaction() {
             if (currentBalance >= selectedItem.price) {
                 currentBalance -= selectedItem.price;
+                
+                // Synchronize system balances across layout displays instantly
                 document.getElementById('display-balance').innerHTML = `${currentBalance.toFixed(2)} <i class="fa-solid fa-coins text-amber-500"></i>`;
+                document.getElementById('ledger-user-balance').innerText = `${currentBalance.toFixed(2)} EC`;
+                
+                // Inject real contract confirmation token to tracking log view
+                const logContainer = document.getElementById('escrow-logs-container');
+                const noActiveMsg = document.getElementById('no-active-escrow-msg');
+                if(noActiveMsg) noActiveMsg.remove();
+                
+                logContainer.innerHTML += `
+                    <div class="bg-emerald-950/20 border border-emerald-500/20 rounded-lg p-3 text-[10px]">
+                        <span class="text-emerald-400 font-bold block">🔒 CONTRACT SETTLED</span>
+                        <span class="text-zinc-400">Node Asset ${selectedItem.id} moved safely to warehouse ledger securely.</span>
+                    </div>`;
+                
                 closeEscrow();
-                alert(`SUCCESS:\nEscrow payment cleared via Diamondback 231 Creative Solutions.\nAsset allocated securely to database cluster.`);
             } else {
                 alert("TRANSACTION BLOCKED:\nEcosystem ledger indicates insufficient currency reserves.");
                 closeEscrow();
             }
         }
 
-        // Trigger first build assembly
+        // Initial compilation thread sequence configuration
         window.onload = () => {
             renderProducts(products);
         };
