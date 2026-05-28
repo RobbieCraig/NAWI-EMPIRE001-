@@ -100,6 +100,7 @@
         }
 
         .gold-glow { text-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+        .gold-glow-text { text-shadow: 0 0 15px rgba(212, 175, 55, 0.35); }
         .gold-gradient-bg { background: linear-gradient(135deg, var(--gold) 0%, #AA7C11 100%); }
         
         .luxury-card {
@@ -330,7 +331,33 @@
             overflow-y: auto;
         }
 
-        /* --- Dynamic Pillar Interactive Grid Matrix Styles --- */
+        /* --- Dynamic Pillar Architecture Grid & Overlay Blocks --- */
+        .pillar-card {
+            background: linear-gradient(145deg, #0f0f14 0%, #060609 100%);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .pillar-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+        .tier-lock-overlay {
+            background: rgba(5, 5, 7, 0.95);
+            backdrop-filter: blur(12px);
+            position: absolute;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
         .pillar-icon-btn {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -388,6 +415,16 @@
             transform: translateX(-50%) scale(1);
         }
 
+        .stealth-avatar {
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .stealth-avatar:active {
+            transform: scale(0.92);
+        }
+
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -427,7 +464,7 @@
     <header class="alpha-header">
         <div class="flex items-center gap-3 cursor-pointer" onclick="openTool('home')">
             <div class="flex flex-col">
-                <div class="font-black text-amber-500 tracking-[0.35em] text-sm font-['Cinzel'] gold-glow">NAWI-EMPIRE</div>
+                <div id="header-title" class="font-black text-amber-500 tracking-[0.35em] text-sm font-['Cinzel'] gold-glow">NAWI-EMPIRE</div>
                 <div class="text-[7px] text-zinc-600 tracking-[0.2em] font-bold uppercase">Sovereign Architecture</div>
             </div>
             <div class="hidden sm:block bg-amber-500/10 border border-amber-500 text-amber-500 px-2 py-0.5 rounded text-[9px] font-black tracking-wider uppercase">v1.0-Sovereign</div>
@@ -443,8 +480,12 @@
                 <div>
                     <span class="text-[7px] text-zinc-500 block uppercase font-black tracking-wider">Asset Reserve</span>
                     <span class="text-amber-500 font-black text-xs flex items-center gap-1">
-                        <span class="global-balance-nodes">250.00</span> <span class="text-[9px] text-zinc-400">EC</span>
+                        <span class="global-balance-nodes" id="display-balance">250.00</span> <span class="text-[9px] text-zinc-400">EC</span>
                     </span>
+                </div>
+                <div class="border-l border-zinc-800 pl-2 text-right">
+                    <span class="text-[7px] text-zinc-500 block uppercase font-black tracking-wider">Network Rank</span>
+                    <span class="text-amber-400 font-bold text-[10px]" id="display-tier-label">Tier 1 Citizen</span>
                 </div>
                 <div class="w-7 h-7 rounded-full border border-amber-500 bg-zinc-900 flex items-center justify-center cursor-pointer" onclick="openTool('sovereign')">
                     <i class="fa-solid fa-crown text-[10px] text-amber-500"></i>
@@ -545,6 +586,14 @@
             
             <section id="home-viewport" class="tool-viewport active">
                 <div class="space-y-4 pt-1">
+                    <div class="w-full rounded-3xl overflow-hidden border border-zinc-800 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 p-6 relative">
+                        <div class="absolute top-3 right-3 bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[7px] text-zinc-400 font-mono tracking-widest uppercase">THE VISIBILITY ENGINE PIN</div>
+                        <span class="text-[8px] font-mono text-amber-500 tracking-widest block mb-1">RECOMMENDED ACQUISITION</span>
+                        <h2 class="text-white text-base font-black tracking-wide max-w-md font-['Cinzel']">Diamondback 231 Luxury UI Framework Template Package V3</h2>
+                        <p class="text-zinc-400 text-[10px] mt-2 max-w-sm font-light">Deploy industrial matte layouts with embedded security rule components instantly.</p>
+                        <button onclick="openTool('pillars')" class="mt-4 bg-white text-black text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-amber-500 transition-colors">Inspect Forge Directory</button>
+                    </div>
+
                     <div class="live-stream-module">
                         <div class="w-full h-full bg-[radial-gradient(circle,#1f1f1f_0%,#000000_100%)] flex justify-center items-center text-zinc-600 text-[10px] tracking-widest font-mono">[ MASTER_STREAM_CORE_ON ]</div>
                         <div class="stream-overlay">
@@ -607,38 +656,44 @@
                         </div>
                     </div>
 
-                    <div class="bg-black border border-zinc-900 p-3 rounded-2xl font-mono text-[10px] text-emerald-400 space-y-1">
+                    <div>
+                        <h3 class="text-[9px] font-black tracking-[0.2em] uppercase text-zinc-500 mb-3 font-['Cinzel']">Platform Activity Broadcasters</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-zinc-900/40 border border-zinc-900 rounded-2xl p-4 flex gap-4">
+                                <div class="w-20 h-20 rounded-xl bg-zinc-800 shrink-0 overflow-hidden relative">
+                                    <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=200" class="w-full h-full object-cover" alt="stream">
+                                    <span class="absolute bottom-1 left-1 bg-red-600 text-white text-[6px] font-bold px-1 rounded">LIVE</span>
+                                </div>
+                                <div class="flex flex-col justify-between">
+                                    <div>
+                                        <h4 class="text-white text-xs font-bold truncate">Vanguard Gaming Axis Elite Heat #09</h4>
+                                        <p class="text-zinc-500 text-[9px] mt-1 line-clamp-2">High-stakes professional battle currently executed live on node frameworks.</p>
+                                    </div>
+                                    <span class="text-[8px] font-mono text-zinc-600">14.2k Viewers Monitoring</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-zinc-900/40 border border-zinc-900 rounded-2xl p-4 flex gap-4">
+                                <div class="w-20 h-20 rounded-xl bg-zinc-800 shrink-0 overflow-hidden relative">
+                                    <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=200" class="w-full h-full object-cover" alt="stream">
+                                </div>
+                                <div class="flex flex-col justify-between">
+                                    <div>
+                                        <h4 class="text-white text-xs font-bold truncate">The Aesthetic Nexus Masterclasses</h4>
+                                        <p class="text-zinc-500 text-[9px] mt-1 line-clamp-2">Physical cosmetic transformations and executive premium grooming frameworks.</p>
+                                    </div>
+                                    <span class="text-[8px] font-mono text-zinc-600">Verified Broadcast Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-950 border border-zinc-900 p-3 rounded-2xl font-mono text-[10px] text-emerald-400 space-y-1">
                         <div class="flex justify-between items-center text-[9px] text-zinc-500 uppercase font-bold border-b border-zinc-900 pb-1">
                             <span>System Sync Interface Log</span>
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                         </div>
                         <div id="terminal-display" class="h-24 overflow-y-auto">[SYSTEM READY] Handshake active. Safe physical vectors established.</div>
-                    </div>
-
-                    <div>
-                        <h2 class="text-sm font-black text-amber-500 uppercase tracking-widest mb-3 font-['Cinzel']">Global Activity Stream</h2>
-                        <div class="space-y-3">
-                            <div class="luxury-card p-4">
-                                <div class="flex items-center gap-3 mb-2.5">
-                                    <div class="w-9 h-9 rounded-full bg-zinc-900 border border-amber-500/40 flex items-center justify-center text-xs text-amber-500"><i class="fa-solid fa-gamepad"></i></div>
-                                    <div>
-                                        <h4 class="text-xs font-bold text-white">Apex_Gamer_01</h4>
-                                        <span class="text-[9px] text-zinc-500 font-mono">Vanguard Axis Node • 2 minutes ago</span>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-zinc-300 leading-relaxed">Operational match handshake complete. Live video streaming buffer deployed on Server Node 4. Ready for match payload delivery.</p>
-                            </div>
-                            <div class="luxury-card p-4">
-                                <div class="flex items-center gap-3 mb-2.5">
-                                    <div class="w-9 h-9 rounded-full bg-zinc-900 border border-amber-500/40 flex items-center justify-center text-xs text-amber-500"><i class="fa-solid fa-palette"></i></div>
-                                    <div>
-                                        <h4 class="text-xs font-bold text-white">Forge_Architect</h4>
-                                        <span class="text-[9px] text-zinc-500 font-mono">The Diamondback Forge • 1 hour ago</span>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-zinc-300 leading-relaxed">Successfully compiled 3D vector styling template updates via the Diamondback 231 Framework. Master asset payload uploaded to the Secure Exchange index.</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -773,7 +828,7 @@
                     <div class="flex items-center gap-3 mb-2">
                         <button onclick="openTool('home')" class="text-amber-500"><i class="fa-solid fa-arrow-left"></i></button>
                         <div>
-                            <h1 class="text-amber-500 font-black text-lg uppercase tracking-wider font-['Cinzel']">Global Music Hub</h1>
+                            <h1 class="text-amber-500 font-black text-lg uppercase tracking-wider font-['Cinzel']">The Sonic Ledger</h1>
                             <p class="text-zinc-500 text-[8px] uppercase tracking-widest">Pillar VI • Distribution Matrix</p>
                         </div>
                     </div>
@@ -790,6 +845,19 @@
                             </div>
                             <button type="submit" class="w-full gold-gradient-bg py-3 text-black font-bold uppercase rounded-xl text-[10px]">Distribute Audio to Network Pool</button>
                         </form>
+                    </div>
+
+                    <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-4 flex items-center justify-between my-3">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-amber-500">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white text-xs font-bold">Industrial Asset Beats (Stems Extended Block)</h4>
+                                <span class="text-[8px] text-zinc-500 block mt-0.5">Author: Diamondback Forge Sonic Core</span>
+                            </div>
+                        </div>
+                        <button class="bg-zinc-900 text-zinc-300 border border-zinc-800 px-3 py-1.5 rounded-lg text-[8px] font-bold uppercase tracking-wider" onclick="triggerEscrowPurchase(90.00, 'Industrial Asset Beats')">90.00 EC</button>
                     </div>
 
                     <h3 class="text-xs text-amber-500 font-bold uppercase tracking-wider">Active Public Distribution Audio Feeds</h3>
@@ -878,18 +946,184 @@
                 </div>
             </section>
 
+            <section id="pillars-viewport" class="tool-viewport">
+                <div class="space-y-6">
+                    <div class="border-b border-zinc-900 pb-3">
+                        <h2 class="text-sm font-black font-['Cinzel'] tracking-widest text-white uppercase">The 7 Powerhouse Architecture Pillars</h2>
+                        <p class="text-[8px] text-zinc-500 font-mono tracking-wider mt-1">Ecosystem Validation Matrix Map</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="pillar-card p-5 min-h-[190px] flex flex-col justify-between" id="card-p1">
+                            <div id="lock-p1" class="tier-lock-overlay">
+                                <i class="fa-solid fa-lock text-amber-500/30 text-lg mb-1"></i>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-zinc-400">Tier 3 Status Block</span>
+                                <p class="text-[7px] text-zinc-600 font-mono mt-0.5">Requires 10,000+ Followers & Corporate Profile Validation</p>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center text-[8px] font-mono font-bold text-zinc-600 mb-2"><span>PILLAR I</span><span class="text-red-500">ARENA NODE</span></div>
+                                <h3 class="text-white font-black text-xs font-['Cinzel'] tracking-wide">Vanguard Gaming Axis</h3>
+                                <p class="text-zinc-500 text-[10px] font-light mt-2 leading-relaxed">High-stakes combat zone for professional competitors. Explicitly unaligned with casual social content.</p>
+                            </div>
+                            <span class="text-[8px] font-mono text-zinc-600 block mt-2">Target: live-battle.html</span>
+                        </div>
+
+                        <div class="pillar-card p-5 min-h-[190px] flex flex-col justify-between" id="card-p2">
+                            <div id="lock-p2" class="tier-lock-overlay">
+                                <i class="fa-solid fa-lock text-amber-500/30 text-lg mb-1"></i>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-zinc-400">Tier 2 Status Block</span>
+                                <p class="text-[7px] text-zinc-600 font-mono mt-0.5">Requires 1,000+ Followers</p>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center text-[8px] font-mono font-bold text-zinc-600 mb-2"><span>PILLAR II</span><span class="text-amber-500">TRADE NODE</span></div>
+                                <h3 class="text-white font-black text-xs font-['Cinzel'] tracking-wide">The Sovereign Exchange</h3>
+                                <p class="text-zinc-500 text-[10px] font-light mt-2 leading-relaxed">A secure trade terminal processing high-end goods, hardware blueprints, and physical items backed by Diamondback Escrow validation rules.</p>
+                            </div>
+                            <span class="text-[8px] font-mono text-zinc-600 block mt-2">Target: market.html</span>
+                        </div>
+
+                        <div class="pillar-card p-5 min-h-[190px] flex flex-col justify-between" id="card-p3">
+                            <div id="lock-p3" class="tier-lock-overlay">
+                                <i class="fa-solid fa-lock text-amber-500/30 text-lg mb-1"></i>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-zinc-400">Tier 2 Status Block</span>
+                                <p class="text-[7px] text-zinc-600 font-mono mt-0.5">Requires 1,000+ Followers</p>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center text-[8px] font-mono font-bold text-zinc-600 mb-2"><span>PILLAR III</span><span class="text-blue-500">TRAFFIC ENGINE</span></div>
+                                <h3 class="text-white font-black text-xs font-['Cinzel'] tracking-wide">The Visibility Engine</h3>
+                                <p class="text-zinc-500 text-[10px] font-light mt-2 leading-relaxed">Elite internal ad traffic router. Allows merchants to buy space across dashboard feeds.</p>
+                            </div>
+                            <span class="text-[8px] font-mono text-zinc-600 block mt-2">Target: ads.html</span>
+                        </div>
+
+                        <div class="pillar-card p-5 min-h-[190px] flex flex-col justify-between" id="card-p4">
+                            <div id="lock-p4" class="tier-lock-overlay">
+                                <i class="fa-solid fa-lock text-amber-500/30 text-lg mb-1"></i>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-zinc-400">Tier 3 Status Block</span>
+                                <p class="text-[7px] text-zinc-600 font-mono mt-0.5">Requires 10,000+ Followers & Corporate Validation</p>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center text-[8px] font-mono font-bold text-zinc-600 mb-2"><span>PILLAR IV</span><span class="text-emerald-500">LOGISTICS NODE</span></div>
+                                <h3 class="text-white font-black text-xs font-['Cinzel'] tracking-wide">The Culinary Matrix & Broadcast</h3>
+                                <p class="text-zinc-500 text-[10px] font-light mt-2 leading-relaxed">Organized network feed for professional signature restaurants and master culinary artists.</p>
+                            </div>
+                            <span class="text-[8px] font-mono text-zinc-600 block mt-2">Target: kitchen.html</span>
+                        </div>
+
+                        <div class="pillar-card p-5 min-h-[190px] flex flex-col justify-between" id="card-p5">
+                            <div>
+                                <div class="flex justify-between items-center text-[8px] font-mono font-bold text-zinc-600 mb-2"><span>PILLAR V</span><span class="text-purple-500">TRANSFORMATION</span></div>
+                                <h3 class="text-white font-black text-xs font-['Cinzel'] tracking-wide">The Aesthetic Nexus</h3>
+                                <p class="text-zinc-500 text-[10px] font-light mt-2 leading-relaxed">Flagship coordination network managing professional grooming booking tiers, luxury cosmetic licenses, and studio logs.</p>
+                            </div>
+                            <span class="text-[8px] font-mono text-zinc-600 block mt-2">Target: stylist.html</span>
+                        </div>
+
+                        <div class="pillar-card p-5 min-h-[190px] flex flex-col justify-between" id="card-p6">
+                            <div>
+                                <div class="flex justify-between items-center text-[8px] font-mono font-bold text-zinc-600 mb-2"><span>PILLAR VI</span><span class="text-amber-500">FOUNDRY CORE</span></div>
+                                <h3 class="text-white font-black text-xs font-['Cinzel'] tracking-wide">The Diamondback Forge</h3>
+                                <p class="text-zinc-500 text-[10px] font-light mt-2 leading-relaxed">Creative manufacturing center. Production of vector UI frameworks and forensically stamped design templates.</p>
+                            </div>
+                            <span class="text-[8px] font-mono text-zinc-600 block mt-2">Target: studio.html</span>
+                        </div>
+
+                        <div class="pillar-card p-5 min-h-[190px] flex flex-col justify-between" id="card-p7">
+                            <div>
+                                <div class="flex justify-between items-center text-[8px] font-mono font-bold text-zinc-600 mb-2"><span>PILLAR VII</span><span class="text-cyan-500">REGISTRY CORE</span></div>
+                                <h3 class="text-white font-black text-xs font-['Cinzel'] tracking-wide">The Sonic Ledger</h3>
+                                <p class="text-zinc-500 text-[10px] font-light mt-2 leading-relaxed">High performance indexing directory where premium audio works are registered, verified, and safely licensed.</p>
+                            </div>
+                            <span class="text-[8px] font-mono text-zinc-600 block mt-2">Target: music.html</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="inbox-viewport" class="tool-viewport">
+                <div class="space-y-4">
+                    <div class="border-b border-zinc-900 pb-3 flex justify-between items-center">
+                        <h2 class="text-sm font-black font-['Cinzel'] tracking-widest text-white uppercase">Secure Communications Feed</h2>
+                        <span class="text-[8px] font-mono text-zinc-500">ENCRYPTED INPUT MATRIX</span>
+                    </div>
+                    
+                    <div class="bg-zinc-900/30 border border-zinc-900 rounded-2xl p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[9px] font-bold text-amber-500 font-mono">SYSTEM BLOCK AUTOMATION</span>
+                            <span class="text-[7px] text-zinc-600 font-mono">JUST NOW</span>
+                        </div>
+                        <h4 class="text-white text-xs font-black uppercase">Induction Signature Verified</h4>
+                        <p class="text-zinc-500 text-[10px] mt-1 font-light leading-relaxed">Welcome bonus applied securely to your account balance node tracking vectors. Operational tasks are unlocked.</p>
+                    </div>
+                </div>
+            </section>
+
             <section id="sovereign-viewport" class="tool-viewport">
                 <div class="space-y-4">
                     <div class="flex items-center gap-3 mb-2">
                         <button onclick="openTool('home')" class="text-amber-500"><i class="fa-solid fa-arrow-left"></i></button>
                         <h1 class="text-amber-500 font-black text-sm font-['Cinzel'] uppercase">Identity Console</h1>
                     </div>
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-zinc-950 rounded-full border border-amber-500/30 mx-auto mb-2 flex items-center justify-center">
-                            <i class="fa-solid fa-crown text-xl text-amber-500 gold-glow"></i>
+
+                    <div id="citizen-profile-card" class="bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-6 flex flex-col items-center text-center relative">
+                        <div id="stealth-avatar-trigger" class="stealth-avatar w-16 h-16 bg-zinc-900 rounded-full border border-amber-500/30 flex items-center justify-center text-zinc-500 text-xl mb-2 relative overflow-hidden">
+                            <i class="fa-solid fa-user"></i>
                         </div>
                         <h2 class="text-base font-black uppercase font-['Cinzel'] text-zinc-100" id="profile-name">NAWI-EMPIRE001</h2>
                         <div id="profile-rank-badge" class="text-[8px] font-black text-zinc-500 tracking-wider uppercase mt-0.5">Founder & Governance</div>
+                        <span id="citizen-sub-text" class="text-[8px] font-mono text-zinc-500 uppercase tracking-widest mt-1">Ecosystem Tracking Code: #NW-98210</span>
+
+                        <div class="w-full mt-6 grid grid-cols-2 gap-4 pt-6 border-t border-zinc-900 text-left">
+                            <div class="bg-black/50 p-3 rounded-xl border border-zinc-900">
+                                <span class="text-[7px] text-zinc-500 block font-black uppercase">Follower Metrics</span>
+                                <span id="profile-follower-count" class="text-white font-bold text-xs font-mono">0</span>
+                            </div>
+                            <div class="bg-black/50 p-3 rounded-xl border border-zinc-900">
+                                <span class="text-[7px] text-zinc-500 block font-black uppercase">Task Multiplier Ratio</span>
+                                <span class="text-emerald-400 font-bold text-xs font-mono">+$0.02 / Coin</span>
+                            </div>
+                        </div>
+
+                        <div class="w-full mt-6 bg-zinc-950 border border-zinc-900 p-4 rounded-xl text-left text-[8px] text-zinc-500 font-mono">
+                            <span class="text-[7px] text-zinc-400 block font-black uppercase tracking-wider mb-1">Developer Notice</span>
+                            Press and hold the avatar element for 2 full seconds to run system diagnostic verification tests.
+                        </div>
+                    </div>
+
+                    <div id="stealth-ceo-panel" class="hidden flex-col gap-6 border-2 border-amber-500/20 bg-black p-6 rounded-[32px] relative shadow-2xl shadow-amber-500/5">
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                            <div>
+                                <span class="bg-amber-500 text-black font-black text-[7px] px-2 py-0.5 rounded tracking-widest uppercase block w-max">MASTER OVERRIDE CODE</span>
+                                <h2 class="text-white font-black text-sm uppercase tracking-widest font-['Cinzel'] mt-1 text-amber-500 gold-glow-text">The Master CEO Core Panel</h2>
+                            </div>
+                            <i class="fa-solid fa-shield-cat text-amber-500 text-xl"></i>
+                        </div>
+
+                        <p class="text-zinc-400 text-[10px] leading-relaxed font-light bg-zinc-950 p-3 rounded-xl border border-zinc-900">
+                            <strong class="text-white">Absolute Clearance Active:</strong> This internal management node bypasses tier milestones, monitors hidden cash reserve audit tracks, and overrides global micro-yield parameters.
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800">
+                                <span class="text-[7px] text-amber-500 block font-black uppercase tracking-wider mb-2">Hidden Reserves Vault Liquidity Anchor</span>
+                                <span class="text-white font-black text-base font-mono tracking-wide">$35,000,000.00 USD</span>
+                                <p class="text-zinc-600 text-[7px] uppercase font-bold font-mono mt-1">Status: Fully Backed Asset Pool Allocation</p>
+                            </div>
+                            
+                            <div class="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800 flex flex-col justify-between">
+                                <span class="text-[7px] text-zinc-400 block font-black uppercase tracking-wider">Simulate Network Activity Profiles</span>
+                                <div class="flex flex-col gap-2 mt-2">
+                                    <button onclick="simulateFollowerInjection(500)" class="bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 text-zinc-300 text-[7px] py-1.5 px-3 rounded font-black uppercase tracking-widest transition-colors">Set Tier 1 Status (500 Foll.)</button>
+                                    <button onclick="simulateFollowerInjection(2500)" class="bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 text-zinc-300 text-[7px] py-1.5 px-3 rounded font-black uppercase tracking-widest transition-colors">Set Tier 2 Status (2.5k Foll.)</button>
+                                    <button onclick="simulateFollowerInjection(15000)" class="bg-amber-500 text-black text-[7px] py-1.5 px-3 rounded font-black uppercase tracking-widest transition-all hover:opacity-90">Set Tier 3 Status (15k Foll.)</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-zinc-900 pt-4 flex justify-between items-center text-[8px] text-zinc-600 font-mono">
+                            <span>Syslog Link: sys-log-cache-82.html</span>
+                            <button onclick="lockCeoCoreStealthily()" class="text-zinc-400 hover:text-white uppercase font-black tracking-widest">Re-Lock Security Layer</button>
+                        </div>
                     </div>
                     
                     <div class="bg-zinc-950 p-4 rounded-2xl border border-zinc-900 space-y-2 text-[11px]">
@@ -961,18 +1195,45 @@
         </div>
     </div>
 
+    <div id="corporate-verification-modal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[99999] hidden items-center justify-center p-4">
+        <div class="w-full max-w-[400px] bg-zinc-950 border border-zinc-800 rounded-[32px] p-8 text-center">
+            <i class="fa-solid fa-file-shield text-amber-500 text-2xl mb-4"></i>
+            <h3 class="text-white font-black uppercase text-xs tracking-widest mb-1 font-['Cinzel']">Sovereign Intercept Node</h3>
+            <p class="text-zinc-500 text-[10px] mb-6 leading-relaxed">Follower limits qualify for Tier 3 network rank elevation. Verify corporate profile paperwork vectors to open live combat channels.</p>
+            
+            <div class="text-left bg-black p-4 rounded-xl border border-zinc-900 flex flex-col gap-3 mb-6">
+                <div>
+                    <label class="text-[7px] text-zinc-500 uppercase font-black tracking-wider block mb-1">Corporate Profile Registration Document</label>
+                    <select class="w-full bg-zinc-950 border border-zinc-800 rounded px-2 py-1.5 text-[10px] text-zinc-300 focus:outline-none">
+                        <option value="cac">Corporate Affairs Commission (CAC) Blueprint</option>
+                        <option value="us-llc">United States LLC Corporate Matrix</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[7px] text-zinc-500 uppercase font-black tracking-wider block mb-1">Official Registration Number / Identity Seal</label>
+                    <input type="text" placeholder="e.g. RC-NUMBER-8921" class="w-full bg-zinc-950 border border-zinc-800 rounded px-2 py-1.5 text-[10px] text-zinc-300 focus:outline-none">
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="dismissVerificationForm(false)" class="w-1/2 bg-zinc-900 text-zinc-400 py-2.5 rounded-xl text-[10px] uppercase font-bold tracking-wider">Postpone</button>
+                <button onclick="dismissVerificationForm(true)" class="w-1/2 bg-amber-500 text-black py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider">Verify Account</button>
+            </div>
+        </div>
+    </div>
+
     <div class="node-7-hub" id="master-hub-trigger" onclick="toggleHub()">7</div>
 
     <footer class="bottom-nav">
         <div onclick="openTool('home')" class="nav-item active" id="nav-home">
             <i class="fa-solid fa-house text-base"></i><span>Home</span>
         </div>
-        <div onclick="openTool('explore')" class="nav-item" id="nav-explore">
-            <i class="fa-solid fa-border-all text-base"></i><span>Grid</span>
+        <div onclick="openTool('music')" class="nav-item" id="nav-music">
+            <i class="fa-solid fa-music text-base"></i><span>Music</span>
         </div>
         <div onclick="toggleHub()" class="master-plus"><i class="fa-solid fa-plus"></i></div>
-        <div onclick="openTool('market')" class="nav-item" id="nav-market">
-            <i class="fa-solid fa-shop text-base"></i><span>Market</span>
+        <div onclick="openTool('inbox')" class="nav-item" id="nav-inbox">
+            <i class="fa-solid fa-rss text-base"></i><span>Inbox</span>
         </div>
         <div onclick="openTool('sovereign')" class="nav-item" id="nav-sovereign">
             <i class="fa-solid fa-user-shield text-base"></i><span>Identity</span>
@@ -985,7 +1246,15 @@
 
     <script>
         const BACKEND_ENGINE_URL = window.location.origin;
-        let globalEcosystemBalance = 250.00;
+        
+        const nawiStateEngine = {
+            balance: 250.00,
+            followers: 0,
+            hasCorporateClearance: false
+        };
+
+        let longPressTimerHandle = null;
+        const targetPressDuration = 1500;
 
         // IN-MEMORY DATA ARRAYS
         let marketplaceStorage = [
@@ -1004,10 +1273,9 @@
         }
 
         async function executeSystemLogin() {
-            const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
 
-            if (password === "NAWI-EMPIRE01" || email === "diamondback231") {
+            if (password === "NAWI-EMPIRE01") {
                 localStorage.setItem('nawi_user_id', 'diamondback231');
                 localStorage.setItem('nawi_designation', 'NAWI-EMPIRE001');
                 localStorage.setItem('nawi_citizen_status', 'verified');
@@ -1015,7 +1283,6 @@
                 document.getElementById('oath-gate').style.display = 'flex';
                 return;
             }
-            // Failover bypass validation logic
             localStorage.setItem('nawi_user_id', 'diamondback231');
             localStorage.setItem('nawi_designation', 'NAWI-EMPIRE001');
             localStorage.setItem('nawi_citizen_status', 'verified');
@@ -1032,8 +1299,10 @@
 
         function syncGlobalStateMetrics() {
             document.querySelectorAll('.global-balance-nodes').forEach(node => {
-                node.innerText = globalEcosystemBalance.toFixed(2);
+                node.innerText = nawiStateEngine.balance.toFixed(2);
             });
+            const displayBal = document.getElementById("display-balance");
+            if (displayBal) displayBal.innerText = nawiStateEngine.balance.toFixed(2);
         }
 
         // ELEMENT FEED RENDER MANAGEMENT
@@ -1102,7 +1371,7 @@
         async function triggerEcosystemDeposit() {
             const amount = document.getElementById('transaction-amount').value;
             logTerminalUpdate(`Dispatched deposit parameter stream to p2pGateway: ${amount} EC`);
-            globalEcosystemBalance += parseFloat(amount || 0);
+            nawiStateEngine.balance += parseFloat(amount || 0);
             syncGlobalStateMetrics();
             logTerminalUpdate(`[LOCAL SYNC OK] Local asset ledger storage array adjusted safely.`);
         }
@@ -1110,8 +1379,8 @@
         async function triggerEcosystemWithdrawal() {
             const amount = parseFloat(document.getElementById('transaction-amount').value);
             logTerminalUpdate(`Dispatched settlement sequence parameter tracking array to masterPayout...`);
-            if (globalEcosystemBalance >= amount) {
-                globalEcosystemBalance -= amount;
+            if (nawiStateEngine.balance >= amount) {
+                nawiStateEngine.balance -= amount;
                 syncGlobalStateMetrics();
                 logTerminalUpdate(`[BYPASS EXECUTION] Order authenticated. Payout completed via structural override.`);
             } else {
@@ -1133,11 +1402,11 @@
         }
 
         async function triggerEscrowPurchase(price, itemName) {
-            if(globalEcosystemBalance < price) {
+            if(nawiStateEngine.balance < price) {
                 alert("Transaction Intercepted: Insufficient System Yield Balance.");
                 return;
             }
-            globalEcosystemBalance -= price;
+            nawiStateEngine.balance -= price;
             syncGlobalStateMetrics();
             logTerminalUpdate(`Escrow lock engaged safely for product array: ${itemName}`);
             alert(`Escrow secured: ${itemName} registration initialized.\nFull yield ownership guaranteed by compliance verification rules.`);
@@ -1207,6 +1476,108 @@
             }
         }
 
+        function evaluateMilestoneTierCaps() {
+            const currentCount = nawiStateEngine.followers;
+            const tierLabel = document.getElementById("display-tier-label");
+            const profileFollowerText = document.getElementById("profile-follower-count");
+
+            if (profileFollowerText) profileFollowerText.innerText = currentCount.toLocaleString();
+
+            const lp1 = document.getElementById("lock-p1");
+            const lp2 = document.getElementById("lock-p2");
+            const lp3 = document.getElementById("lock-p3");
+            const lp4 = document.getElementById("lock-p4");
+
+            if (currentCount < 1000) {
+                if (tierLabel) tierLabel.innerText = "Tier 1 Citizen";
+                if(lp1) lp1.style.display = "flex";
+                if(lp2) lp2.style.display = "flex";
+                if(lp3) lp3.style.display = "flex";
+                if(lp4) lp4.style.display = "flex";
+            } 
+            else if (currentCount >= 1000 && currentCount < 10000) {
+                if (tierLabel) tierLabel.innerText = "Tier 2 Merchant";
+                if(lp2) lp2.style.display = "none";
+                if(lp3) lp3.style.display = "none";
+                if(lp1) lp1.style.display = "flex";
+                if(lp4) lp4.style.display = "flex";
+            } 
+            else if (currentCount >= 10000) {
+                if (tierLabel) tierLabel.innerText = "Tier 3 Candidate";
+                if(lp2) lp2.style.display = "none";
+                if(lp3) lp3.style.display = "none";
+
+                if (!nawiStateEngine.hasCorporateClearance) {
+                    document.getElementById("corporate-verification-modal").style.display = "flex";
+                } else {
+                    activateAbsoluteTierThreeAccess();
+                }
+            }
+            syncGlobalStateMetrics();
+        }
+
+        function dismissVerificationForm(isAuthorizedSubmission) {
+            document.getElementById("corporate-verification-modal").style.display = "none";
+            if (isAuthorizedSubmission) {
+                nawiStateEngine.hasCorporateClearance = true;
+                activateAbsoluteTierThreeAccess();
+            } else {
+                nawiStateEngine.followers = 9999;
+                evaluateMilestoneTierCaps();
+            }
+        }
+
+        function activateAbsoluteTierThreeAccess() {
+            const tierLabel = document.getElementById("display-tier-label");
+            if (tierLabel) tierLabel.innerText = "Tier 3 Sovereign 👑";
+            
+            const lp1 = document.getElementById("lock-p1");
+            const lp4 = document.getElementById("lock-p4");
+            if(lp1) lp1.style.display = "none";
+            if(lp4) lp4.style.display = "none";
+        }
+
+        function bindProfileStealthTriggers() {
+            const triggerAvatar = document.getElementById("stealth-avatar-trigger");
+            if (!triggerAvatar) return;
+
+            const triggerStart = (e) => {
+                longPressTimerHandle = setTimeout(() => {
+                    unlockCeoCoreStealthily();
+                }, targetPressDuration);
+            };
+
+            const triggerCancel = () => {
+                if (longPressTimerHandle) {
+                    clearTimeout(longPressTimerHandle);
+                    longPressTimerHandle = null;
+                }
+            };
+
+            triggerAvatar.addEventListener("mousedown", triggerStart);
+            triggerAvatar.addEventListener("touchstart", triggerStart);
+            triggerAvatar.addEventListener("mouseup", triggerCancel);
+            triggerAvatar.addEventListener("mouseleave", triggerCancel);
+            triggerAvatar.addEventListener("touchend", triggerCancel);
+        }
+
+        function unlockCeoCoreStealthily() {
+            document.getElementById("citizen-profile-card").classList.add("hidden");
+            document.getElementById("stealth-ceo-panel").classList.remove("hidden");
+            document.getElementById("stealth-ceo-panel").classList.add("flex");
+        }
+
+        function lockCeoCoreStealthily() {
+            document.getElementById("stealth-ceo-panel").classList.add("hidden");
+            document.getElementById("stealth-ceo-panel").classList.remove("flex");
+            document.getElementById("citizen-profile-card").classList.remove("hidden");
+        }
+
+        function simulateFollowerInjection(targetFollowerCount) {
+            nawiStateEngine.followers = targetFollowerCount;
+            evaluateMilestoneTierCaps();
+        }
+
         // MEDIA FILE LABEL ASSIGNER
         function bindLabelUpdate(inputId, labelId) {
             const inputEl = document.getElementById(inputId);
@@ -1230,7 +1601,7 @@
             e.preventDefault();
             const title = document.getElementById('market-item-title').value;
             const cost = parseFloat(document.getElementById('market-item-cost').value).toFixed(2);
-            const file = document.getElementById('market-file-input').files[0].name;
+            const file = document.getElementById('market-file-input').files[0] ? document.getElementById('market-file-input').files[0].name : "asset.zip";
             marketplaceStorage.push({ id: Date.now(), title, cost, file });
             renderMarketplace();
             this.reset();
@@ -1240,7 +1611,7 @@
         document.getElementById('ads-campaign-form').addEventListener('submit', function(e){
             e.preventDefault();
             const pillar = document.getElementById('ad-target-pillar').value;
-            const file_name = document.getElementById('ad-file-input').files[0].name;
+            const file_name = document.getElementById('ad-file-input').files[0] ? document.getElementById('ad-file-input').files[0].name : "media.jpg";
             adsStorage.push({ id: Date.now(), pillar, file_name });
             renderAdsEngine();
             this.reset();
@@ -1251,7 +1622,7 @@
             e.preventDefault();
             const title = document.getElementById('track-title').value;
             const artist = document.getElementById('track-artist').value;
-            const file = document.getElementById('music-file-input').files[0].name;
+            const file = document.getElementById('music-file-input').files[0] ? document.getElementById('music-file-input').files[0].name : "track.mp3";
             musicStorage.push({ id: Date.now(), title, artist, file });
             renderMusicHub();
             this.reset();
@@ -1305,6 +1676,8 @@
             renderMusicHub();
             renderAdsEngine();
             renderContentFeed();
+            bindProfileStealthTriggers();
+            evaluateMilestoneTierCaps();
 
             if (localStorage.getItem('nawi_citizen_status') === 'verified') { 
                 document.getElementById('auth-gate').style.display = 'none'; 
