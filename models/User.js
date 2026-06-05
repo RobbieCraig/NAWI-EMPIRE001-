@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema(
+{
     platform_watermark: {
         type: String,
         default: 'PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001',
@@ -10,7 +11,17 @@ const UserSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        index: true
+    },
+
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        minlength: 3,
+        maxlength: 50
     },
 
     email: {
@@ -24,6 +35,16 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+
+    phone: {
+        type: String,
+        default: ''
+    },
+
+    profilePhoto: {
+        type: String,
+        default: ''
     },
 
     role: {
@@ -50,15 +71,16 @@ const UserSchema = new mongoose.Schema({
         default: 'active'
     },
 
-    profilePhoto: {
-        type: String,
-        default: ''
+    verificationTier: {
+        type: Number,
+        enum: [1, 2, 3],
+        default: 1
     },
 
     identity: {
         sovereign_name: {
             type: String,
-            default: 'Username'
+            default: ''
         },
 
         legacy_rank: {
@@ -74,6 +96,71 @@ const UserSchema = new mongoose.Schema({
         joined_date: {
             type: Date,
             default: Date.now
+        }
+    },
+
+    biometricVerification: {
+        day1VideoUrl: {
+            type: String,
+            default: ''
+        },
+
+        verifiedAt: {
+            type: Date
+        },
+
+        biometricStatus: {
+            type: String,
+            enum: [
+                'pending',
+                'approved',
+                'rejected'
+            ],
+            default: 'pending'
+        }
+    },
+
+    businessVerification: {
+        businessName: {
+            type: String,
+            default: ''
+        },
+
+        registrationNumber: {
+            type: String,
+            default: ''
+        },
+
+        registrationDocument: {
+            type: String,
+            default: ''
+        },
+
+        approved: {
+            type: Boolean,
+            default: false
+        }
+    },
+
+    complianceMetrics: {
+        cleanEscrowTransactions: {
+            type: Number,
+            default: 0
+        },
+
+        rulesViolated: {
+            type: Number,
+            default: 0
+        },
+
+        successfulDeliveries: {
+            type: Number,
+            default: 0
+        },
+
+        disputesOpened: {
+            type: Number,
+            default: 0
         }
     },
 
@@ -121,6 +208,86 @@ const UserSchema = new mongoose.Schema({
         }
     },
 
+    pillarAccess: {
+        marketplace: {
+            type: Boolean,
+            default: true
+        },
+
+        ads_program: {
+            type: Boolean,
+            default: true
+        },
+
+        gaming_studio: {
+            type: Boolean,
+            default: true
+        },
+
+        live_stream: {
+            type: Boolean,
+            default: true
+        },
+
+        kitchen_meal: {
+            type: Boolean,
+            default: true
+        },
+
+        music_promotion: {
+            type: Boolean,
+            default: true
+        },
+
+        content_creation: {
+            type: Boolean,
+            default: true
+        }
+    },
+
+    walletSnapshot: {
+        empireCoins: {
+            type: Number,
+            default: 5
+        },
+
+        usdBalance: {
+            type: Number,
+            default: 0
+        },
+
+        ngnBalance: {
+            type: Number,
+            default: 0
+        }
+    },
+
+    sovereignStylistTheme: {
+        activeTheme: {
+            type: String,
+            enum: [
+                'deep_obsidian',
+                'industrial_titanium',
+                'polished_gold'
+            ],
+            default: 'deep_obsidian'
+        },
+
+        titaniumAccents: {
+            type: Boolean,
+            default: true
+        },
+
+        polishedGoldBorders: {
+            type: Boolean,
+            default: true
+        }
+    },
+
+    challengesEntered: [{
+        type: String
+    }],
+
     walletId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Wallet'
@@ -160,6 +327,10 @@ const UserSchema = new mongoose.Schema({
         multi_factor_auth: {
             type: String,
             default: 'ENABLED'
+        },
+
+        lastLogin: {
+            type: Date
         }
     }
 },
@@ -168,4 +339,6 @@ const UserSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports =
+    mongoose.models.User ||
+    mongoose.model('User', UserSchema);
