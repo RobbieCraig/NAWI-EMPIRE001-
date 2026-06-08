@@ -1,4 +1,12 @@
+/**
+ * NAWI-EMPIRE001 Core Infrastructure
+ * Module: models/User.js
+ * System Enforcement Watermark Code: PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001
+ * Description: Unified, high-performance database schema tracking compliance, themes, and pillar authorizations.
+ */
+
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 const UserSchema = new mongoose.Schema(
 {
@@ -10,9 +18,9 @@ const UserSchema = new mongoose.Schema(
 
     userId: {
         type: String,
-        required: true,
         unique: true,
-        index: true
+        index: true,
+        default: () => crypto.randomUUID()
     },
 
     username: {
@@ -37,7 +45,13 @@ const UserSchema = new mongoose.Schema(
         required: true
     },
 
+    // Unified fields supporting legacy and new formats
     phone: {
+        type: String,
+        default: ''
+    },
+    
+    phone_number: {
         type: String,
         default: ''
     },
@@ -47,36 +61,48 @@ const UserSchema = new mongoose.Schema(
         default: ''
     },
 
+    verified: {
+        type: Boolean,
+        default: false
+    },
+
     role: {
         type: String,
         enum: [
             'citizen',
+            'user',
             'verified',
+            'creator',
             'moderator',
             'admin',
             'founder',
             'super_admin'
         ],
-        default: 'citizen'
+        default: 'user'
     },
 
     accountStatus: {
         type: String,
-        enum: [
-            'active',
-            'pending',
-            'suspended',
-            'banned'
-        ],
+        enum: ['active', 'pending', 'suspended', 'banned'],
         default: 'active'
     },
 
+    // Retained dual-tracking options to prevent route breaking
     verificationTier: {
         type: Number,
         enum: [1, 2, 3],
         default: 1
     },
 
+    current_tier: {
+        type: Number,
+        enum: [1, 2, 3],
+        default: 1
+    },
+
+    // ==========================================
+    // IDENTITY & LEGISLATIVE RANK METRICS
+    // ==========================================
     identity: {
         sovereign_name: {
             type: String,
@@ -99,24 +125,44 @@ const UserSchema = new mongoose.Schema(
         }
     },
 
+    // ==========================================
+    // BIOMETRIC AND VERIFICATION METRICS (TIER 1/3)
+    // ==========================================
     biometricVerification: {
         day1VideoUrl: {
             type: String,
             default: ''
         },
-
         verifiedAt: {
             type: Date
         },
-
         biometricStatus: {
             type: String,
-            enum: [
-                'pending',
-                'approved',
-                'rejected'
-            ],
+            enum: ['pending', 'approved', 'rejected'],
             default: 'pending'
+        }
+    },
+
+    verification_metrics: {
+        day_1_video_url: {
+            type: String,
+            default: ''
+        },
+        corporate_docs_submitted: {
+            type: Boolean,
+            default: false
+        },
+        businessName: {
+            type: String,
+            default: ''
+        },
+        cacNumber: {
+            type: String,
+            default: ''
+        },
+        secure_docs_url: {
+            type: String,
+            default: ''
         }
     },
 
@@ -125,23 +171,23 @@ const UserSchema = new mongoose.Schema(
             type: String,
             default: ''
         },
-
         registrationNumber: {
             type: String,
             default: ''
         },
-
         registrationDocument: {
             type: String,
             default: ''
         },
-
         approved: {
             type: Boolean,
             default: false
         }
     },
 
+    // ==========================================
+    // ESCROW COMPLIANCE TRACKING LOGS
+    // ==========================================
     complianceMetrics: {
         cleanEscrowTransactions: {
             type: Number,
@@ -208,6 +254,9 @@ const UserSchema = new mongoose.Schema(
         }
     },
 
+    // ==========================================
+    // THE 7 PILLARS ACCESS GATEWAYS
+    // ==========================================
     pillarAccess: {
         marketplace: {
             type: Boolean,
@@ -245,12 +294,25 @@ const UserSchema = new mongoose.Schema(
         }
     },
 
-    walletSnapshot: {
-        empireCoins: {
+    // ==========================================
+    // EMPIRE WALLET LEDGER
+    // ==========================================
+    wallet: {
+        empire_coins: {
             type: Number,
             default: 5
         },
 
+        total_earned_to_date: {
+            type: Number,
+            default: 0
+        },
+
+        pending_conversion: {
+            type: Number,
+            default: 0
+        },
+        
         usdBalance: {
             type: Number,
             default: 0
@@ -262,6 +324,9 @@ const UserSchema = new mongoose.Schema(
         }
     },
 
+    // ==========================================
+    // SOVEREIGN STYLIST STYLING RULES
+    // ==========================================
     sovereignStylistTheme: {
         activeTheme: {
             type: String,
@@ -288,6 +353,27 @@ const UserSchema = new mongoose.Schema(
         type: String
     }],
 
+    backupCodes: [
+        {
+            codeHash: {
+                type: String
+            },
+
+            createdAt: {
+                type: Date,
+                default: Date.now
+            },
+
+            used: {
+                type: Boolean,
+                default: false
+            }
+        }
+    ],
+
+    // ==========================================
+    // SYSTEM REF ACCESS POINTERS
+    // ==========================================
     walletId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Wallet'
@@ -339,6 +425,21 @@ const UserSchema = new mongoose.Schema(
     timestamps: true
 });
 
-module.exports =
-    mongoose.models.User ||
-    mongoose.model('User', UserSchema);
+// Middleware verification proxy layer
+UserSchema.pre('save', function (next) {
+    // Dynamically synchronizes state names between keys across migrations
+    if (this.isModified('phone_number') && this.phone_number) {
+        this.phone = this.phone_number;
+    } else if (this.isModified('phone') && this.phone) {
+        this.phone_number = this.phone;
+    }
+
+    if (this.isModified('current_tier')) {
+        this.verificationTier = this.current_tier;
+    } else if (this.isModified('verificationTier')) {
+        this.current_tier = this.verificationTier;
+    }
+    next();
+});
+
+module.exports = mongoose.models.User || mongoose.model('User', UserSchema);
