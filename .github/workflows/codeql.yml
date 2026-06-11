@@ -49,14 +49,16 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 1
 fi
 
-# Fetch and create branch
+# Fetch newest remote changes safely
 git fetch origin
-if git show-ref --verify --quiet "refs/heads/${BRANCH}"; then
-  echo "Branch ${BRANCH} exists locally. Checking it out..."
-  git checkout "${BRANCH}"
+
+# FIX: Drop and track remote branch cleanly to avoid "already exists" errors
+if git show-ref --verify --quiet "refs/remotes/origin/${BRANCH}"; then
+  echo "Branch exists on remote. Checking out and tracking..."
+  git checkout -B "${BRANCH}" "origin/${BRANCH}"
 else
-  echo "Creating and switching to branch ${BRANCH}..."
-  git checkout -b "${BRANCH}"
+  echo "Creating fresh isolated branch ${BRANCH}..."
+  git checkout -B "${BRANCH}"
 fi
 
 # Overwrite package.json
@@ -250,10 +252,14 @@ else
   echo "SKIP_NPM_INSTALL is true; skipping npm install in CI."
 fi
 
-# Stage, commit, push
-git add package.json package-lock.json controllers/ || true
+# Stage changes safely without strict mapping crashes
+git add package.json controllers/
+if [ -f package-lock.json ]; then
+  git add package-lock.json
+fi
+
 git commit -m "chore: add express-validator; add controllers to remove safeLoad warnings" || true
-git push -u origin "${BRANCH}" || true
+git push origin "${BRANCH}" --force
 
 echo "Pushed branch ${BRANCH} to origin."
 SCRIPT
